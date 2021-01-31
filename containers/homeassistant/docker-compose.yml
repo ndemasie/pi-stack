@@ -1,0 +1,11 @@
+services:
+  # https://www.home-assistant.io/docs/installation/docker
+  homeassistant:
+    container_name: homeassistant
+    image: homeassistant/raspberrypi4-homeassistant:stable
+    volumes:
+      - ./homeassistant:/config
+    environment:
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    network_mode: host

@@ -1,0 +1,3 @@
+# Ignore all dot files in root except .gitignore
+.*
+!/.gitignore
