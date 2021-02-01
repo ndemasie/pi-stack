@@ -20,12 +20,9 @@ readarray -t container_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -p
 #       Menu       #
 ####################
 for container in "${container_array[@]}"; do
-  title=$container
-  container_config_path="${CURDIR}/${container}/.config"
-  if [ -f $container_config_path ] && (< $container_config_path grep --silent "title"); then
-    # Find out a way to import a single variable and _dynamically_ adjust for quotes
-    title=$(grep -oP "title=\K.*" $container_config_path)
-  fi
+
+  title=$(grep -oP "title=\K.*" "${CURDIR}/${container}/.config")
+  [ -z "$title" ] && title=$container
 
   # Set status if container has match in ./docker-compose.yml
   if [ -f $docker_compose_path ]; then
