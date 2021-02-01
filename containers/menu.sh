@@ -20,9 +20,20 @@ readarray -t container_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -p
 #       Menu       #
 ####################
 for container in "${container_array[@]}"; do
-  ## Tests if ./docker-compose.yml exists and container matches inside
-  [ -f $docker_compose_path ] && (< $docker_compose_path grep --silent "$container:") && status="ON" || status="OFF"
-  menu_options+=("$container" "$container" "$status")
+  description=$container
+
+  container_config_path="${CURDIR}/${container}/.config"
+  if [ -f $container_config_path ] && (< $container_config_path grep --silent "title"); then
+    # Find out a way to import a single variable and _dynamically_ adjust for quotes
+    title=$(grep -oP "title=\K.*" $container_config_path)
+  fi
+
+  # Set status if container has match in ./docker-compose.yml
+  if [ -f $docker_compose_path ]; then
+    (< $docker_compose_path grep --silent "$container:") && status="ON" || status="OFF"
+  fi
+
+  menu_options+=("$container" "$title" "$status")
 done
 
 container_selection=$(whiptail --title "$menu_title" --notags --separate-output --checklist \
@@ -30,19 +41,19 @@ container_selection=$(whiptail --title "$menu_title" --notags --separate-output 
   -- "${menu_options[@]}" \
   3>&1 1>&2 2>&3)
 
-# Exit if no selection
-[ -z "$container_selection" ] && echo "No containers selected" && exit 1
+# # Exit if no selection
+# [ -z "$container_selection" ] && echo "No containers selected" && exit 1
 
-## Build docker-compose.yml
-echo "Generating docker-compose.yml"
-for container in ${container_selection[@]}; do
-  path="${CURDIR}/${container}/docker-compose.yml"
-  # Check if container docker-compose.yml file is found
-  if [ ! -f $path ]; then
-    printf "%s\n" "${red}Unable to locate ${container}/docker-compose.yml - Skipped${reset}"
-  else
-    container_compose_configs+=" -f ${CURDIR}/${container}/docker-compose.yml"
-  fi
-done
+# ## Build docker-compose.yml
+# echo "Generating docker-compose.yml"
+# for container in ${container_selection[@]}; do
+#   path="${CURDIR}/${container}/docker-compose.yml"
+#   # Check if container docker-compose.yml file is found
+#   if [ ! -f $path ]; then
+#     printf "%s\n" "${red}Unable to locate ${container}/docker-compose.yml - Skipped${reset}"
+#   else
+#     container_compose_configs+=" -f ${CURDIR}/${container}/docker-compose.yml"
+#   fi
+# done
 
-echo -e "$(docker-compose$container_compose_configs config)" >$docker_compose_path
+# echo -e "$(docker-compose$container_compose_configs config)" >$docker_compose_path
