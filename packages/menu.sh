@@ -1,12 +1,6 @@
 #!/bin/bash
-
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-
-# CLI Text styling
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+source $(dirname "$CURDIR")/.variables
 
 menu_title=$'Install Packages'
 menu_message=$'Use the [SPACEBAR] to select which packages you would like to install'

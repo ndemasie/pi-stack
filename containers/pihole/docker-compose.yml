@@ -10,10 +10,11 @@ services:
       - "80:80/tcp"
       - "443:443/tcp"
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TZ}
       - DNS1=1.1.1.1
       - DNS2=8.8.8.8
-      # - WEBPASSWORD=secret : TODO
+      - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
+      - INTERFACE=eth0
     volumes:
       - ./pihole/pihole:/etc/pihole
       - ./pihole/dnsmasq.d:/etc/dnsmasq.d

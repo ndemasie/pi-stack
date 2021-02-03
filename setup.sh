@@ -1,21 +1,12 @@
 #!/bin/bash
-
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-SYS_ARCH=$(uname -m)                                    # System Architecture
-TZ                                                      # Timezone
-
-# CLI Text styling
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-bold=$(tput bold)
-reset=$(tput sgr0)
+source ${CURDIR}/.variables
 
 # Setup steps in order of execution
 RUN_STEPS=(
-  do_update_pi
+  # do_update_pi
   do_confirm_tz
-  do_packages_menu
+  # do_packages_menu
   do_containers_menu
 )
 
@@ -36,7 +27,7 @@ function do_confirm_tz() {
   if whiptail --title "Timezone" --yesno "$(timedatectl | sed -nr '/Time zone|Universal time/p')\n\n\nSet new Timezone?" 12 75; then
     sudo raspi-config
   fi
-  $TZ=$(cat /etc/timezone)
+  export TZ=$(cat /etc/timezone)
 }
 
 function do_packages_menu() {
@@ -65,4 +56,4 @@ echo "${bold}${yellow}Setting up your IoT stack${reset}"
 for step in ${RUN_STEPS[@]}; do
   $step
 done
-echo "Done!"
+echo "Setup completed!"

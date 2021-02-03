@@ -1,2 +1,5 @@
 # Mac Spotlight file
 .DS_STORE
+
+.save
+!.env.*

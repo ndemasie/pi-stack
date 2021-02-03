@@ -6,6 +6,6 @@ services:
     volumes:
       - ./homeassistant:/config
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TZ}
     restart: unless-stopped
     network_mode: host
