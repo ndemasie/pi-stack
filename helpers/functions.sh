@@ -6,6 +6,6 @@ function hasCommand() {
 
 function execute() {
   local path=${1}
-  [ ! -x $path ] && sudo chmod +x $path
+  [ -x $path ] || sudo chmod +x $path
   $path
 }
