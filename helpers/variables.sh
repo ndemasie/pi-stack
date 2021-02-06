@@ -1,6 +1,5 @@
 #!/bin/bash
 # CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-
 SYS_ARCH=$(uname -m)  # System Architecture
 TZ=$(cat /etc/timezone) # Timezone
 

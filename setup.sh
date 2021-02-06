@@ -1,12 +1,13 @@
 #!/bin/bash
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
+source ${CURDIR}/helpers/functions.sh
 source ${CURDIR}/helpers/variables.sh
 
 # Setup steps in order of execution
 RUN_STEPS=(
   # do_update_pi
-  do_confirm_tz
-  # do_packages_menu
+  # do_confirm_tz
+  do_packages_menu
   do_containers_menu
 )
 
@@ -31,23 +32,11 @@ function do_confirm_tz() {
 }
 
 function do_packages_menu() {
-  packages_menu_path="${CURDIR}/packages/menu.sh"
-  if [ ! -e $packages_menu_path ]; then
-    printf "%s\n" "${red}ERROR: Packages menu script $packages_menu_path not found${reset}"
-  else
-    [ ! -x $packages_menu_path ] && sudo chmod +x $packages_menu_path
-    $packages_menu_path
-  fi
+  execute "${CURDIR}/packages/menu.sh"
 }
 
 function do_containers_menu() {
-  containers_menu_path="${CURDIR}/containers/menu.sh"
-  if [ ! -e $containers_menu_path ]; then
-    printf "%s\n" "${red}ERROR: Containers menu script $containers_menu_path not found${reset}"
-  else
-    [ ! -x $containers_menu_path ] && sudo chmod +x $containers_menu_path
-    $containers_menu_path
-  fi
+  execute "${CURDIR}/containers/menu.sh"
 }
 
 ## RUN
