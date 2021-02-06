@@ -1,5 +1,6 @@
 #!/bin/bash
 export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
+source $(dirname "$CURDIR")/helpers/functions.sh
 source $(dirname "$CURDIR")/helpers/variables.sh
 export TZ
 
@@ -19,6 +20,6 @@ done
 cmd=$"docker-compose --env-file $env_file $compose_files"
 ${cmd} config | grep --silent "DEBUG|INFO|WARNING|ERROR|CRITICAL"
 
-$cmd_save_path="${CURDIR}/.tmp/.cmd.docker-compose"
+cmd_save_path="${CURDIR}/.tmp/.cmd.docker-compose"
 ensure_path $cmd_save_path
 printf "%s" "${cmd}" > $cmd_save_path
