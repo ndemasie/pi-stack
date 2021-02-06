@@ -19,4 +19,6 @@ done
 cmd=$"docker-compose --env-file $env_file $compose_files"
 ${cmd} config | grep --silent "DEBUG|INFO|WARNING|ERROR|CRITICAL"
 
-printf "%s" "${cmd}" > "${CURDIR}/.tmp/.cmd.docker-compose"
+$cmd_save_path="${CURDIR}/.tmp/.cmd.docker-compose"
+ensure_path $cmd_save_path
+printf "%s" "${cmd}" > $cmd_save_path

@@ -1,7 +1,7 @@
 #!/bin/bash
 export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source $(dirname "$CURDIR")/helpers/variables.sh
 source $(dirname "$CURDIR")/helpers/functions.sh
+source $(dirname "$CURDIR")/helpers/variables.sh
 export TZ
 
 menu_title=$'Container Selection'
@@ -45,7 +45,7 @@ for container in ${container_selection[@]}; do
   fi
 done
 
-[ -d ${CURDIR}/.tmp ] || mkdir ${CURDIR}/.tmp
+ensure_path $saved_selections_file
 printf "%s\n" "${selection[@]}" >$saved_selections_file
 
 execute "${CURDIR}/generate.sh"

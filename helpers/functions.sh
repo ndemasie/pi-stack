@@ -1,7 +1,13 @@
 #!/bin/bash
 source $(dirname -- "$(readlink -f -- "$BASH_SOURCE")")/variables.sh
 
-function hasCommand() {
+function ensure_path() {
+  local file=${1}
+  path=${file%/*}
+  [ ! -f $file ] && mkdir -p $path && touch $file
+}
+
+function has_command() {
   local cmd=$@
   command -v "$cmd" >/dev/null 2>&1
 }

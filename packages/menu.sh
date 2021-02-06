@@ -14,7 +14,7 @@ readarray -t package_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -pri
 #       Menu       #
 ####################
 for package in "${package_array[@]}"; do
-  (hasCommand $package) && status=("ON") || status=("OFF")
+  (has_command $package) && status=("ON") || status=("OFF")
   menu_options+=("$package" "$package" "${status}")
 done
 
@@ -29,7 +29,7 @@ package_selection=$(whiptail --title "$menu_title" --notags --separate-output --
 ## Install
 for package in ${package_selection[@]}; do
   script="install"
-  (hasCommand $package) && script="update"
+  (has_command $package) && script="update"
   path=${CURDIR}/${package}/${script}.sh
 
   if [ ! -f $path ]; then
