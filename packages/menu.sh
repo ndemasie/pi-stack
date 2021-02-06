@@ -1,6 +1,7 @@
 #!/bin/bash
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
 source $(dirname "$CURDIR")/helpers/variables.sh
+source $(dirname "$CURDIR")/helpers/functions.sh
 
 menu_title=$'Install Packages'
 menu_message=$'Use the [SPACEBAR] to select which packages you would like to install'
@@ -8,17 +9,6 @@ menu_options=()
 
 # Read all "./" directory names into an array
 readarray -t package_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n')
-
-function hasCommand() {
-  local cmd=$@
-  command -v "$cmd" >/dev/null 2>&1
-}
-
-function execute() {
-  local path=${1}
-  [ ! -x $path ] && sudo chmod +x $path
-  $path
-}
 
 ####################
 #       Menu       #

@@ -1,4 +1,4 @@
-# Pi-Server
+# Pi-Stack
 
 Automated setup and management for open source packages and Docker containers on a rasberrypi.
 
