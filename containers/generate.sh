@@ -13,10 +13,10 @@ save_selections_file="${CURDIR}/.save.selections"
 readarray -t selections < $save_selections_file
 
 for container in ${selections[@]}; do
-  compose_files+="-f ${CURDIR}/${container}/docker-compose.yml"
+  compose_files+=" -f ${CURDIR}/${container}/docker-compose.yml"
 done
 
 cmd=$"docker-compose --env-file $env_file $compose_files"
-$cmd config | grep --silent "DEBUG|INFO|WARNING|ERROR|CRITICAL"
+${cmd} config | grep --silent "DEBUG|INFO|WARNING|ERROR|CRITICAL"
 
-printf '%s' "$cmd" > "${CURDIR}/.cmd.docker-compose"
+printf "%s" "${cmd}" > "${CURDIR}/.cmd.docker-compose"
