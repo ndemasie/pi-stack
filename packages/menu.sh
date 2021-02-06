@@ -15,7 +15,7 @@ readarray -t package_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -pri
 ####################
 for package in "${package_array[@]}"; do
   (has_command $package) && status=("ON") || status=("OFF")
-  menu_options+=("$package" "$package" "${status}")
+  menu_options+=("$package" "$package" "$status")
 done
 
 package_selection=$(whiptail --title "$menu_title" --notags --separate-output --checklist \
