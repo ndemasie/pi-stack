@@ -16,8 +16,8 @@ services:
       - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
       - INTERFACE=eth0
     volumes:
-      - ./pihole/pihole:/etc/pihole
-      - ./pihole/dnsmasq.d:/etc/dnsmasq.d
+      - ${CURDIR}/pihole/volumes/pihole:/etc/pihole
+      - ${CURDIR}/pihole/volumes:dnsmasq.d:/etc/dnsmasq.d
     dns:
       - 127.0.0.1
       - 1.1.1.1

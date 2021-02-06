@@ -4,7 +4,7 @@ services:
     container_name: homeassistant
     image: homeassistant/raspberrypi4-homeassistant:stable
     volumes:
-      - ./homeassistant:/config
+      - ${CURDIR}/homeassistant/volumes:/config
     environment:
       - TZ=${TZ}
     restart: unless-stopped
