@@ -1,6 +1,6 @@
 #!/bin/bash
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source $(dirname "$CURDIR")/.variables
+source $(dirname "$CURDIR")/helpers/variables.sh
 
 menu_title=$'Install Packages'
 menu_message=$'Use the [SPACEBAR] to select which packages you would like to install'

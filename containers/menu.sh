@@ -1,14 +1,15 @@
 #!/bin/bash
-CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source $(dirname "$CURDIR")/.variables
+export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
+source $(dirname "$CURDIR")/helpers/variables.sh
+source $(dirname "$CURDIR")/helpers/functions.sh
 export TZ
 
 menu_title=$'Container Selection'
 menu_message=$'Use the [SPACEBAR] to select which containers you would like to run'
 menu_options=()
 
-save_file="${CURDIR}/.save"
-readarray -t saved_selections < $save_file
+saved_selections_file="${CURDIR}/.save.selections"
+readarray -t saved_selections < $saved_selections_file
 
 # Read all "./" directory names into an array
 readarray -t container_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n')
@@ -17,12 +18,12 @@ readarray -t container_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -p
 #       Menu       #
 ####################
 for container in "${container_array[@]}"; do
-  title=$(grep -oP "title=\K.*" "${CURDIR}/${container}/.config")
+  description=$(grep -oP "description=\K.*" "${CURDIR}/${container}/.config")
   
-  [ -z "$title" ] && title=$container
+  [ -z "$description" ] && description=$container
   [[ " ${saved_selections[@]} " =~ " ${container} " ]] && status="ON" || status="OFF"
 
-  menu_options+=("$container" "$title" "$status")
+  menu_options+=("$container" "$description" "$status")
 done
 
 container_selection=$(whiptail --title "$menu_title" --notags --separate-output --checklist \
@@ -44,4 +45,6 @@ for container in ${container_selection[@]}; do
   fi
 done
 
-printf "%s\n" "${selection[@]}" >$save_file
+printf "%s\n" "${selection[@]}" >$saved_selections_file
+
+execute "${CURDIR}/generate.sh"

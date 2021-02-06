@@ -1,8 +1,6 @@
 #!/bin/bash
-
-# CLI Text styling
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
+source ${CURDIR}/helpers/variables.sh
 
 echo "Checking if branch is up to date"
 git fetch origin master
@@ -18,7 +16,7 @@ else
 			break
 			;;
 		n | no) break ;;
-		*) echo "Invalid input: '${REPLY}'" ;;
+		*) echo "${red}Invalid input${reset}: '${REPLY}'" ;;
 		esac
 	done
 fi
