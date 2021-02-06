@@ -1,7 +1,4 @@
-# Mac Spotlight file
-.DS_STORE
-
-.save*
-.cmd*
-
-!.env.*
+# Dotfiles
+.*
+!.env
+!.config
