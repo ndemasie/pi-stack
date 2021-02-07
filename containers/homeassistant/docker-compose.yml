@@ -4,8 +4,8 @@ services:
     container_name: homeassistant
     image: homeassistant/raspberrypi4-homeassistant:stable
     volumes:
-      - ${CURDIR}/homeassistant/volumes:/config
+      - ./volumes/config:/config
     environment:
-      - TZ=${TZ}
+      - TZ=Europe/Berlin
     restart: unless-stopped
     network_mode: host

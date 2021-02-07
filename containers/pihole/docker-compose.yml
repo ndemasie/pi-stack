@@ -11,13 +11,14 @@ services:
       - "443:443/tcp"
     environment:
       - TZ=${TZ}
+      # - TZ=Europe/Berlin
       - DNS1=1.1.1.1
       - DNS2=8.8.8.8
-      - WEBPASSWORD=${PIHOLE_WEBPASSWORD}
+      - WEBPASSWORD=secret
       - INTERFACE=eth0
     volumes:
-      - ${CURDIR}/pihole/volumes/pihole:/etc/pihole
-      - ${CURDIR}/pihole/volumes:dnsmasq.d:/etc/dnsmasq.d
+      - ./volumes/dnsmasq.d:/etc/dnsmasq.d
+      - ./volumes/pihole:/etc/pihole
     dns:
       - 127.0.0.1
       - 1.1.1.1
