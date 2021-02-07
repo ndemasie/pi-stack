@@ -2,7 +2,6 @@
 export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
 source $(dirname "$CURDIR")/helpers/functions.sh
 source $(dirname "$CURDIR")/helpers/variables.sh
-export TZ
 
 menu_title=$'Container Selection'
 menu_message=$'Use the [SPACEBAR] to select which containers you would like to run'
@@ -38,14 +37,15 @@ container_selection=$(whiptail --title "$menu_title" --notags --separate-output 
 echo "Saving selection"
 for container in ${container_selection[@]}; do
   path="${CURDIR}/${container}/docker-compose.yml"
-  if [ ! -f $path ]; then
-    printf "%s\n" "${red}Unable to locate ${container}/docker-compose.yml - Skipped${reset}"
-  else
-    selection+=($container)
-  fi
+  [ ! -f $path ] && echo "${red}ERROR${reset}: Unable to locate ${container}/docker-compose.yml - Skipped" && continue
+  
+  echo "Validating $container/docker-compose.yml config"
+  test=$(docker-compose -f $path config | grep "DEBUG|INFO|WARNING|ERROR|CRITICAL" -c)
+
+  echo "TEST: $test"
+
+  selection+=($container)
 done
 
 ensure_path $saved_selections_file
 printf "%s\n" "${selection[@]}" >$saved_selections_file
-
-execute "${CURDIR}/generate.sh"

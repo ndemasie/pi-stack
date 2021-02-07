@@ -1,9 +1,14 @@
 #!/bin/bash
-export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
+CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
 source $(dirname "$CURDIR")/helpers/variables.sh
-export TZ=${TZ}
 
-compose_file="${CURDIR}/.tmp/.cmd.docker-compose"
-[ -f $compose_file ] || ${CURDIR}/generate.sh
+save_selections_file="${CURDIR}/.tmp/.save.selections"
+[ -f $save_selections_file ] || ${CURDIR}/generate.sh
 
-echo "$(< $compose_file) up -d"
+readarray -t selections < $save_selections_file
+for container in ${selections[@]}; do
+  compose_files+=" -f ${CURDIR}/${container}/docker-compose.yml"
+done
+
+sudo docker-compose $compose_files config
+# sudo docker-compose $compose_files up -d

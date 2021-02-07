@@ -16,5 +16,5 @@ function execute() {
   local path=${1}
   [ ! -e $path ] && printf "%s\n" "${red}ERROR${reset}: $path not found" && return 1
   [ -x $path ] || sudo chmod +x $path
-  $path
+  bash $path
 }

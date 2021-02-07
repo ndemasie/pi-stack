@@ -2,3 +2,6 @@
 .*
 !.env
 !.config
+
+# Container volumns
+containers/*/volumes/**/*
