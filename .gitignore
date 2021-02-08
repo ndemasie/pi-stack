@@ -1,7 +1,7 @@
 # Dot Dirs/Files
 .*
 !.env
-!.config
+!.conf
 
 # Container volumns
 containers/*/volumes/**/*

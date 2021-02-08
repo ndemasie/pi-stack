@@ -17,7 +17,7 @@ readarray -t container_array < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]
 #       Menu       #
 ####################
 for container in "${container_array[@]}"; do
-  description=$(grep -oP "description=\K.*" "${CURDIR}/${container}/.config")
+  description=$(grep -oP "description=\K.*" "${CURDIR}/${container}/.conf")
   
   [ -z "$description" ] && description=$container
   [[ " ${saved_selections[@]} " =~ " ${container} " ]] && status="ON" || status="OFF"
