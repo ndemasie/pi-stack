@@ -5,8 +5,8 @@ source ${CURDIR}/helpers/variables.sh
 
 # Setup steps in order of execution
 RUN_STEPS=(
-  # do_update_pi
-  # do_confirm_tz
+  do_update_pi
+  do_confirm_tz
   do_packages_menu
   do_containers_menu
 )
@@ -28,7 +28,6 @@ function do_confirm_tz() {
   if whiptail --title "Timezone" --yesno "$(timedatectl | sed -nr '/Time zone|Universal time/p')\n\n\nSet new Timezone?" 12 75; then
     sudo raspi-config
   fi
-  export TZ=$(cat /etc/timezone)
 }
 
 function do_packages_menu() {
