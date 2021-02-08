@@ -37,12 +37,14 @@ container_selection=$(whiptail --title "$menu_title" --notags --separate-output 
 echo "Saving selection"
 for container in ${container_selection[@]}; do
   path="${CURDIR}/${container}/docker-compose.yml"
-  [ ! -f $path ] && echo "${red}ERROR${reset}: Unable to locate ${container}/docker-compose.yml - Skipped" && continue
+
+  if [ ! -f $path ]; then
+    echo "${red}ERROR${reset}: Unable to locate ${container}/docker-compose.yml - Skipped"
+    continue
+  fi
   
   echo "Validating $container/docker-compose.yml config"
-  test=$(docker-compose -f $path config | grep "DEBUG|INFO|WARNING|ERROR|CRITICAL" -c)
-
-  echo "TEST: $test"
+  docker-compose -f $path config --quiet
 
   selection+=($container)
 done

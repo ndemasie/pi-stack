@@ -10,8 +10,7 @@ services:
       - "80:80/tcp"
       - "443:443/tcp"
     environment:
-      - TZ=${TZ}
-      # - TZ=Europe/Berlin
+      - TZ=Europe/Berlin
       - DNS1=1.1.1.1
       - DNS2=8.8.8.8
       - WEBPASSWORD=secret
