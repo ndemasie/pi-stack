@@ -10,5 +10,5 @@ for container in ${selections[@]}; do
   compose_files+=" -f ${CURDIR}/${container}/docker-compose.yml"
 done
 
-# sudo docker-compose $compose_files config
-sudo docker-compose $compose_files up -d
+sudo docker-compose $compose_files config
+# sudo docker-compose $compose_files up -d
