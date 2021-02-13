@@ -1,3 +1,7 @@
-# Ignore all dot files in root except .gitignore
+# Dot Dirs/Files
 .*
-!/.gitignore
+!.env
+!.conf
+
+# Container volumns
+containers/*/volumes/**/*

@@ -13,10 +13,11 @@ services:
       - TZ=Europe/Berlin
       - DNS1=1.1.1.1
       - DNS2=8.8.8.8
-      # - WEBPASSWORD=secret : TODO
+      - WEBPASSWORD=secret
+      - INTERFACE=eth0
     volumes:
-      - ./pihole/pihole:/etc/pihole
-      - ./pihole/dnsmasq.d:/etc/dnsmasq.d
+      - ../pihole/volumes/dnsmasq.d:/etc/dnsmasq.d
+      - ../pihole/volumes/pihole:/etc/pihole
     dns:
       - 127.0.0.1
       - 1.1.1.1

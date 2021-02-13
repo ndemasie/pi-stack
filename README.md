@@ -1,4 +1,4 @@
-# Pi-Server
+# Pi-Stack
 
 Automated setup and management for open source packages and Docker containers on a rasberrypi.
 
@@ -10,9 +10,9 @@ Many thanks to the [IOTstack](https://github.com/gcgarner/IOTstack) project for 
 | --- | --- | --- |
 | homeassistant | [HomeAssistant](https://www.home-assistant.io/) | Home automation server |
 | mosquitto | [Eclipse Mosquitto](https://mosquitto.org/) | MQTT message broker |
-| pihole | [PiHole](https://pi-hole.net/) [github](https://github.com/pi-hole/pi-hole/#one-step-automated-install) | Network-wide Add Blocking |
+| pihole | [PiHole](https://pi-hole.net/) [github](https://github.com/pi-hole/pi-hole/#one-step-automated-install) | Network-wide Ad Blocking |
 
-<sub>More container ideas from [IOTstack](https://github.com/gcgarner/IOTstack/blob/9a308a7f93f81d02e948a826cb8eac3cfe590e67/menu.sh#L9-L36)</sub>
+<sub>More container ideas available from [IOTstack](https://github.com/gcgarner/IOTstack/blob/9a308a7f93f81d02e948a826cb8eac3cfe590e67/menu.sh#L9-L36)</sub>
 
 ## Packages
 

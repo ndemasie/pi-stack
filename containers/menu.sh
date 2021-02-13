@@ -1,32 +1,30 @@
 #!/bin/bash
-CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
+export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
+source $(dirname "$CURDIR")/helpers/functions.sh
+source $(dirname "$CURDIR")/helpers/variables.sh
 
-# CLI Text styling
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
-
-menu_title=$'Container Selection'
-menu_message=$'Use the [SPACEBAR] to select which containers you would like to run'
 menu_options=()
 
-docker_compose_path="${CURDIR}/docker-compose.yml"
+saved_selections_path="${CURDIR}/.tmp/.save.selections"
+readarray -t saved_selections < $saved_selections_path
 
-# Read all "./" directory names into an array
-readarray -t container_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n')
+# Read all non-dot container directories into an array
+readarray -t container_array < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*' -type d -printf '%P\n')
 
 ####################
 #       Menu       #
 ####################
 for container in "${container_array[@]}"; do
-  ## Tests if ./docker-compose.yml exists and container matches inside
-  [ -f $docker_compose_path ] && (< $docker_compose_path grep --silent "$container:") && status="ON" || status="OFF"
-  menu_options+=("$container" "$container" "$status")
+  description=$(grep -oP "description=\K.*" "${CURDIR}/${container}/.conf")
+  
+  [ -z "$description" ] && description=$container
+  [[ " ${saved_selections[@]} " =~ " ${container} " ]] && status="ON" || status="OFF"
+
+  menu_options+=("$container" "$description" "$status")
 done
 
-container_selection=$(whiptail --title "$menu_title" --notags --separate-output --checklist \
-  "$menu_message" 20 78 12 \
+container_selection=$(whiptail --title "Container Selection" --notags --separate-output --checklist \
+  "Use the [SPACEBAR] to select which containers you would like to run" 20 78 12 \
   -- "${menu_options[@]}" \
   3>&1 1>&2 2>&3)
 
@@ -34,15 +32,20 @@ container_selection=$(whiptail --title "$menu_title" --notags --separate-output 
 [ -z "$container_selection" ] && echo "No containers selected" && exit 1
 
 ## Build docker-compose.yml
-echo "Generating docker-compose.yml"
+echo "Saving selection"
 for container in ${container_selection[@]}; do
-  path="${CURDIR}/${container}/docker-compose.yml"
-  # Check if container docker-compose.yml file is found
-  if [ ! -f $path ]; then
-    printf "%s\n" "${red}Unable to locate ${container}/docker-compose.yml - Skipped${reset}"
-  else
-    container_compose_configs+=" -f ${CURDIR}/${container}/docker-compose.yml"
+  docker_compose_path="${CURDIR}/${container}/docker-compose.yml"
+
+  if [ ! -f $docker_compose_path ]; then
+    echo "${red}ERROR${reset}: Unable to locate ${container}/docker-compose.yml - Skipped"
+    continue
   fi
+  
+  echo "Validating $container/docker-compose.yml config"
+  docker-compose --file $docker_compose_path config --quiet
+
+  selection+=($container)
 done
 
-echo -e "$(docker-compose$container_compose_configs config)" >$docker_compose_path
+ensure_path $saved_selections_path
+printf "%s\n" "${selection[@]}" >$saved_selections_path

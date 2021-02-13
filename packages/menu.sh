@@ -1,12 +1,7 @@
 #!/bin/bash
-
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-
-# CLI Text styling
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+source $(dirname "$CURDIR")/helpers/variables.sh
+source $(dirname "$CURDIR")/helpers/functions.sh
 
 menu_title=$'Install Packages'
 menu_message=$'Use the [SPACEBAR] to select which packages you would like to install'
@@ -15,23 +10,12 @@ menu_options=()
 # Read all "./" directory names into an array
 readarray -t package_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n')
 
-function hasCommand() {
-  local cmd=$@
-  command -v "$cmd" >/dev/null 2>&1
-}
-
-function execute() {
-  local path=${1}
-  [ ! -x $path ] && sudo chmod +x $path
-  $path
-}
-
 ####################
 #       Menu       #
 ####################
 for package in "${package_array[@]}"; do
-  (hasCommand $package) && status=("ON") || status=("OFF")
-  menu_options+=("$package" "$package" "${status}")
+  (has_command $package) && status=("ON") || status=("OFF")
+  menu_options+=("$package" "$package" "$status")
 done
 
 package_selection=$(whiptail --title "$menu_title" --notags --separate-output --checklist \
@@ -45,7 +29,7 @@ package_selection=$(whiptail --title "$menu_title" --notags --separate-output --
 ## Install
 for package in ${package_selection[@]}; do
   script="install"
-  (hasCommand $package) && script="update"
+  (has_command $package) && script="update"
   path=${CURDIR}/${package}/${script}.sh
 
   if [ ! -f $path ]; then
