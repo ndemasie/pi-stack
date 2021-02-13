@@ -3,12 +3,10 @@ export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current di
 source $(dirname "$CURDIR")/helpers/functions.sh
 source $(dirname "$CURDIR")/helpers/variables.sh
 
-menu_title=$'Container Selection'
-menu_message=$'Use the [SPACEBAR] to select which containers you would like to run'
 menu_options=()
 
-saved_selections_file="${CURDIR}/.tmp/.save.selections"
-readarray -t saved_selections < $saved_selections_file
+saved_selections_path="${CURDIR}/.tmp/.save.selections"
+readarray -t saved_selections < $saved_selections_path
 
 # Read all non-dot container directories into an array
 readarray -t container_array < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*' -type d -printf '%P\n')
@@ -25,8 +23,8 @@ for container in "${container_array[@]}"; do
   menu_options+=("$container" "$description" "$status")
 done
 
-container_selection=$(whiptail --title "$menu_title" --notags --separate-output --checklist \
-  "$menu_message" 20 78 12 \
+container_selection=$(whiptail --title "Container Selection" --notags --separate-output --checklist \
+  "Use the [SPACEBAR] to select which containers you would like to run" 20 78 12 \
   -- "${menu_options[@]}" \
   3>&1 1>&2 2>&3)
 
@@ -36,18 +34,18 @@ container_selection=$(whiptail --title "$menu_title" --notags --separate-output 
 ## Build docker-compose.yml
 echo "Saving selection"
 for container in ${container_selection[@]}; do
-  path="${CURDIR}/${container}/docker-compose.yml"
+  docker_compose_path="${CURDIR}/${container}/docker-compose.yml"
 
-  if [ ! -f $path ]; then
+  if [ ! -f $docker_compose_path ]; then
     echo "${red}ERROR${reset}: Unable to locate ${container}/docker-compose.yml - Skipped"
     continue
   fi
   
   echo "Validating $container/docker-compose.yml config"
-  docker-compose -f $path config --quiet
+  docker-compose --file $docker_compose_path config --quiet
 
   selection+=($container)
 done
 
-ensure_path $saved_selections_file
-printf "%s\n" "${selection[@]}" >$saved_selections_file
+ensure_path $saved_selections_path
+printf "%s\n" "${selection[@]}" >$saved_selections_path

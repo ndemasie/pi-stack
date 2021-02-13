@@ -5,18 +5,15 @@ source ${CURDIR}/helpers/variables.sh
 echo "Checking if branch is up to date"
 git fetch origin master
 
-if [ $(git status | grep -c "Your branch is up to date") -eq 1 ]; then
+if [ $(git status | grep --count "Your branch is up to date") -eq 1 ]; then
 	echo "Your branch is up to date"
 else
 	while true; do
-		read -p "${yellow}New version available. Would you like to sync to the latest commit on master? (y/n)${reset} " REPLY
+		read -p "${green}New version available. Would you like to sync to the latest commit on master? (y/n)${reset} " REPLY
 		case "${REPLY,,}" in
-		y | yes)
-			git pull origin master
-			break
-			;;
+		y | yes) git pull origin master && break ;;
 		n | no) break ;;
-		*) echo "${red}Invalid input${reset}: '${REPLY}'" ;;
+		*) echo "${yellow}Invalid input${reset}: '${REPLY}'" ;;
 		esac
 	done
 fi
