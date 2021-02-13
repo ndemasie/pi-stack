@@ -6,6 +6,6 @@ services:
       - "1883:1883"
       - "9001:9001"
     volumes:
-      - ./volumes/config:/mosquitto/config
-      - ./volumes/data:/mosquitto/data
-      - ./volumes/log:/mosquitto/log
+      - ../mosquitto/volumes/config:/mosquitto/config
+      - ../mosquitto/volumes/data:/mosquitto/data
+      - ../mosquitto/volumes/log:/mosquitto/log

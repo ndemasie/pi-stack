@@ -16,8 +16,8 @@ services:
       - WEBPASSWORD=secret
       - INTERFACE=eth0
     volumes:
-      - ./volumes/dnsmasq.d:/etc/dnsmasq.d
-      - ./volumes/pihole:/etc/pihole
+      - ../pihole/volumes/dnsmasq.d:/etc/dnsmasq.d
+      - ../pihole/volumes/pihole:/etc/pihole
     dns:
       - 127.0.0.1
       - 1.1.1.1
