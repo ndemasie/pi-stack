@@ -3,46 +3,48 @@ CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory
 source $(dirname "$CURDIR")/helpers/variables.sh
 source $(dirname "$CURDIR")/helpers/functions.sh
 
-menu_title=$'Install Packages'
-menu_message=$'Use the [SPACEBAR] to select which packages you would like to install'
-menu_options=()
-
 # Read all "./" directory names into an array
-readarray -t package_array < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n')
+readarray -t package_list < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n')
 
-####################
-#       Menu       #
-####################
-for package in "${package_array[@]}"; do
+for package in "${package_list[@]}"; do
   (has_command $package) && status=("ON") || status=("OFF")
   menu_options+=("$package" "$package" "$status")
 done
 
-package_selection=$(whiptail --title "$menu_title" --notags --separate-output --checklist \
-  "$menu_message" 20 78 12 \
+selections=$(whiptail --title "Install Packages" --notags --separate-output --checklist \
+  "Use the [SPACEBAR] to select which packages you would like to install" 20 78 12 \
   -- "${menu_options[@]}" \
   3>&1 1>&2 2>&3)
 
 # Exit if no selection
-[ -z "$package_selection" ] && echo "No packages selected" && exit 1
+[ -z "$selections" ] && echo "No packages selected" && exit 1
 
-## Install
-for package in ${package_selection[@]}; do
-  script="install"
-  (has_command $package) && script="update"
-  path=${CURDIR}/${package}/${script}.sh
-
-  if [ ! -f $path ]; then
-    printf "%s\n" "${path} not found"
-    printf "%s\n" "${yellow}WARN: Skipping ${package} ${script}${reset}"
-    continue
-  fi
-
-  printf "%s\n" "${green}Running ${script} script ${path}...${reset}"
-  # execute $path
-  echo "Successfully ran script"
+declare -A package_script
+for package in "${package_list[@]}"; do
+  script=''
+  [[ "${selections[@]}" =~ "${package}" ]] && ! (has_command $package) && script='install'
+  [[ "${selections[@]}" =~ "${package}" ]] && (has_command $package) && script='update'
+  [[ ! "${selections[@]}" =~ "${package}" ]] && (has_command $package) && script='uninstall'
+  package_script[$package]=$script
 done
 
-if (whiptail --title "Restart Required" --yesno "Would you like to reboot the device?" 20 78); then
-  sudo reboot
+## Execute Action
+recommend_reboot=1
+for package in ${!package_script[@]}; do
+  script="${package_script[$package]}"
+  path="${CURDIR}/${package}/${script}.sh"
+
+  case $script in
+    "install") recommend_reboot=0 && execute $path ;;
+    "update") execute $path --quiet;;
+    "uninstall") execute $path --quiet ;;
+    *) ;;
+  esac
+done
+
+if [ $recommend_reboot -eq 0 ]; then
+  if (whiptail --title "Reboot Recommended" --yesno "Would you like to reboot the device?" 20 78); then
+    sudo reboot
+  fi
 fi
+
