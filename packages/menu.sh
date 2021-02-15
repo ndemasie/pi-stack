@@ -29,20 +29,20 @@ for package in "${package_list[@]}"; do
 done
 
 ## Execute Action
-recommend_reboot=1
+recommend_reboot=false
 for package in ${!package_script[@]}; do
   script="${package_script[$package]}"
   path="${CURDIR}/${package}/${script}.sh"
 
   case $script in
-    "install") recommend_reboot=0 && execute $path ;;
+    "install") recommend_reboot=true && execute $path ;;
     "update") execute $path --quiet;;
     "uninstall") execute $path --quiet ;;
     *) ;;
   esac
 done
 
-if [ $recommend_reboot -eq 0 ]; then
+if [ "$recommend_reboot" == true ]; then
   if (whiptail --title "Reboot Recommended" --yesno "Would you like to reboot the device?" 20 78); then
     sudo reboot
   fi

@@ -14,22 +14,22 @@ function has_command() {
 
 function execute() {
   local path
-  local quiet=1 # false
+  local quiet=false
 
   # https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
   while (( "$#" )); do
     case "$1" in
-      -q|--quiet) quiet=0 && shift ;;
+      -q|--quiet) quiet=true && shift ;;
       -*|--*=) echo "${red}Error${reset}: Unsupported flag $1" >&2 && shift ;;
       *) path=$1 && shift ;;
     esac
   done
 
   if [ ! -e $path ]; then
-    [ $quiet -eq 0 ] || printf "%s\n" "${red}ERROR${reset}: $path not found"
+    [ "$quiet" == false ] && printf "%s\n" "${red}ERROR${reset}: $path not found"
     return 1
   fi
 
-  [ -x $path ] || sudo chmod +x $path
-  bash $path
+  # [ -x $path ] || sudo chmod +x $path
+  # bash $path
 }
