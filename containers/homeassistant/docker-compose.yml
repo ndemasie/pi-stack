@@ -5,7 +5,6 @@ services:
     image: homeassistant/raspberrypi4-homeassistant:stable
     volumes:
       - ../homeassistant/volumes/config:/config
-    environment:
-      - TZ=Europe/Berlin
+      - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
     network_mode: host
