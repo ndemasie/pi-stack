@@ -10,10 +10,10 @@ readarray -t container_list < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*
 readarray -t saved_selections < $saved_selections_path
 
 for container in "${container_list[@]}"; do
-  description=$(grep -oP "description=\K.*" "${CURDIR}/${container}/.conf")
-  [ -z "$description" ] && description=$container
+  name=$(grep -oP "name=\K.*" "${CURDIR}/${container}/.conf")
+  [ -z "$name" ] && name=$container
   [[ " ${saved_selections[@]} " =~ " ${container} " ]] && status="ON" || status="OFF"
-  menu_options+=("$container" "$description" "$status")
+  menu_options+=("$container" "$name" "$status")
 done
 
 selections=$(whiptail --title "Container Selection" --notags --separate-output --checklist \
