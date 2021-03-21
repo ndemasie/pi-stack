@@ -11,7 +11,7 @@ if [ -f /home/$USER/.gitconfig ]; then
     y | yes) rm /home/$USER/.gitconfig && break ;;
     n | no) break ;;
     '') break ;;
-    *) echo "${yellow}Invalid input${reset}: '${REPLY}'" ;;
+    *) echo "${YELLOW}Invalid input${RESET}: '${REPLY}'" ;;
     esac
   done
 fi
