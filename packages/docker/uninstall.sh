@@ -10,6 +10,6 @@ $(dirname "$CURDIR")/docker-compose/uninstall.sh
 
 echo "Uninstalling docker..."
 sudo apt purge docker
-sudo apt autoremove
+sudo apt autoremove -y
 
 echo "docker was uninstalled"

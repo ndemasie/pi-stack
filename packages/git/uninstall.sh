@@ -2,7 +2,7 @@
 
 echo "Uninstalling git..."
 sudo apt purge git
-sudo apt autoremove
+sudo apt autoremove -y
 
 if [ -f /home/$USER/.gitconfig ]; then
   while true; do

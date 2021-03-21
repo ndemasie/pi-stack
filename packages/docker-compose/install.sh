@@ -8,7 +8,7 @@ then # Install python3 dependencies
 fi
 
 echo "Installing docker-compose with pip3..."
-sudo pip3 install docker-compose 
+sudo pip3 install docker-compose -y
 
 sudo su - $USER # Logout/in for user groups to take effect
 
