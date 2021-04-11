@@ -3,16 +3,16 @@ CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory
 source $(dirname "$CURDIR")/helpers/variables.sh
 source $(dirname "$CURDIR")/helpers/functions.sh
 
-saved_selections_path="${CURDIR}/.state.selections"
+STATE_SELECTIONS_PATH="${CURDIR}/.state.selections"
+readarray -t state_selections < $STATE_SELECTIONS_PATH
 
 # Read all non-dot container directories into an array
 readarray -t container_list < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*' -type d -printf '%P\n')
-readarray -t saved_selections < $saved_selections_path
 
 for container in "${container_list[@]}"; do
   name=$(grep -oP "name=\K.*" "${CURDIR}/${container}/.conf")
   [ -z "$name" ] && name=$container
-  [[ " ${saved_selections[@]} " =~ " ${container} " ]] && status="ON" || status="OFF"
+  [[ " ${state_selections[@]} " =~ " ${container} " ]] && status="ON" || status="OFF"
   menu_options+=("$container" "$name" "$status")
 done
 
@@ -39,6 +39,6 @@ for container in ${selections[@]}; do
   selection+=($container)
 done
 
-ensure_path $saved_selections_path
+ensure_path $STATE_SELECTIONS_PATH
 echo "Saving selections"
-printf "%s\n" "${selection[@]}" >$saved_selections_path
+printf "%s\n" "${selection[@]}" >$STATE_SELECTIONS_PATH

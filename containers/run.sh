@@ -2,11 +2,10 @@
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
 source $(dirname "$CURDIR")/helpers/variables.sh
 
-save_selections_file="${CURDIR}/.state.selections"
-[ -f $save_selections_file ] || ${CURDIR}/generate.sh
+STATE_SELECTIONS_PATH="${CURDIR}/.state.selections"
+readarray -t state_selections < $STATE_SELECTIONS_PATH
 
-readarray -t selections < $save_selections_file
-for container in ${selections[@]}; do
+for container in ${state_selections[@]}; do
   compose_files+=" --file ${CURDIR}/${container}/docker-compose.yml"
 done
 
