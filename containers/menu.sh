@@ -1,5 +1,5 @@
 #!/bin/bash
-export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
+CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
 source $(dirname "$CURDIR")/helpers/variables.sh
 source $(dirname "$CURDIR")/helpers/functions.sh
 
