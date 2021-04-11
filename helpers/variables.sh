@@ -6,19 +6,25 @@ SYS_ARCH=$(uname -m)  # System Architecture
 TZ=$(cat /etc/timezone) # Timezone
 
 if [ -z ${NO_COLOR} -o -z ${NOCOLOR} ]; then
-	#COLOR OUTPUT FOR RICH OUTPUT
-	ORANGE=$'\e[1;33m'
-	RED=$(tput setaf 1)
-	# RED=$'\e[1;31m'
-	NC=$'\e[0m'
-	GREEN=$(tput setaf 2)
-	# GREEN=$'\e[1;32m'
-	PURPLE=$'\e[1;35m'
-	BLUE=$'\e[1;34m'
-	CYAN=$'\e[1;36m'
-	YELLOW=$(tput setaf 3)
-	# YELLOW=$'\e[01;33m'
-	REPEAT=$'\e[1A'
+	# ANSI COLORS: https://en.wikipedia.org/wiki/ANSI_escape_code
+	BLACK=$'\e[0;30m'
+	RED=$'\e[0;31m'
+	GREEN=$'\e[0;32m'
+	YELLOW=$'\e[01;33m'
+	BLUE=$'\e[0;34m'
+	MAGENTA=$'\e[0;35m'
+	CYAN=$'\e[0;36m'
+	WHITE=$'\e[0;37m'
+
+	BRIGHT_BLACK=$'\e[0;90m'
+	BRIGHT_RED=$'\e[0;91m'
+	BRIGHT_GREEN=$'\e[0;92m'
+	BRIGHT_YELLOW=$'\e[01933m'
+	BRIGHT_BLUE=$'\e[0;94m'
+	BRIGHT_MAGENTA=$'\e[0;95m'
+	BRIGHT_CYAN=$'\e[0;96m'
+	BRIGHT_WHITE=$'\e[0;97m'
+
   BOLD=$(tput bold)
-  RESET=$(tput sgr0)
+  NC=$'\e[0m'
 fi

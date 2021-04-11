@@ -34,7 +34,7 @@ function do_validate_arm_sys_arch() {
 }
 
 function do_update_pi() {
-  echo "${BOLD}Updating Pi${RESET}"
+  echo "${BOLD}Updating Pi${NC}"
   sudo apt update -y
   sudo apt full-upgrade -y
 }
@@ -55,7 +55,7 @@ function do_containers_menu() {
 
 ## RUN
 do_validate_arm_sys_arch
-echo "${BOLD}${YELLOW}Setting up your IoT stack${RESET}"
+echo "${BOLD}${YELLOW}Setting up your IoT stack${NC}"
 for step in ${RUN_STEPS[@]}; do
   $step
 done
