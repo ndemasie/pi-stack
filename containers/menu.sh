@@ -9,6 +9,7 @@ readarray -t state_selections < $STATE_SELECTIONS_PATH
 # Read all non-dot container directories into an array
 readarray -t container_list < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*' -type d -printf '%P\n')
 
+## Present menu
 for container in "${container_list[@]}"; do
   name=$(grep -oP "name=\K.*" "${CURDIR}/${container}/.conf")
   [ -z "$name" ] && name=$container
@@ -21,10 +22,9 @@ selections=$(whiptail --title "Container Selection" --notags --separate-output -
   -- "${menu_options[@]}" \
   3>&1 1>&2 2>&3)
 
-# Exit if no selection
 [ -z "$selections" ] && echo "No containers selected" && exit 1
 
-## Build docker-compose.yml
+## Validate selections
 for container in ${selections[@]}; do
   docker_compose_path="${CURDIR}/${container}/docker-compose.yml"
 
@@ -39,6 +39,7 @@ for container in ${selections[@]}; do
   selection+=($container)
 done
 
+## Save selections state
 ensure_path $STATE_SELECTIONS_PATH
 echo "Saving selections"
 printf "%s\n" "${selection[@]}" >$STATE_SELECTIONS_PATH
