@@ -26,7 +26,7 @@ if [ -z ${NO_COLOR} -o -z ${NOCOLOR} ]; then
 	BRIGHT_WHITE=$'\e[97m'
 
 	# SGR (Select Graphic Rendition) parameters
-  NC=$'\e[0m'
+  RESET=$'\e[0m'
   BOLD=$'\e[1m'
 	FAINT=$'\e[2m'
 	ITALIC=$'\e[3m'
