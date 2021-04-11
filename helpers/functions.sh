@@ -4,7 +4,10 @@ source $(dirname -- "$(readlink -f -- "$BASH_SOURCE")")/variables.sh
 function ensure_path() {
   local filepath=${1}
   local dirpath=${file%/*}
-  [ ! -f $filepath ] && mkdir -p $dirpath && touch -a $filepath
+  if [ ! -f $filepath ]; then
+    mkdir -p $dirpath
+    touch -a $filepath
+  fi
 }
 
 function has_command() {
