@@ -3,7 +3,7 @@ export CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current di
 source $(dirname "$CURDIR")/helpers/variables.sh
 source $(dirname "$CURDIR")/helpers/functions.sh
 
-saved_selections_path="${CURDIR}/.save.selections"
+saved_selections_path="${CURDIR}/.state.selections"
 
 # Read all non-dot container directories into an array
 readarray -t container_list < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*' -type d -printf '%P\n')

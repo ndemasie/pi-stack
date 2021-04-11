@@ -2,7 +2,7 @@
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
 source $(dirname "$CURDIR")/helpers/variables.sh
 
-save_selections_file="${CURDIR}/.save.selections"
+save_selections_file="${CURDIR}/.state.selections"
 [ -f $save_selections_file ] || ${CURDIR}/generate.sh
 
 readarray -t selections < $save_selections_file
