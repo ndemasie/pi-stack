@@ -10,5 +10,3 @@ services:
       - ../mosquitto/volumes/config:/mosquitto/config:ro
       - ../mosquitto/volumes/data:/mosquitto/data
       - ../mosquitto/volumes/log:/mosquitto/log
-    networks:
-      - pi_stack
