@@ -19,7 +19,7 @@ if [ -z ${NO_COLOR} -o -z ${NOCOLOR} ]; then
 	BRIGHT_BLACK=$'\e[90m'
 	BRIGHT_RED=$'\e[91m'
 	BRIGHT_GREEN=$'\e[92m'
-	BRIGHT_YELLOW=$'\e[01933m'
+	BRIGHT_YELLOW=$'\e[93m'
 	BRIGHT_BLUE=$'\e[94m'
 	BRIGHT_MAGENTA=$'\e[95m'
 	BRIGHT_CYAN=$'\e[96m'
