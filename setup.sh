@@ -15,8 +15,8 @@
 # ----------------------------------------------------------------------------------------
 
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source ${CURDIR}/helpers/functions.sh
 source ${CURDIR}/helpers/variables.sh
+source ${CURDIR}/helpers/functions.sh
 
 # Setup steps in order of execution
 RUN_STEPS=(
