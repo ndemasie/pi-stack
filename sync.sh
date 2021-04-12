@@ -9,11 +9,11 @@ if [ $(git status | grep --count "Your branch is up to date") -eq 1 ]; then
 	echo "Your branch is up to date"
 else
 	while true; do
-		read -p "${green}New version available. Would you like to sync to the latest commit on master? (y/n)${reset} " REPLY
+		read -p "${YELLOW}New version available. Would you like to sync to the latest commit on master? (y/n)${RESET} " REPLY
 		case "${REPLY,,}" in
 		y | yes) git pull origin master && break ;;
 		n | no) break ;;
-		*) echo "${yellow}Invalid input${reset}: '${REPLY}'" ;;
+		*) echo "${YELLOW}WARN${RESET} Invalid input: '${REPLY}'" ;;
 		esac
 	done
 fi

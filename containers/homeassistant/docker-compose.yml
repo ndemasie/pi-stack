@@ -3,9 +3,8 @@ services:
   homeassistant:
     container_name: homeassistant
     image: homeassistant/raspberrypi4-homeassistant:stable
-    volumes:
-      - ../homeassistant/volumes/config:/config
-    environment:
-      - TZ=Europe/Berlin
     restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ../homeassistant/volumes/config:/config
     network_mode: host

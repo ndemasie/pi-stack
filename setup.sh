@@ -1,7 +1,22 @@
 #!/bin/bash
+
+# ----------------------------------------------------------------------------------------
+# Scripts to maintain your pi-stack
+# by Nathan DeMasie
+# ----------------------------------------------------------------------------------------
+#
+#            _            __             __  
+#     ____  (_)     _____/ /_____ ______/ /__
+#    / __ \/ /_____/ ___/ __/ __ `/ ___/ //_/
+#   / /_/ / /_____(__  ) /_/ /_/ / /__/ ,<   
+#  / .___/_/     /____/\__/\__,_/\___/_/|_|  
+# /_/                                        
+#
+# ----------------------------------------------------------------------------------------
+
 CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source ${CURDIR}/helpers/functions.sh
 source ${CURDIR}/helpers/variables.sh
+source ${CURDIR}/helpers/functions.sh
 
 # Setup steps in order of execution
 RUN_STEPS=(
@@ -13,13 +28,13 @@ RUN_STEPS=(
 
 function do_validate_arm_sys_arch() {
   if [ $(echo "$SYS_ARCH" | grep -v "arm") ]; then
-    echo "Only ARM architecture is supported: detected '${SYS_ARCH}'"
+    echo "${RED}ERROR${RESET} Only ARM architecture is supported: detected '${SYS_ARCH}'"
     exit 1
   fi
 }
 
 function do_update_pi() {
-  echo "${bold}Updating Pi${reset}"
+  echo "${BOLD}Updating Pi${RESET}"
   sudo apt update -y
   sudo apt full-upgrade -y
 }
@@ -40,7 +55,7 @@ function do_containers_menu() {
 
 ## RUN
 do_validate_arm_sys_arch
-echo "${bold}${yellow}Setting up your IoT stack${reset}"
+echo "${YELLOW}INFO${RESET} Setting up your pi-stack"
 for step in ${RUN_STEPS[@]}; do
   $step
 done
