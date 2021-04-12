@@ -28,7 +28,7 @@ RUN_STEPS=(
 
 function do_validate_arm_sys_arch() {
   if [ $(echo "$SYS_ARCH" | grep -v "arm") ]; then
-    echo "Only ARM architecture is supported: detected '${SYS_ARCH}'"
+    echo "${RED}ERROR${RESET} Only ARM architecture is supported: detected '${SYS_ARCH}'"
     exit 1
   fi
 }
@@ -55,7 +55,7 @@ function do_containers_menu() {
 
 ## RUN
 do_validate_arm_sys_arch
-echo "${BOLD}${YELLOW}Setting up your IoT stack${RESET}"
+echo "${YELLOW}INFO${RESET} Setting up your pi-stack"
 for step in ${RUN_STEPS[@]}; do
   $step
 done

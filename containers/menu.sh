@@ -29,7 +29,7 @@ for container in ${selections[@]}; do
   docker_compose_path="${CURDIR}/${container}/docker-compose.yml"
 
   if [ ! -f $docker_compose_path ]; then
-    echo "${RED}ERROR${RESET}: Unable to locate ${container}/docker-compose.yml - Skipped"
+    echo "${RED}ERROR${RESET} Unable to locate ${container}/docker-compose.yml - Skipped"
     continue
   fi
   

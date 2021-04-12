@@ -23,13 +23,13 @@ function execute() {
   while (( "$#" )); do
     case "$1" in
       -q|--quiet) quiet=true && shift ;;
-      -*|--*=) echo "${RED}Error${RESET}: Unsupported flag $1" >&2 && shift ;;
+      -*|--*=) echo "${RED}ERROR${RESET} Unsupported flag $1" >&2 && shift ;;
       *) path=$1 && shift ;;
     esac
   done
 
   if [ ! -e $path ]; then
-    [ "$quiet" == false ] && printf "%s\n" "${RED}ERROR${RESET}: $path not found"
+    [ "$quiet" == false ] && printf "%s\n" "${RED}ERROR${RESET} $path not found"
     return 1
   fi
 
