@@ -26,3 +26,4 @@ Many thanks to the [gcgarner/IOTstack](https://github.com/gcgarner/IOTstack) and
 | log2ram | [log2ram](https://github.com/azlux/log2ram) | Like ramlog for systemd. <br> Reduces SD card writes on RaspberryPi. |
 | micro | [micro](https://github.com/zyedidia/micro) | Minimal text editor |
 | python3 | Python3 | Python3 with Pip3 |
+| widevine | Widevine | DRM library used by Netflix et. al. |
