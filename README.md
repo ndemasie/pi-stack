@@ -23,7 +23,7 @@ Many thanks to the [gcgarner/IOTstack](https://github.com/gcgarner/IOTstack) and
 | docker | [Docker](https://docs.docker.com/) | Containers |
 | docker-compose | [Docker Compose](https://github.com/docker/compose) | Tool for running multi-container applications |
 | git | [Git](https://git-scm.com/) | Version contral system |
+| libwidevinecdm0 | Widevine | DRM library used by Netflix et. al. |
 | log2ram | [log2ram](https://github.com/azlux/log2ram) | Like ramlog for systemd. <br> Reduces SD card writes on RaspberryPi. |
 | micro | [micro](https://github.com/zyedidia/micro) | Minimal text editor |
 | python3 | Python3 | Python3 with Pip3 |
-| widevine | Widevine | DRM library used by Netflix et. al. |
