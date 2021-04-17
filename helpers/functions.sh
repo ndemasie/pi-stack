@@ -33,6 +33,6 @@ function execute() {
     return 1
   fi
 
-  # [ -x $path ] || sudo chmod +x $path
-  # bash $path
+  [ -x $path ] || sudo chmod +x $path
+  bash $path
 }
