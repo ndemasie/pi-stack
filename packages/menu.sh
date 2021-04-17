@@ -8,7 +8,7 @@ readarray -t package_list < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -prin
 
 ## Present menu
 for package in "${package_list[@]}"; do
-  (has_package $package) && status=("ON") || status=("OFF")
+  status=$(has_package $package && echo "ON" || echo "OFF")
   menu_options+=("$package" "$package" "$status")
 done
 
