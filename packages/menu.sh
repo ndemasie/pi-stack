@@ -23,9 +23,9 @@ selections=$(whiptail --title "Install Packages" --notags --separate-output --ch
 declare -A package_script
 for package in "${package_list[@]}"; do
   script=''
-  [[ "${selections[@]}" =~ "${package}" ]] && ! (has_command $package) && script='install'
-  [[ "${selections[@]}" =~ "${package}" ]] && (has_command $package) && script='update'
-  [[ ! "${selections[@]}" =~ "${package}" ]] && (has_command $package) && script='uninstall'
+  [[ "${selections[@]}" =~ "${package}" ]] && ! (has_command $package) && script=install
+  [[ "${selections[@]}" =~ "${package}" ]] && (has_command $package) && script=update
+  [[ ! "${selections[@]}" =~ "${package}" ]] && (has_command $package) && script=uninstall
   package_script[$package]=$script
 done
 
@@ -36,9 +36,9 @@ for package in ${!package_script[@]}; do
   path="${CURDIR}/${package}/${script}.sh"
 
   case $script in
-    "install") recommend_reboot=true && execute $path ;;
-    "update") execute $path --quiet;;
-    "uninstall") execute $path --quiet ;;
+    install) recommend_reboot=true && execute $path ;;
+    update) execute $path --quiet;;
+    uninstall) execute $path --quiet ;;
     *) ;;
   esac
 done
