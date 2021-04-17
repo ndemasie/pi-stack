@@ -23,8 +23,8 @@ selections=$(whiptail --title "Install Packages" --notags --separate-output --ch
 declare -A package_script
 for package in "${package_list[@]}"; do
   script=''
-  [[ "${selections[@]}" =~ "${package}" ]] && is_pkg_selected=true || is_pkg_selected=false
-  has_package $package && is_pkg_installed=true || is_pkg_installed=false
+  is_pkg_selected=$([[ "${selections[@]}" =~ "${package}" ]] && echo true || echo false)
+  is_pkg_installed=$(has_package $package &&  echo true || echo false)
 
   $is_pkg_selected && ! $is_pkg_installed && script=install
   $is_pkg_selected && $is_pkg_installed && script=update
@@ -39,14 +39,12 @@ for package in ${!package_script[@]}; do
   script="${package_script[$package]}"
   path="${CURDIR}/${package}/${script}.sh"
 
-  echo "${package} script ${script}"
-
-  # case $script in
-  #   install) recommend_reboot=true && execute $path ;;
-  #   update) execute $path --quiet;;
-  #   uninstall) execute $path --quiet ;;
-  #   *) ;;
-  # esac
+  case $script in
+    install) recommend_reboot=true && execute $path ;;
+    update) execute $path --quiet;;
+    uninstall) execute $path --quiet ;;
+    *) ;;
+  esac
 done
 
 if [ "$recommend_reboot" == true ]; then
