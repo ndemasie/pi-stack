@@ -8,3 +8,6 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ../homeassistant/volumes/config:/config
     network_mode: host
+
+    devices: # Useful for ZHA integration access to zigbee coordinator
+      - /dev/ttyACM0:/dev/ttyACM0 # should work if CC2531 connected
