@@ -10,9 +10,12 @@ function ensure_path() {
   fi
 }
 
-function has_command() {
-  local cmd=${1}
-  command -v "$cmd" >/dev/null 2>&1
+function has_package() {
+  local pkg=${1}
+  if $(command -v "$pkg" >/dev/null 2>&1) || $(apt list --installed 2>&1 | grep $pkg >/dev/null)
+    then true
+    else false
+  fi
 }
 
 function execute() {
@@ -33,6 +36,6 @@ function execute() {
     return 1
   fi
 
-  # [ -x $path ] || sudo chmod +x $path
-  # bash $path
+  [ -x $path ] || sudo chmod +x $path
+  bash $path
 }

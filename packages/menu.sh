@@ -8,7 +8,7 @@ readarray -t package_list < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -prin
 
 ## Present menu
 for package in "${package_list[@]}"; do
-  (has_command $package) && status=("ON") || status=("OFF")
+  status=$(has_package $package && echo "ON" || echo "OFF")
   menu_options+=("$package" "$package" "$status")
 done
 
@@ -23,9 +23,13 @@ selections=$(whiptail --title "Install Packages" --notags --separate-output --ch
 declare -A package_script
 for package in "${package_list[@]}"; do
   script=''
-  [[ "${selections[@]}" =~ "${package}" ]] && ! (has_command $package) && script='install'
-  [[ "${selections[@]}" =~ "${package}" ]] && (has_command $package) && script='update'
-  [[ ! "${selections[@]}" =~ "${package}" ]] && (has_command $package) && script='uninstall'
+  is_pkg_selected=$([[ "${selections[@]}" =~ "${package}" ]] && echo true || echo false)
+  is_pkg_installed=$(has_package $package &&  echo true || echo false)
+
+  $is_pkg_selected && ! $is_pkg_installed && script=install
+  $is_pkg_selected && $is_pkg_installed && script=update
+  ! $is_pkg_selected && $is_pkg_installed && script=uninstall
+
   package_script[$package]=$script
 done
 
@@ -36,9 +40,9 @@ for package in ${!package_script[@]}; do
   path="${CURDIR}/${package}/${script}.sh"
 
   case $script in
-    "install") recommend_reboot=true && execute $path ;;
-    "update") execute $path --quiet;;
-    "uninstall") execute $path --quiet ;;
+    install) recommend_reboot=true && execute $path ;;
+    update) execute $path --quiet;;
+    uninstall) execute $path --quiet ;;
     *) ;;
   esac
 done

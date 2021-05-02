@@ -7,4 +7,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ../homeassistant/volumes/config:/config
-    network_mode: host
+    # network_mode: host # See comments https://github.com/SensorsIot/IOTstack/commit/0831cc7925e5829bc760f7c3c76887270545d60b#diff-4beb2bf857956f6938836f128d969e2d6ea631ac3f6441df0f3f273f1f2df270
+
+    devices: # For ZHA integration access to zigbee CC2531 coordinator
+      - /dev/ttyACM0:/dev/ttyACM0
