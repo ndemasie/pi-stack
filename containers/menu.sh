@@ -11,9 +11,8 @@ readarray -t container_list < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*
 
 ## Present menu
 for container in "${container_list[@]}"; do
-  name=$(grep -oP "name=\K.*" "${CURDIR}/${container}/.conf")
-  [ -z "$name" ] && name=$container
-  [[ " ${state_selections[@]} " =~ " ${container} " ]] && status="ON" || status="OFF"
+  name=$(grep -oP "name=\K.*" "${CURDIR}/${container}/.conf" || echo $container)
+  status=$([[ "${state_selections[@]}" =~ "${container}" ]] && echo "ON" || echo "OFF")
   menu_options+=("$container" "$name" "$status")
 done
 

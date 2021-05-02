@@ -2,7 +2,7 @@
 # Download base image
 FROM koenkk/zigbee2mqtt
 
-# change default configuration.yaml to be IOTstack-friendly
+# change default configuration.yaml
 # 1. expect the MQTT service to be in the Mosquitto container
 # 2. enable the web front end on port 8080
 RUN sed -i.bak \
