@@ -46,11 +46,19 @@ function generate_package_table() {
   echo $pkg_table
 }
 
-container_table=$(echo -e generate_container_table)
-packages_table=$(echo -e generate_package_table)
+container_table=$(generate_container_table)
+packages_table=$(generate_package_table)
 
-sed \
-  # --in-place \
-  --expression="s/\$generate_container_table/test/" \
-  # --expression="s/\$package\_table/$packages_table/" \
-  ".github/workflows/readme_template.md" > "README.md"
+echo -e ${container_table}
+
+# table="| Image | Name | Description | Notes |\n"
+# table+="| --- | --- | --- | --- |\n"
+# table+="| $img1 | $name1 | $desc1 | $notes1 |\n"
+# table+="| $img2 | $name2 | $desc2 | $notes2 |\n"
+# table+="| $img3 | $name3 | $desc3 | $notes3 |\n"
+
+# cat <(head -n 9 readme_template.md) $(echo -e ${container_table}) <(tail -n +10 readme_template.md)
+
+# sed -i \
+#   --expression="{r $container_table}" \
+#   "./readme_template.md" > "README.md"

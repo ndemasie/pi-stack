@@ -10,8 +10,9 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v2
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "💡 Generating the `README.md`."
       - run: |
-          source .github/workflows/generate_readme.sh
-          README.md <<< $(cat .github/workflows/readme_template.md)
+          echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+          echo "💡 Generating `README.md`."
+          bash scripts/generate_readme.sh
+          echo "💡 Publishing `README.md`."
+
