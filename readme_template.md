@@ -6,10 +6,10 @@ Many thanks to the [gcgarner/IOTstack](https://github.com/gcgarner/IOTstack) and
 
 ## Containers
 
-<!-- insert-table-here -->
+<!-- insert-container-table -->
 
 <sub>More container ideas available from [IOTstack](https://github.com/SensorsIot/IOTstack/tree/master/.templates)</sub>
 
 ## Packages
 
-$generate_package_table
+<!-- insert-package-table -->
