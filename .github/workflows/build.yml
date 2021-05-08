@@ -1,8 +1,8 @@
 name: CI
 on:
-  push:
-    branches: ["!master"]
-    paths: ["containers/**", "packages/**"]
+  pull_request:
+    branches: [master]
+    paths: [containers/**, packages/**]
   workflow_dispatch:
 
 jobs:
