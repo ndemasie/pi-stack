@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function generate_container_table_row() {
   local container="$1"
   local conf_file_path="./containers/${container}/.conf"
