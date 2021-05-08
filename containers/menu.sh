@@ -7,7 +7,7 @@ STATE_SELECTIONS_PATH="${CURDIR}/.state.selections"
 readarray -t state_selections < $STATE_SELECTIONS_PATH
 
 # Read all non-dot container directories into an array
-readarray -t container_list < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*' -type d -printf '%P\n')
+readarray -t container_list < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*' -type d -printf '%P\n' | sort)
 
 ## Present menu
 for container in "${container_list[@]}"; do
