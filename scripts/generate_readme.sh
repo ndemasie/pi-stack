@@ -18,7 +18,6 @@ function generate_container_table() {
   for container in "${container_list[@]}"; do
     container_table+=$(generate_container_table_row $container)
   done
-
   echo $container_table
 }
 
@@ -42,21 +41,14 @@ function generate_package_table() {
   for package in "${package_list[@]}"; do
     pkg_table+=$(generate_package_table_row $package)
   done
-
-  echo $pkg_table
+  echo ${pkg_table}
 }
 
-container_table=$(generate_container_table)
-packages_table=$(generate_package_table)
-
-
-
-echo -e ${container_table} |
-  sed \
-    --expression='/<!-- insert-container-table -->/{r /dev/stdin' -e 'd}' \
-    readme_template.md > README.md
-
-# echo -e ${container_table} |
-#   sed \
-#   --expression='/<!-- insert-container-table -->/{r /dev/stdin' -e 'd}' \
-#   readme_template.md > README.md
+awk \
+  -v ct="$(generate_container_table)" \
+  -v pt="$(generate_package_table)" \
+  '{
+    gsub(/<!-- insert-container-table -->/,ct)
+    gsub(/<!-- insert-package-table -->/,pt)
+  }1' \
+  readme_template.md > README.md
