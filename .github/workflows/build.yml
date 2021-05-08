@@ -19,11 +19,10 @@ jobs:
           echo "💡 Publishing `README.md`."
       - name: Commit changes
         run: |
-          git config --global user.name 'Nathan DeMasie'
+          git config --global user.name '${{ github.actor }}'
           git config --global user.email 'ndemasie@users.noreply.github.com'
           git add README.md
           git commit -m "Update README.md"
-          git push
       - name: Push changes # push the output folder to your repo
         uses: ad-m/github-push-action@master
         with:
