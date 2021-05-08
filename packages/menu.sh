@@ -4,7 +4,7 @@ source $(dirname "$CURDIR")/helpers/variables.sh
 source $(dirname "$CURDIR")/helpers/functions.sh
 
 # Read all "./" directory names into an array
-readarray -t package_list < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n')
+readarray -t package_list < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n' | sort)
 
 ## Present menu
 for package in "${package_list[@]}"; do

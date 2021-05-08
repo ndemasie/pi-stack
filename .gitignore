@@ -1,7 +1,8 @@
 # Dot Dirs/Files
 .*
-!.env
 !.conf
+!.env
+!.github/
 
 # Container volumns
 containers/*/volumes/**/*
