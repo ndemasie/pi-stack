@@ -1,5 +1,4 @@
 services:
-  # https://documentation.portainer.io/
   portainer-ce:
     container_name: portainer-ce
     image: portainer/portainer-ce
