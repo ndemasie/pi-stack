@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal token
-          fetch-depth: 0 # otherwise, you will failed to push refs to dest repo
+          fetch-depth: 0 # otherwise, you will fail to push refs to dest repo
       - name: Run script
         run: |
           echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
@@ -22,12 +22,11 @@ jobs:
           echo "💡 Publishing `README.md`."
       - name: Commit changes
         run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --local user.name "${{ github.actor }}"
+          git config --local user.email "${{ github.actor }}@users.noreply.github.com"
           git add README.md
           git commit -m "Update README.md"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
+          
+          git push \
+            "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository	 }}.git" \
+            HEAD:${{ github.head_ref }}
