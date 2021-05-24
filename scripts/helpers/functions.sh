@@ -31,7 +31,7 @@ function execute() {
 
   if [ ! -e $path ]; then
     [ "$quiet" == false ] && printf "%s\n" "${RED}ERROR${RESET} $path not found"
-    return false
+    return 1
   fi
 
   [ -x $path ] || sudo chmod +x $path
