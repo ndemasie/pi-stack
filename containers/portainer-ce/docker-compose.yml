@@ -1,6 +1,6 @@
 services:
   portainer-ce:
-    container_name: portainer-ce
+    container_name: portainer
     image: portainer/portainer-ce
     restart: unless-stopped
     ports:
