@@ -1,9 +1,7 @@
 #!/bin/bash
-source $(dirname -- "$(readlink -f -- "$BASH_SOURCE")")/variables.sh
-
 function ensure_path() {
   local filepath=${1}
-  local dirpath=${file%/*}
+  local dirpath=${filepath%/*}
   if [ ! -f $filepath ]; then
     mkdir -p $dirpath
     touch -a $filepath

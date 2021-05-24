@@ -13,11 +13,11 @@ function generate_container_table_row() {
 }
 
 function generate_container_table() {
-  readarray -t container_list < <(find containers -maxdepth 1 -path 'containers/[^\.]*' -type d -printf '%P\n' | sort)
+  readarray -t containers < <(find containers -maxdepth 1 -path 'containers/[^\.]*' -type d -printf '%P\n' | sort)
 
   container_table="| Image | Name | Description | Notes |\n"
   container_table+="| --- | --- | --- | --- |\n"
-  for container in "${container_list[@]}"; do
+  for container in "${containers[@]}"; do
     container_table+=$(generate_container_table_row $container)
   done
   echo $container_table
@@ -36,11 +36,11 @@ function generate_package_table_row() {
 }
 
 function generate_package_table() {
-  readarray -t package_list < <(find packages -mindepth 1 -maxdepth 1 -type d -printf '%P\n' | sort)
+  readarray -t packages < <(find packages -mindepth 1 -maxdepth 1 -type d -printf '%P\n' | sort)
 
   pkg_table="| Command | Name | Description |\n"
   pkg_table+="| --- | --- | --- |\n"
-  for package in "${package_list[@]}"; do
+  for package in "${packages[@]}"; do
     pkg_table+=$(generate_package_table_row $package)
   done
   echo ${pkg_table}

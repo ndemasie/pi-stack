@@ -4,8 +4,8 @@ on:
     branches:
       - master
     paths:
-      - 'containers/**/*'
-      - 'packages/**/*'
+      - "containers/**/*"
+      - "packages/**/*"
   workflow_dispatch:
 
 jobs:
@@ -22,9 +22,9 @@ jobs:
           echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
           echo "💡 Generating README.md."
           bash scripts/generate_readme.sh
-          echo "💡 Publishing README.md."
       - name: Commit changes
         run: |
+          echo "💡 Publishing README.md."
           git config --local user.name "${{ github.actor }}"
           git config --local user.email "${{ github.actor }}@users.noreply.github.com"
           git add README.md

@@ -1,13 +1,12 @@
 services:
-  # https://www.home-assistant.io/docs/installation/docker
   homeassistant:
     container_name: homeassistant
     image: homeassistant/raspberrypi4-homeassistant:stable
     restart: unless-stopped
+    ports:
+      - "8123:8123"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ../homeassistant/volumes/config:/config
-    # network_mode: host # See comments https://github.com/SensorsIot/IOTstack/commit/0831cc7925e5829bc760f7c3c76887270545d60b#diff-4beb2bf857956f6938836f128d969e2d6ea631ac3f6441df0f3f273f1f2df270
-
-    devices: # For ZHA integration access to zigbee CC2531 coordinator
-      - /dev/ttyACM0:/dev/ttyACM0
+      - ../../data/homeassistant/volumes/config:/config
+    devices:
+      - /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0018E33122-if00:/dev/ttyACM0 # ZHA Controller
