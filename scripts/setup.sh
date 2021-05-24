@@ -14,9 +14,9 @@
 #
 # ----------------------------------------------------------------------------------------
 
-CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source ${CURDIR}/helpers/variables.sh
-source ${CURDIR}/helpers/functions.sh
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+PROJECT_DIR=${SCRIPT_PATH/pi-stack*/pi-stack}
+source ${PROJECT_DIR}/scripts/helpers/index.sh
 
 # Setup steps in order of execution
 RUN_STEPS=(
@@ -46,11 +46,11 @@ function do_confirm_tz() {
 }
 
 function do_packages_menu() {
-  execute "${CURDIR}/packages/menu.sh"
+  execute "${PROJECT_DIR}/scripts/packages_menu.sh"
 }
 
 function do_containers_menu() {
-  execute "${CURDIR}/containers/menu.sh"
+  execute "${PROJECT_DIR}/scripts/containers_menu.sh"
 }
 
 ## RUN

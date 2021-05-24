@@ -1,6 +1,9 @@
 #!/bin/bash
-CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source ${CURDIR}/helpers/variables.sh
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+PROJECT_DIR=${SCRIPT_PATH/pi-stack*/pi-stack}
+source ${PROJECT_DIR}/scripts/helpers/index.sh
+
+cd ${PROJECT_DIR}
 
 echo "Checking if branch is up to date"
 git fetch origin master

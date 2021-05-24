@@ -1,6 +1,4 @@
 #!/bin/bash
-source $(dirname -- "$(readlink -f -- "$BASH_SOURCE")")/variables.sh
-
 function ensure_path() {
   local filepath=${1}
   local dirpath=${file%/*}

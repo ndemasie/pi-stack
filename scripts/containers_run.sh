@@ -1,14 +1,15 @@
 #!/bin/bash
-CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source $(dirname "$CURDIR")/helpers/variables.sh
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+PROJECT_DIR=${SCRIPT_PATH/pi-stack*/pi-stack}
+source ${PROJECT_DIR}/scripts/helpers/index.sh
+
 
 SCRIPT_RUN_CMD=${1,,}
 
-STATE_SELECTIONS_PATH="${CURDIR}/.state.selections"
-readarray -t state_selections < $STATE_SELECTIONS_PATH
+readarray -t state_selections < "${PROJECT_DIR}/.containers.selections"
 
 for container in ${state_selections[@]}; do
-  compose_files+=" --file ${CURDIR}/${container}/docker-compose.yml"
+  compose_files+=" --file ${PROJECT_DIR}/containers/${container}/docker-compose.yml"
 done
 
 case $SCRIPT_RUN_CMD in

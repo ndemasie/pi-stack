@@ -1,10 +1,11 @@
 #!/bin/bash
-CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source $(dirname "$CURDIR")/helpers/variables.sh
-source $(dirname "$CURDIR")/helpers/functions.sh
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+PROJECT_DIR=${SCRIPT_PATH/pi-stack*/pi-stack}
+source ${PROJECT_DIR}/scripts/helpers/index.sh
+
 
 # Read all "./" directory names into an array
-readarray -t package_list < <(find $CURDIR -mindepth 1 -maxdepth 1 -type d -printf '%P\n' | sort)
+readarray -t package_list < <(find $PROJECT_DIR/packages -mindepth 1 -maxdepth 1 -type d -printf '%P\n' | sort)
 
 ## Present menu
 for package in "${package_list[@]}"; do
@@ -37,7 +38,7 @@ done
 recommend_reboot=false
 for package in ${!package_script[@]}; do
   script="${package_script[$package]}"
-  path="${CURDIR}/${package}/${script}.sh"
+  path="${PROJECT_DIR}/packages/${package}/${script}.sh"
 
   case $script in
     install) recommend_reboot=true && execute $path ;;

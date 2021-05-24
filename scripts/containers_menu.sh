@@ -1,17 +1,18 @@
 #!/bin/bash
-CURDIR=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")") # Sets current directory agnostic of run location
-source $(dirname "$CURDIR")/helpers/variables.sh
-source $(dirname "$CURDIR")/helpers/functions.sh
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+PROJECT_DIR=${SCRIPT_PATH/pi-stack*/pi-stack}
+source ${PROJECT_DIR}/scripts/helpers/index.sh
 
-STATE_SELECTIONS_PATH="${CURDIR}/.state.selections"
+
+STATE_SELECTIONS_PATH="${PROJECT_DIR}/.containers.selections"
 readarray -t state_selections < $STATE_SELECTIONS_PATH
 
 # Read all non-dot container directories into an array
-readarray -t container_list < <(find $CURDIR -maxdepth 1 -path ''$CURDIR'/[^\.]*' -type d -printf '%P\n' | sort)
+readarray -t container_list < <(find $PROJECT_DIR/containers -maxdepth 1 -path ''$PROJECT_DIR/containers'/[^\.]*' -type d -printf '%P\n' | sort)
 
 ## Present menu
 for container in "${container_list[@]}"; do
-  name=$(grep -oP "name=\K.*" "${CURDIR}/${container}/.conf" || echo $container)
+  name=$(grep -oP "name=\K.*" "${PROJECT_DIR}/containers/${container}/.conf" || echo $container)
   status=$([[ "${state_selections[@]}" =~ "${container}" ]] && echo "ON" || echo "OFF")
   menu_options+=("$container" "$name" "$status")
 done
@@ -25,7 +26,7 @@ selections=$(whiptail --title "Container Selection" --notags --separate-output -
 
 ## Validate selections
 for container in ${selections[@]}; do
-  docker_compose_path="${CURDIR}/${container}/docker-compose.yml"
+  docker_compose_path="${PROJECT_DIR}/containers/${container}/docker-compose.yml"
 
   if [ ! -f $docker_compose_path ]; then
     echo "${RED}ERROR${RESET} Unable to locate ${container}/docker-compose.yml - Skipped"
