@@ -5,10 +5,10 @@ source ${PROJECT_DIR}/scripts/helpers/index.sh
 
 
 # Read all "./" directory names into an array
-readarray -t package_list < <(find $PROJECT_DIR/packages -mindepth 1 -maxdepth 1 -type d -printf '%P\n' | sort)
+readarray -t packages < <(find $PROJECT_DIR/packages -mindepth 1 -maxdepth 1 -type d -printf '%P\n' | sort)
 
 ## Present menu
-for package in "${package_list[@]}"; do
+for package in "${packages[@]}"; do
   status=$(has_package $package && echo "ON" || echo "OFF")
   menu_options+=("$package" "$package" "$status")
 done
@@ -22,7 +22,7 @@ selections=$(whiptail --title "Install Packages" --notags --separate-output --ch
 
 ## Apply menu selection logic
 declare -A package_script
-for package in "${package_list[@]}"; do
+for package in "${packages[@]}"; do
   script=''
   is_pkg_selected=$([[ "${selections[@]}" =~ "${package}" ]] && echo true || echo false)
   is_pkg_installed=$(has_package $package &&  echo true || echo false)

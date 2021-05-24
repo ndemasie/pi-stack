@@ -1,7 +1,7 @@
 #!/bin/bash
 function ensure_path() {
   local filepath=${1}
-  local dirpath=${file%/*}
+  local dirpath=${filepath%/*}
   if [ ! -f $filepath ]; then
     mkdir -p $dirpath
     touch -a $filepath
@@ -31,7 +31,7 @@ function execute() {
 
   if [ ! -e $path ]; then
     [ "$quiet" == false ] && printf "%s\n" "${RED}ERROR${RESET} $path not found"
-    return 1
+    return false
   fi
 
   [ -x $path ] || sudo chmod +x $path

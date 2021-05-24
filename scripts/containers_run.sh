@@ -6,9 +6,10 @@ source ${PROJECT_DIR}/scripts/helpers/index.sh
 
 SCRIPT_RUN_CMD=${1,,}
 
-readarray -t state_selections < "${PROJECT_DIR}/.containers.selections"
+SELECTIONS_PATH="${PROJECT_DIR}/.containers.selections"
+readarray -t containers < "${SELECTIONS_PATH}"
 
-for container in ${state_selections[@]}; do
+for container in ${containers[@]}; do
   compose_files+=" --file ${PROJECT_DIR}/containers/${container}/docker-compose.yml"
 done
 
