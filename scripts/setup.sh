@@ -19,7 +19,7 @@ PROJECT_DIR=${SCRIPT_PATH/pi-stack*/pi-stack}
 source ${PROJECT_DIR}/scripts/helpers/index.sh
 
 # Setup steps in order of execution
-RUN_STEPS=(
+steps=(
   do_update_pi
   do_confirm_tz
   do_packages_menu
@@ -56,7 +56,5 @@ function do_containers_menu() {
 ## RUN
 do_validate_arm_sys_arch
 echo "${YELLOW}INFO${RESET} Setting up your pi-stack"
-for step in ${RUN_STEPS[@]}; do
-  $step
-done
+for step in ${steps[@]}; do $step; done
 echo "Setup completed!"
