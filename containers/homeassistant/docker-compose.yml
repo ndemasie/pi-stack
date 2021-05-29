@@ -7,6 +7,6 @@ services:
       - "8123:8123"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ../../data/homeassistant/volumes/config:/config
+      - ../homeassistant/volumes/config:/config
     devices:
       - /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0018E33122-if00:/dev/ttyACM0 # ZHA Controller
