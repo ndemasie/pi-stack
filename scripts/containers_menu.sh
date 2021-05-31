@@ -8,12 +8,12 @@ STATE_SELECTIONS_PATH="${PROJECT_DIR}/.containers.selections"
 readarray -t state_selections < $STATE_SELECTIONS_PATH
 
 # Read all non-dot container directories into an array
-readarray -t container_list < <(find $PROJECT_DIR/containers -maxdepth 1 -path ''$PROJECT_DIR/containers'/[^\.]*' -type d -printf '%P\n' | sort)
+readarray -t container_list < <( find $PROJECT_DIR/containers -maxdepth 1 -path ''$PROJECT_DIR'/containers/*' -type d -printf '%P\n'| sort )
 
 ## Present menu
 for container in "${container_list[@]}"; do
-  name=$(grep -oP "name=\K.*" "${PROJECT_DIR}/containers/${container}/.conf" || echo $container)
-  status=$([[ "${state_selections[@]}" =~ "${container}" ]] && echo "ON" || echo "OFF")
+  name=$( grep -oP 'name="\K.*(?=")' "${PROJECT_DIR}/containers/${container}/.conf" || echo $container )
+  status=$( [[ "${state_selections[@]}" =~ "${container}" ]] && echo "ON" || echo "OFF" )
   menu_options+=("$container" "$name" "$status")
 done
 
