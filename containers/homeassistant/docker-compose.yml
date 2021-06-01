@@ -1,7 +1,11 @@
 services:
   homeassistant:
     container_name: homeassistant
-    image: homeassistant/raspberrypi4-homeassistant:stable
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        - hacs="true"
     restart: unless-stopped
     ports:
       - "8123:8123"
