@@ -5,4 +5,4 @@
 !.github/
 
 # Container volumns
-containers/*/volumes/**/*
+data/
