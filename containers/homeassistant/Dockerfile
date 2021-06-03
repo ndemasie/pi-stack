@@ -6,6 +6,6 @@ FROM homeassistant/raspberrypi4-homeassistant:stable
 RUN cd /config
 RUN \
 if [[ "$hacs" == true ]] && [[ ! -d /config/custom_components ]]; then \
-  echo "INFO: Installing HACS..." \
-  wget -q -O - https://install.hacs.xyz | bash - \
+  echo "INFO: Installing HACS..."; \
+  wget -q -O - https://install.hacs.xyz | bash -; \
 fi

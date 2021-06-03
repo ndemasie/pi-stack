@@ -15,7 +15,7 @@ done
 
 case $SCRIPT_RUN_CMD in
   c|config) compose_cmd="config";;
-  d|down) compose_cmd="down";;
+  d|down) compose_cmd="down --remove-orphans";;
   u|up) compose_cmd="up --detach";;
   *) echo "${RED}ERROR${RESET}: Script docker-compose command '$SCRIPT_RUN_CMD' not recognized" && exit 1;;
 esac
