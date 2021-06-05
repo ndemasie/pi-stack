@@ -50,11 +50,11 @@ function do_packages_menu() {
 }
 
 function do_containers_menu() {
-  execute "${PROJECT_DIR}/scripts/containers_menu.sh"
+  execute "${PROJECT_DIR}/scripts/containers.sh menu"
 }
 
 ## RUN
 do_validate_arm_sys_arch
-echo "${YELLOW}INFO${RESET} Setting up your pi-stack"
+echo "${YELLOW}INFO:${RESET} Setting up your pi-stack"
 for step in ${steps[@]}; do $step; done
 echo "Setup completed!"

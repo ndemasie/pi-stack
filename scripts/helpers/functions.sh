@@ -17,7 +17,9 @@ function has_package() {
 }
 
 function execute() {
-  local path
+  local path="${1}"
+  shift
+  local params
   local quiet=false
 
   # https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
@@ -25,19 +27,19 @@ function execute() {
     case "$1" in
       -q|--quiet) quiet=true
         ;;
-      -*|--*=) echo "${RED}ERROR${RESET} Unsupported flag $1" >&2
+      -*|--*=) echo "${RED}ERROR:${RESET} Unsupported flag ${1}" >&2
         ;;
-      *) path=$1
+      *) params+="${1}"
         ;;
     esac
     shift
   done
 
   if [ ! -e $path ]; then
-    [ "$quiet" == false ] && printf "%s\n" "${RED}ERROR${RESET} $path not found"
+    [ "$quiet" == false ] && printf "%s\n" "${RED}ERROR:${RESET} ${path} not found"
     return 1
   fi
 
   [ -x $path ] || sudo chmod +x $path
-  bash $path
+  bash $path $params
 }

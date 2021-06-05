@@ -34,7 +34,7 @@ while (( "$#" )); do
       printHelp
       ;;
     *|-*|--*)
-      echo "${RED}ERROR${RESET} Bad option '$1'" >&2
+      echo "${RED}ERROR:${RESET} Bad option '$1'" >&2
       printHelp
       exit 1
       ;;
