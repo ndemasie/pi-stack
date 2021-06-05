@@ -50,7 +50,7 @@ function do_packages_menu() {
 }
 
 function do_containers_menu() {
-  execute "${PROJECT_DIR}/scripts/containers.sh menu"
+  execute "${PROJECT_DIR}/scripts/containers.sh" menu
 }
 
 ## RUN
