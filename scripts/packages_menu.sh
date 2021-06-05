@@ -9,8 +9,9 @@ readarray -t packages < <(find $PROJECT_DIR/packages -mindepth 1 -maxdepth 1 -ty
 
 ## Present menu
 for package in "${packages[@]}"; do
+  name=$( grep -oP 'name="\K.*(?=")' "${PROJECT_DIR}/packages/${package}/.conf" || echo $package )
   status=$(has_package $package && echo "ON" || echo "OFF")
-  menu_options+=("$package" "$package" "$status")
+  menu_options+=("$package" "$name" "$status")
 done
 
 selections=$(whiptail --title "Install Packages" --notags --separate-output --checklist \
@@ -23,32 +24,32 @@ selections=$(whiptail --title "Install Packages" --notags --separate-output --ch
 ## Apply menu selection logic
 declare -A package_script
 for package in "${packages[@]}"; do
-  script=''
   is_pkg_selected=$([[ "${selections[@]}" =~ "${package}" ]] && echo true || echo false)
   is_pkg_installed=$(has_package $package &&  echo true || echo false)
 
-  $is_pkg_selected && ! $is_pkg_installed && script=install
-  $is_pkg_selected && $is_pkg_installed && script=update
-  ! $is_pkg_selected && $is_pkg_installed && script=uninstall
-
-  package_script[$package]=$script
+  if $is_pkg_selected && ! $is_pkg_installed; then
+    package_script[$package]=install
+  elif $is_pkg_selected && $is_pkg_installed; then
+    package_script[$package]=update
+  elif ! $is_pkg_selected && $is_pkg_installed; then
+    package_script[$package]=uninstall
+  fi
 done
 
 ## Execute action
-recommend_reboot=false
 for package in ${!package_script[@]}; do
   script="${package_script[$package]}"
   path="${PROJECT_DIR}/packages/${package}/${script}.sh"
 
   case $script in
     install) recommend_reboot=true && execute $path ;;
-    update) execute $path --quiet;;
+    update) execute $path --quiet ;;
     uninstall) execute $path --quiet ;;
     *) ;;
   esac
 done
 
-if [ "$recommend_reboot" == true ]; then
+if [[ "${recommend_reboot:-false}" == true ]]; then
   if (whiptail --title "Reboot Recommended" --yesno "Would you like to reboot the device?" 20 78); then
     sudo reboot
   fi
