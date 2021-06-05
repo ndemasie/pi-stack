@@ -23,10 +23,14 @@ function execute() {
   # https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
   while (( "$#" )); do
     case "$1" in
-      -q|--quiet) quiet=true && shift ;;
-      -*|--*=) echo "${RED}ERROR${RESET} Unsupported flag $1" >&2 && shift ;;
-      *) path=$1 && shift ;;
+      -q|--quiet) quiet=true
+        ;;
+      -*|--*=) echo "${RED}ERROR${RESET} Unsupported flag $1" >&2
+        ;;
+      *) path=$1
+        ;;
     esac
+    shift
   done
 
   if [ ! -e $path ]; then
