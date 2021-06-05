@@ -35,11 +35,11 @@ function execute() {
     shift
   done
 
-  if [ ! -e $path ]; then
-    [ "$quiet" == false ] && printf "%s\n" "${RED}ERROR:${RESET} ${path} not found"
+  if [[ ! -e $path ]]; then
+    [[ "$quiet" == false ]] && printf "%s\n" "${RED}ERROR:${RESET} ${path} not found"
     return 1
   fi
 
-  [ -x $path ] || sudo chmod +x $path
+  [[ -x $path ]] || sudo chmod +x $path
   bash $path $params
 }
