@@ -5,12 +5,12 @@
 # by Nathan DeMasie
 # ----------------------------------------------------------------------------------------
 #
-#            _            __             __  
+#            _            __             __
 #     ____  (_)     _____/ /_____ ______/ /__
 #    / __ \/ /_____/ ___/ __/ __ `/ ___/ //_/
-#   / /_/ / /_____(__  ) /_/ /_/ / /__/ ,<   
-#  / .___/_/     /____/\__/\__,_/\___/_/|_|  
-# /_/                                        
+#   / /_/ / /_____(__  ) /_/ /_/ / /__/ ,<
+#  / .___/_/     /____/\__/\__,_/\___/_/|_|
+# /_/
 #
 # ----------------------------------------------------------------------------------------
 
@@ -22,6 +22,8 @@ source ${PROJECT_DIR}/scripts/helpers/index.sh
 steps=(
   do_update_pi
   do_confirm_tz
+  do_add_bluetooth_group_to_user
+  do_add_env_file
   do_packages_menu
   do_containers_menu
 )
@@ -45,6 +47,16 @@ function do_confirm_tz() {
   fi
 }
 
+function do_add_bluetooth_group_to_user() {
+  if id -nG "$USER" | grep -qw "bluetooth"; then
+    sudo usermod -a -G bluetooth $USER
+  fi
+}
+
+function do_add_env_file {
+  [[ ! -f .env ]] && touch .env
+}
+
 function do_packages_menu() {
   execute "${PROJECT_DIR}/scripts/packages_menu.sh"
 }
@@ -55,6 +67,6 @@ function do_containers_menu() {
 
 ## RUN
 do_validate_arm_sys_arch
-echo "${YELLOW}INFO:${RESET} Setting up your pi-stack"
+echo "${YELLOW}INFO${RESET}: Setting up your pi-stack"
 for step in ${steps[@]}; do $step; done
 echo "Setup completed!"
