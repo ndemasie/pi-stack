@@ -9,15 +9,17 @@ services:
       - "67:67/udp"
       - "80:80/tcp"
       - "443:443/tcp"
+    env_file:
+      - '../pihole/.env'
     environment:
       - TZ=Europe/Berlin
       - DNS1=1.1.1.1
       - DNS2=8.8.8.8
-      - WEBPASSWORD=secret
+      # - WEBPASSWORD=secret ## Uncomment this and replace with your own secret
       - INTERFACE=eth0
     volumes:
-      - ../pihole/volumes/dnsmasq.d:/etc/dnsmasq.d
-      - ../pihole/volumes/pihole:/etc/pihole
+      - ../../data/pihole/dnsmasq.d:/etc/dnsmasq.d
+      - ../../data/pihole/pihole:/etc/pihole
     dns:
       - 127.0.0.1
       - 1.1.1.1
