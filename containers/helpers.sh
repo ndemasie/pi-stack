@@ -2,16 +2,36 @@
 SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
 PROJECT_DIR=${SCRIPT_PATH/pi-stack*/pi-stack}
 
-SAVED_SELECTIONS_PATH="${PROJECT_DIR}/.containers.selections"
+SAVED_SELECTIONS_PATH="${PROJECT_DIR}/containers/.containers.selections"
+SAVED_DOCKER_COMPOSE_PATH="${PROJECT_DIR}/containers/docker-compose.yml"
 
 source "${PROJECT_DIR}/scripts/helpers/functions.sh"
 source "${PROJECT_DIR}/scripts/helpers/variables.sh"
 [ -z ${NO_COLOR} -o -z ${NOCOLOR} ] && source "${PROJECT_DIR}/scripts/helpers/.colors.conf"
 
-function getComposeFiles() {
-  SELECTIONS_PATH="${PROJECT_DIR}/.containers.selections"
-  readarray -t containers <"${SELECTIONS_PATH}"
+function printHelp() {
+  echo ""
+  echo "Usage:"
+  echo "  menu"
+  echo "    Open menu to select container set"
+  echo ""
+  echo "  config"
+  echo "    Check docker compose configs with selected containers"
+  echo ""
+  echo "  down"
+  echo "    Run docker compose down with selected containers"
+  echo ""
+  echo "  up"
+  echo "    Run docker compose up with selected containers"
+  echo ""
+  echo "  -h | --help"
+  echo "    Print options"
+  echo ""
+  exit 0
+}
 
+function getComposeFiles() {
+  readarray -t containers <"${SAVED_SELECTIONS_PATH}"
   for container in ${containers[@]}; do
     compose_files+=" --file ${PROJECT_DIR}/containers/${container}/docker-compose.yml"
   done
@@ -19,10 +39,11 @@ function getComposeFiles() {
 }
 
 function getContainerList() {
+  # Reads all "./" directory names into an array
   find $PROJECT_DIR/containers -maxdepth 1 -path ''$PROJECT_DIR'/containers/*' -type d -printf '%P\n' | sort
 }
 
-function runMenu() {
+function showMenu() {
   readarray -t saved_selections <$SAVED_SELECTIONS_PATH
   readarray -t container_list < <(getContainerList)
 
@@ -37,23 +58,10 @@ function runMenu() {
     -- "${menu_options[@]}" \
     3>&1 1>&2 2>&3)
 
-  [ -z "$selections" ] && echo "No containers selected" && exit 1
+  echo ${selections[@]}
+}
 
-  ## Validate selections
-  for container in ${selections[@]}; do
-    docker_compose_path="${PROJECT_DIR}/containers/${container}/docker-compose.yml"
-
-    if [ ! -f $docker_compose_path ]; then
-      echo "${RED}ERROR${RESET}: Unable to locate ${container}/docker-compose.yml - Skipped"
-      continue
-    fi
-
-    echo "Validating $container/docker-compose.yml config"
-    docker-compose --file $docker_compose_path config --quiet
-
-    valid_selections+=($container)
-  done
-
-  ensure_path $SAVED_SELECTIONS_PATH
-  printf "%s\n" "${valid_selections[@]}" >$SAVED_SELECTIONS_PATH
+function saveCompose() {
+  compose_files=$(getComposeFiles)
+  docker-compose $compose_files config >$SAVED_DOCKER_COMPOSE_PATH
 }

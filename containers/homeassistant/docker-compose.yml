@@ -2,7 +2,7 @@ services:
   homeassistant:
     container_name: homeassistant
     build:
-      context: ./
+      context: ../homeassistant/.
       dockerfile: Dockerfile
       args:
         - hacs="true"
