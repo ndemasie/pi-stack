@@ -1,14 +1,14 @@
 services:
   mosquitto:
     container_name: mosquitto
-    build:
+    build: 
       context: ../mosquitto/.
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - "1883:1883"
-    # volumes:
-    #   - ../../data/mosquitto/pwfile:/mosquitto/pwfile
-    #   - ../../data/mosquitto/config:/mosquitto/config:ro
-    #   - ../../data/mosquitto/data:/mosquitto/data
-    #   - ../../data/mosquitto/log:/mosquitto/log
+    volumes:
+      - ../../data/mosquitto/pwfile:/mosquitto/pwfile
+      - ../../data/mosquitto/config:/mosquitto/config
+      - ../../data/mosquitto/data:/mosquitto/data
+      - ../../data/mosquitto/log:/mosquitto/log

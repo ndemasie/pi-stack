@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-userId="$(id --user)"
+userId="$(id -u)"
 
 if [[ "$userId" == '0' ]] && [[ -d "/mosquitto" ]]; then
    rsync -arp --ignore-existing /volumes/ "/mosquitto"
