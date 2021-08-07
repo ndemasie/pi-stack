@@ -58,11 +58,11 @@ function do_add_env_file {
 }
 
 function do_packages_menu() {
-  execute "${PROJECT_DIR}/packages/index.sh"
+  execute "${PROJECT_DIR}/packages/main.sh"
 }
 
 function do_containers_menu() {
-  execute "${PROJECT_DIR}/containers/index.sh"
+  execute "${PROJECT_DIR}/containers/main.sh"
 }
 
 ## RUN
