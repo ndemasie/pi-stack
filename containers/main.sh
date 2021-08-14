@@ -76,6 +76,9 @@ while (("$#")); do
     [ -z "$selections" ] && echo "No containers selected" && exit 1
     saveCompose
     ;;
+  save)
+    saveCompose
+    ;;
   config)
     sudo docker-compose \
       --file $SAVED_DOCKER_COMPOSE_PATH \
