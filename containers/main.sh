@@ -9,7 +9,7 @@ source "${PROJECT_DIR}/scripts/helpers/functions.sh"
 source "${PROJECT_DIR}/scripts/helpers/variables.sh"
 [ -z ${NO_COLOR} -o -z ${NOCOLOR} ] && source "${PROJECT_DIR}/scripts/helpers/.colors.conf"
 
-function printHelp() {
+function print_help() {
   echo ""
   echo "Usage:"
   echo "  menu"
@@ -30,7 +30,7 @@ function printHelp() {
   exit 0
 }
 
-function getComposeFiles() {
+function get_compose_files() {
   readarray -t containers <"${SAVED_SELECTIONS_PATH}"
   for container in ${containers[@]}; do
     compose_files+=" --file ${PROJECT_DIR}/containers/${container}/docker-compose.yml"
@@ -38,14 +38,14 @@ function getComposeFiles() {
   echo "$compose_files"
 }
 
-function getContainerList() {
+function get_container_list() {
   # Reads all "./" directory names into an array
   find $PROJECT_DIR/containers -maxdepth 1 -path ''$PROJECT_DIR'/containers/*' -type d -printf '%P\n' | sort
 }
 
-function showMenu() {
+function get_selections() {
   readarray -t saved_selections <$SAVED_SELECTIONS_PATH
-  readarray -t container_list < <(getContainerList)
+  readarray -t container_list < <(get_container_list)
 
   for container in "${container_list[@]}"; do
     name=$(grep -oP 'name="\K.*(?=")' "${PROJECT_DIR}/containers/${container}/.conf" || echo $container)
@@ -61,23 +61,23 @@ function showMenu() {
   echo ${selections[@]}
 }
 
-function saveCompose() {
-  compose_files=$(getComposeFiles)
+function save_compose() {
+  compose_files=$(get_compose_files)
   docker-compose $compose_files config >$SAVED_DOCKER_COMPOSE_PATH
 }
 
 # MAIN
-[[ $# -eq 0 ]] && showMenu
+[[ $# -eq 0 ]] && print_help
 
 while (("$#")); do
   case "${1,,}" in
   menu)
-    selections=$(showMenu)
+    selections=$(get_selections)
     [ -z "$selections" ] && echo "No containers selected" && exit 1
-    saveCompose
+    save_compose
     ;;
   save)
-    saveCompose
+    save_compose
     ;;
   config)
     sudo docker-compose \
@@ -97,7 +97,7 @@ while (("$#")); do
       --detach
     ;;
   * | -* | --* | -h | --help)
-    printHelp
+    print_help
     exit 1
     ;;
   esac

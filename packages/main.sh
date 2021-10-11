@@ -6,22 +6,13 @@ source "${PROJECT_DIR}/scripts/helpers/functions.sh"
 source "${PROJECT_DIR}/scripts/helpers/variables.sh"
 [ -z ${NO_COLOR} -o -z ${NOCOLOR} ] && source "${PROJECT_DIR}/scripts/helpers/.colors.conf"
 
-function getPackageList() {
+function get_package_list() {
   # Read all "./" directory names into an array
   find $PROJECT_DIR/packages -mindepth 1 -maxdepth 1 -type d -printf '%P\n' | sort
 }
 
-function has_package() {
-  local pkg=${1}
-  if $(command -v "$pkg" >/dev/null 2>&1) || $(apt list --installed 2>&1 | grep $pkg >/dev/null); then
-    true
-  else
-    false
-  fi
-}
-
-function showMenu() {
-  readarray -t packages < <(getPackageList)
+function get_selections() {
+  readarray -t packages < <(get_package_list)
   ## Present menu
   for package in "${packages[@]}"; do
     name=$(grep -oP 'name="\K.*(?=")' "${PROJECT_DIR}/packages/${package}/.conf" || echo $package)
@@ -38,7 +29,7 @@ function showMenu() {
 }
 
 # MAIN
-selections=$(showMenu)
+selections=$(get_selections)
 
 [ -z "$selections" ] && echo "No packages selected" && exit 1
 
