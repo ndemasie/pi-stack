@@ -31,7 +31,7 @@ function print_help() {
 }
 
 function get_compose_files() {
-  readarray -t containers <"${SAVED_SELECTIONS_PATH}"
+  readarray -t containers < "${SAVED_SELECTIONS_PATH}"
   for container in ${containers[@]}; do
     compose_files+=" --file ${PROJECT_DIR}/containers/${container}/docker-compose.yml"
   done
@@ -44,7 +44,7 @@ function get_container_list() {
 }
 
 function get_selections() {
-  readarray -t saved_selections <$SAVED_SELECTIONS_PATH
+  readarray -t saved_selections < "${SAVED_SELECTIONS_PATH}"
   readarray -t container_list < <(get_container_list)
 
   for container in "${container_list[@]}"; do
@@ -63,7 +63,7 @@ function get_selections() {
 
 function save_compose() {
   compose_files=$(get_compose_files)
-  docker-compose $compose_files config >$SAVED_DOCKER_COMPOSE_PATH
+  docker-compose $compose_files config > $SAVED_DOCKER_COMPOSE_PATH
 }
 
 # MAIN
@@ -74,6 +74,8 @@ while (("$#")); do
   menu)
     selections=$(get_selections)
     [ -z "$selections" ] && echo "No containers selected" && exit 1
+    printf "%s\n" ${selections[@]} > "${SAVED_SELECTIONS_PATH}"
+
     save_compose
     ;;
   save)
