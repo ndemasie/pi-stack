@@ -1,6 +1,6 @@
 ARG hacs
 
-FROM homeassistant/raspberrypi4-homeassistant:stable
+FROM ghcr.io/home-assistant/home-assistant:stable
 
 # Install HACS: https://hacs.xyz/docs/installation/installation/
 RUN cd /config
