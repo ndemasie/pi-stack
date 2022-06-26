@@ -1,0 +1,26 @@
+services:
+  monitor:
+    container_name: monitor
+    image: mashupmill/presence-monitor:latest
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+    command: ['-b']
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+        - mosquitto
+    environment:
+      MQTT_ADDRESS: 192.168.2.120
+      MQTT_PORT: 1883
+      MQTT_USER: 
+      MQTT_PASSWORD:
+      # KNOWN_BEACON_ADDRESSES: |
+      #   FF:FF:FF:FF:FF:FF Red Tag
+      #   FF:FF:FF:FF:FF:FF Green Tag
+      #   FF:FF:FF:FF:FF:FF White Tag
+      #   FF:FF:FF:FF:FF:FF Black Tag
+      KNOWN_STATIC_ADDRESSES: |
+        80:0C:67:4F:BD:86 Das iPhone
+        FF:FF:FF:FF:FF:FF Alpha Phone BT
+        FF:FF:FF:FF:FF:FF Beta Phone BT

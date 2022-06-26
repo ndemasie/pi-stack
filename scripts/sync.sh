@@ -14,11 +14,10 @@ if [ $(git checkout ${branch} | grep --count "Your branch is up to date") -eq 1 
 	echo "Your branch is up to date"
 else
 	while true; do
-		read -p "${YELLOW}New version available. Would you like to sync to the latest commit on ${branch}? (y/n)${RESET} " REPLY
+		read -p "${YELLOW}New version available. Would you like to sync to the latest commit on ${branch}? (y/N)${RESET} " REPLY
 		case "${REPLY,,}" in
 		y | yes) git pull origin master && break ;;
-		n | no) break ;;
-		*) echo "${YELLOW}WARN${RESET} Invalid input: '${REPLY}'" ;;
+		*) break ;;
 		esac
 	done
 fi

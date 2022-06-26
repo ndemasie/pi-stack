@@ -1,3 +1,3 @@
 #!/bin/bash
 
-apt remove log2ram --purge
+sudo apt purge -y log2ram

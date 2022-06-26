@@ -1,12 +1,14 @@
 services:
   mosquitto:
     container_name: mosquitto
-    image: eclipse-mosquitto:latest
+    build: 
+      context: ../mosquitto/.
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - "1883:1883"
     volumes:
-      - ../mosquitto/volumes/pwfile:/mosquitto/pwfile
-      - ../mosquitto/volumes/config:/mosquitto/config:ro
-      - ../mosquitto/volumes/data:/mosquitto/data
-      - ../mosquitto/volumes/log:/mosquitto/log
+      - ../../data/mosquitto/pwfile:/mosquitto/pwfile
+      - ../../data/mosquitto/config:/mosquitto/config
+      - ../../data/mosquitto/data:/mosquitto/data
+      - ../../data/mosquitto/log:/mosquitto/log
