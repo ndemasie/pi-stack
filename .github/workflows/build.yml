@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
           echo "💡 Generating README.md."
-          bash scripts/generate_readme.sh
+          bash scripts/generate-readme.sh
       - name: Commit changes
         run: |
           echo "💡 Publishing README.md."
