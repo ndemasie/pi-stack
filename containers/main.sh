@@ -96,6 +96,7 @@ while (("$#")); do
     sudo docker-compose \
       --file $SAVED_DOCKER_COMPOSE_PATH \
       up \
+      --build \
       --detach
     ;;
   * | -* | --* | -h | --help)

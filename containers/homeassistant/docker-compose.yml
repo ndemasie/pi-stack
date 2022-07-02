@@ -2,17 +2,17 @@ services:
   homeassistant:
     container_name: homeassistant
     build:
+      args:
+        HACS: "true"
       context: ../homeassistant/.
       dockerfile: Dockerfile
-      args:
-        - hacs="true"
-    restart: unless-stopped
     # ports:
     #   - "8123:8123"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ../../data/homeassistant/config:/config
     devices:
-      - /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0018E33122-if00:/dev/ttyACM0 # ZHA Controller
+    - /dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0018E33122-if00:/dev/ttyACM0 # ZHA Controller
     network_mode: host
     privileged: true
+    restart: unless-stopped
+    volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - ../../data/homeassistant/config:/config
