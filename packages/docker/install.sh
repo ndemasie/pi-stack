@@ -13,4 +13,13 @@ groups $USER
 echo "Verifying docker"
 docker run hello-world
 
+while true; do
+  read -p "Enable docker system service on boot? (Y/n) " REPLY
+  REPLY=${REPLY:-y}
+  case "${REPLY,,}" in
+    y ) sudo systemctl enable docker && break;;
+    * ) break;;
+  esac
+done
+
 echo "docker was installed"

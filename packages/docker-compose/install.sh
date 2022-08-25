@@ -1,16 +1,17 @@
 #!/bin/bash
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+PROJECT_DIR=${SCRIPT_PATH/pi-stack*/pi-stack}
+source ${PROJECT_DIR}/scripts/helpers/variables.sh
 
 echo "Installing docker-compose..."
-echo "Checking docker-compose dependencies"  
-if ( ! command -v python3  &> /dev/null ) || ( ! command -v pip3 &> /dev/null )
-then # Install python3 dependencies
-  ../python3/install.sh
-fi
+DOCKER_COMPOSE_VERSION="2.10.1"
+# For 64-bit OS use:
+# DOCKER_COMPOSE_ARCH="aarch64"
+# For 32-bit OS use:
+DOCKER_COMPOSE_ARCH=${SYS_ARCH::-1}
 
-echo "Installing docker-compose with pip3..."
-sudo pip3 install docker-compose -y
-
-sudo su - $USER # Logout/in for user groups to take effect
+sudo curl -L "https://github.com/docker/compose/releases/download/v${DOCKER_COMPOSE_VERSION}/docker-compose-linux-${DOCKER_COMPOSE_ARCH}" -o /usr/bin/docker-compose
+sudo chmod +x /usr/bin/docker-compose
 
 echo "Verifying docker-compose"
 docker-compose --version
