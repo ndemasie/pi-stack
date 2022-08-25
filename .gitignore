@@ -1,6 +1,7 @@
 # Dot Dirs/Files
 .*
 !.conf
+!.*.conf
 !.github/
 
 # Container volumns
