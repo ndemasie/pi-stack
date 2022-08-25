@@ -22,7 +22,8 @@ source ${PROJECT_DIR}/scripts/helpers/index.sh
 steps=(
   do_update_pi
   do_confirm_tz
-  do_add_bluetooth_group_to_user
+  do_fix_dns
+  # do_add_bluetooth_group_to_user
   do_add_env_file
   do_packages_menu
   do_containers_menu
@@ -63,6 +64,10 @@ function do_packages_menu() {
 
 function do_containers_menu() {
   execute "${PROJECT_DIR}/containers/main.sh"
+}
+
+function do_fix_dns() {
+  execute "${PROJECT_DIR}/scripts/fix-dns.sh"
 }
 
 ## RUN
