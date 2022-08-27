@@ -9,6 +9,7 @@ function generate_container_table_row() {
   : ${name:=$container}; [ ! -z $doc_name_link ] && name="[${name}](${doc_name_link})"
   desc=${doc_description:-}
   notes=${doc_notes:-}
+
   echo "| $image | $name | $desc | $notes |\n"
 }
 

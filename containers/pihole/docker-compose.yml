@@ -1,26 +1,22 @@
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole:latest
+    image: pihole/pihole:2021.11 # latest has UI issue as of 02.07.22
     restart: unless-stopped
     ports:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
       - "80:80/tcp"
-      - "443:443/tcp"
+    env_file:
+      - '../pihole/.env'
     environment:
       - TZ=Europe/Berlin
-      - DNS1=1.1.1.1
-      - DNS2=8.8.8.8
-      - WEBPASSWORD=secret
+      # - WEBPASSWORD=secret ## Uncomment this and replace with your own secret
       - INTERFACE=eth0
     volumes:
-      - ../pihole/volumes/dnsmasq.d:/etc/dnsmasq.d
-      - ../pihole/volumes/pihole:/etc/pihole
-    dns:
-      - 127.0.0.1
-      - 1.1.1.1
+      - ../../data/pihole/dnsmasq.d:/etc/dnsmasq.d
+      - ../../data/pihole/pihole:/etc/pihole
     # Recommended but not required (DHCP needs NET_ADMIN)
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
     cap_add:

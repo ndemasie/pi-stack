@@ -1,8 +1,11 @@
 # Dot Dirs/Files
 .*
 !.conf
-!.env
+!.*.conf
 !.github/
 
 # Container volumns
-containers/*/volumes/**/*
+data/
+
+# Generated container docker-compose may include secrets
+containers/docker-compose.yml

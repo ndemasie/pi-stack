@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ../zigbee2mqtt/volumes/data:/app/data
+      - ../../data/zigbee2mqtt/data:/app/data
     devices:
       # - /dev/ttyACM0:/dev/ttyACM0 # should work if CC2531 connected
       # - /dev/ttyAMA0:/dev/ttyACM0
