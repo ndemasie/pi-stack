@@ -1,6 +1,8 @@
 #!/bin/bash
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+source "$(dirname $SCRIPT_PATH)/.conf"
 
-echo "Installing git..."
+echo "Installing ${name}..."
 sudo apt install git -y
 
-echo "git was installed"
+echo "${name} was installed"

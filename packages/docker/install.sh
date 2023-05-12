@@ -1,6 +1,8 @@
 #!/bin/bash
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+source "$(dirname $SCRIPT_PATH)/.conf"
 
-echo "Installing docker..."
+echo "Installing ${name}..."
 curl -sSL https://get.docker.com | sh
 
 echo "Adding docker group to ${USER}"
@@ -22,4 +24,4 @@ while true; do
   esac
 done
 
-echo "docker was installed"
+echo "${name} was installed"

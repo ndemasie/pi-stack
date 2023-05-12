@@ -1,4 +1,6 @@
 #!/bin/bash
+SCRIPT_PATH=$(readlink -f -- "$BASH_SOURCE")
+source "$(dirname $SCRIPT_PATH)/.conf"
 
 echo "Installing python3 and pip3..."
 # dependencies
