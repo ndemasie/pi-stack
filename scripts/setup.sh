@@ -48,6 +48,11 @@ function do_confirm_tz() {
   fi
 }
 
+function do_set_term_font() {
+  sudo sed -i 's/FONTFACE=""/FONTFACE="Terminus"/' /etc/default/console-setup
+  sudo sed -i 's/FONTSIZE=""/FONTSIZE="16x32"/' /etc/default/console-setup
+}
+
 function do_add_bluetooth_group_to_user() {
   if id -nG "$USER" | grep -qw "bluetooth"; then
     sudo usermod -a -G bluetooth $USER
