@@ -15,7 +15,7 @@ def draw_screen(stdscr):
 
         # Memory
         memory = psutil.virtual_memory()
-        memory_info = f"Memory: {memory.used / 1024**2:.2f} MB / {memory.total / 1024**2:.2f} MB ({memory.percent}%)"
+        memory_info = f"{memory.used / 1024**2:.2f} MB / {memory.total / 1024**2:.2f} MB ({memory.percent}%)"
 
         stdscr.addstr(2, 0, "Memory:", curses.A_BOLD)
         stdscr.addstr(2, 8, memory_info)
@@ -51,7 +51,7 @@ def draw_screen(stdscr):
 
             stdscr.addstr(15 + i, 0, f"{container_id:<15}")
             stdscr.addstr(15 + i, 15, f"{name:<25}", curses.COLOR_CYAN)
-            stdscr.addstr(15 + i, 40, f"{status_icon:<3} {status:<10}", status_color)
+            stdscr.addstr(15 + i, 40, f"{status:<10} {status_icon}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
