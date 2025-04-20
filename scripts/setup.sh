@@ -39,11 +39,7 @@ function do_validate_arm_sys_arch() {
 }
 
 function do_update_pi() {
-  if whiptail --title "Software updates" --yesno "Update pi?" 12 60; then
-    echo "${BOLD}Updating Pi${RESET}"
-    sudo apt update -y
-    sudo apt full-upgrade -y
-  fi
+  execute "${PROJECT_DIR}/scripts/do-update-pi.sh"
 }
 
 function do_confirm_tz() {
@@ -53,33 +49,15 @@ function do_confirm_tz() {
 }
 
 function do_set_term_font() {
-  FONTSIZE=$(whiptail --title "Font Size" --menu "Choose a font size" 12 60 5 \
-      "16x32" "Large Font (16x32)" \
-      "8x16" "Medium Font (8x16)" 3>&1 1>&2 2>&3)
+  execute "${PROJECT_DIR}/scripts/do-set-term-font.sh"
+}
 
-  # Check if the user selected a font size
-  if [ $? -eq 0 ]; then
-      # Change the font size based on user selection
-      sudo sed -i "s/FONTSIZE=\"[^\"]*\"/FONTSIZE=\"$FONTSIZE\"/" /etc/default/console-setup
-      echo "Font size changed to $FONTSIZE. You may need to restart your terminal or system for changes to take effect."
-  else
-      echo "No font size selected. Continuing..."
-  fi
+function do_setup_lcd_screen() {
+  execute "${PROJECT_DIR}/scripts/do-setup-lcd-screen.sh"
 }
 
 function do_rotate_screen() {
-  if whiptail --title "Screen Orientation" --yesno "Do you want to rotate the screen?" 12 60; then
-    ROTATION=$(whiptail --title "Screen Orientation" --menu "Rotation:" 12 60 5 \
-        "1" "(90deg)" \
-        "2" "(180deg)" \
-        "3" "(270deg)" 3>&1 1>&2 2>&3)
-
-    if grep -q "^display_rotate=" /boot/config.txt; then
-        sudo sed -i "s/^display_rotate=.*/display_rotate=$ROTATION/" /boot/config.txt
-    else
-        sudo sed -i "\$a\display_rotate=$ROTATION" /boot/config.txt
-    fi
-  fi
+  execute "${PROJECT_DIR}/scripts/do-rotate-screen.sh"
 }
 
 function do_add_bluetooth_group_to_user() {
