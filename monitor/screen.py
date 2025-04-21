@@ -11,9 +11,9 @@ def setup_curses():
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_GREEN)
-    curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_YELLOW)
-    curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_RED)
+    curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_GREEN)
+    curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_YELLOW)
+    curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_RED)
 
 def check_website_status(url):
     try:
@@ -41,21 +41,22 @@ def draw_screen(stdscr):
 
         # CPU Usage
         cpu_usage = psutil.cpu_percent(interval=1)
-        stdscr.addstr(2, 0, "CPU Usage:", curses.A_BOLD)
-        stdscr.addstr(2, 11, f"{cpu_usage:.2f}%")
+
+        stdscr.addstr(2, 0, "CPU:", curses.A_BOLD)
+        stdscr.addstr(2, 15, f"{cpu_usage:.2f}%")
 
         # Memory
         memory = psutil.virtual_memory()
-        memory_info = f"{memory.used / 1024**2:.2f} MB / {memory.total / 1024**2:.2f} MB ({memory.percent}%)"
+        memory_info = f"{memory.used / 1024**2:.2f} MB ({memory.percent}%)"
 
         stdscr.addstr(3, 0, "Memory:", curses.A_BOLD)
-        stdscr.addstr(3, 8, memory_info)
+        stdscr.addstr(3, 15, memory_info)
 
         # Temperature
         temp = os.popen("vcgencmd measure_temp").readline().strip().replace("temp=", "")
 
         stdscr.addstr(4, 0, "Temperature:", curses.A_BOLD)
-        stdscr.addstr(4, 12, temp)
+        stdscr.addstr(4, 15, temp)
 
         # Top Processes
         stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
@@ -82,20 +83,21 @@ def draw_screen(stdscr):
 
         for i, (container_id, name, status) in enumerate(containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            check_mark = "✔" if status == "running" else ""
+            suffix = "✔" if status == "running" else ""
 
             stdscr.addstr(16 + i, 0, f"{container_id:<15}")
             stdscr.addstr(16 + i, 15, f"{name:<25}", curses.COLOR_CYAN)
-            stdscr.addstr(16 + i, 40, f"{status:<10} {check_mark}", status_color)
+            stdscr.addstr(16 + i, 40, f"{status:<10} {suffix}", status_color)
 
         # Website Status
         stdscr.addstr(23, 0, "Website Status:", curses.A_BOLD)
         for i, website_url in enumerate(websites):
-            website_status = check_website_status(website_url)
-            website_status_text = "OK" if website_status == 200 else "ERROR"
-            status_color = curses.color_pair(4) if website_status == "200" else curses.color_pair(6)
+            status_code = check_website_status(website_url)
+            status_text = "OK" if status_code == 200 else "ERROR"
+            status_color = curses.color_pair(4) if status_code == "200" else curses.color_pair(6)
+
             stdscr.addstr(24 + i, 0, f"{website_url:<30}")
-            stdscr.addstr(24 + i, 30, f"{website_status:<8}", status_color)
+            stdscr.addstr(24 + i, 30, f"{status_text:<8}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
