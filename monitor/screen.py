@@ -51,20 +51,20 @@ def draw_screen(stdscr):
         cpu_usage = psutil.cpu_percent(interval=1)
 
         stdscr.addstr(2, 0, "CPU:", curses.A_BOLD)
-        stdscr.addstr(2, 15, f"{cpu_usage:.2f}%")
+        stdscr.addstr(2, 15, f"{cpu_usage:.2f}%", curses.color_pair(4))
 
         # Memory
         memory = psutil.virtual_memory()
         memory_info = f"{memory.used / 1024**2:.2f} MB ({memory.percent}%)"
 
         stdscr.addstr(3, 0, "Memory:", curses.A_BOLD)
-        stdscr.addstr(3, 15, memory_info)
+        stdscr.addstr(3, 15, memory_info, curses.color_pair(4))
 
         # Temperature
         temp = os.popen("vcgencmd measure_temp").readline().strip().replace("temp=", "")
 
         stdscr.addstr(4, 0, "Temperature:", curses.A_BOLD)
-        stdscr.addstr(4, 15, temp)
+        stdscr.addstr(4, 15, temp, curses.color_pair(4))
 
         # Top Processes
         stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
@@ -92,8 +92,8 @@ def draw_screen(stdscr):
         for i, (container_id, name, status) in enumerate(containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
 
-            stdscr.addstr(16 + i, 0, f"{container_id:<15}")
-            stdscr.addstr(16 + i, 15, f"{name:<25}", curses.color_pair(5))
+            stdscr.addstr(16 + i, 0, f"{container_id:<15}", curses.color_pair(5))
+            stdscr.addstr(16 + i, 15, f"{name:<25}", curses.color_pair(4))
             stdscr.addstr(16 + i, 40, f"{status:<10}", status_color)
 
         # Website Status
@@ -103,7 +103,7 @@ def draw_screen(stdscr):
             status_text = " OK ".center(6) if status_code == 200 else " ERROR ".center(6)
             status_color = curses.color_pair(11) if status_code == 200 else curses.color_pair(13)
 
-            stdscr.addstr(24 + i, 0, f"{website_url:<30}")
+            stdscr.addstr(24 + i, 0, f"{website_url:<30}", curses.color_pair(4))
             stdscr.addstr(24 + i, 30, f"{status_text}", status_color)
 
         stdscr.refresh()
