@@ -5,15 +5,11 @@ import os
 import time
 import requests
 
-
 def setup_curses():
     curses.curs_set(0)  # Hide cursor
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_GREEN)
-    curses.init_pair(5, curses.COLOR_WHITE, curses.COLOR_YELLOW)
-    curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_RED)
 
 def check_website_status(url):
     try:
@@ -83,21 +79,20 @@ def draw_screen(stdscr):
 
         for i, (container_id, name, status) in enumerate(containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            suffix = "✔" if status == "running" else ""
 
             stdscr.addstr(16 + i, 0, f"{container_id:<15}")
             stdscr.addstr(16 + i, 15, f"{name:<25}", curses.COLOR_CYAN)
-            stdscr.addstr(16 + i, 40, f"{status:<10} {suffix}", status_color)
+            stdscr.addstr(16 + i, 40, f"{status:<10}", status_color)
 
         # Website Status
         stdscr.addstr(23, 0, "Website Status:", curses.A_BOLD)
         for i, website_url in enumerate(websites):
             status_code = check_website_status(website_url)
-            status_text = "OK" if status_code == 200 else "ERROR"
-            status_color = curses.color_pair(4) if status_code == "200" else curses.color_pair(6)
+            status_text = " OK ".center(6) if status_code == 200 else " ERROR ".center(6)
+            status_color = curses.color_pair(1) if status_code == "200" else curses.color_pair(3)
 
             stdscr.addstr(24 + i, 0, f"{website_url:<30}")
-            stdscr.addstr(24 + i, 30, f"{status_text:<8}", status_color)
+            stdscr.addstr(24 + i, 30, f"{status_text}", status_color | curses.A_REVERSE)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
