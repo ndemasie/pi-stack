@@ -43,15 +43,40 @@ def draw_screen(stdscr):
 
         # CPU Usage
         cpu_usage = psutil.cpu_percent(interval=1)
-        cpu_color = curses.color_pair(1) if cpu_usage < 50 else curses.color_pair(2)
+        cpu_color
+        if cpu_usage < 30:
+            cpu_color = curses.color_pair(1)
+        elif cpu_usage < 50:
+            cpu_color = curses.color_pair(2)
+        elif cpu_usage < 70:
+            cpu_color = curses.color_pair(6)
+        else:
+            cpu_color = curses.color_pair(6) | curses.A_REVERSE
 
         # Memory
         memory = psutil.virtual_memory()
-        memory_color = curses.color_pair(1) if memory.percent < 50 else curses.color_pair(2)
+        memory_color
+        if memory.percent < 30:
+            memory_color = curses.color_pair(1)
+        elif memory.percent < 50:
+            memory_color = curses.color_pair(2)
+        elif memory.percent < 70:
+            memory_color = curses.color_pair(6)
+        else:
+            memory_color = curses.color_pair(6) | curses.A_REVERSE
 
         # Temperature
         temp = os.popen("vcgencmd measure_temp").readline().strip().replace("temp=", "")
-        temp_color = curses.color_pair(1) if temp < 50 else curses.color_pair(2)
+        temp_num = float(temp)  # Attempt to convert temp to a float
+        temp_color
+        if temp_num < 55:
+            temp_color = curses.color_pair(1)
+        elif temp_num < 60:
+            temp_color = curses.color_pair(2)
+        elif temp_num < 64:
+            temp_color = curses.color_pair(6)
+        else:
+            temp_color = curses.color_pair(6) | curses.A_REVERSE
 
         # Top Processes
         if current_time - process_update_time >= process_cache_expiry:
