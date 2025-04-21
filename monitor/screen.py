@@ -9,7 +9,19 @@ def setup_curses():
     curses.curs_set(0)  # Hide cursor
     curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
-    curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.init_pair(5, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+    curses.init_pair(6, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
+
+    curses.init_pair(11, curses.COLOR_WHITE, curses.COLOR_GREEN)
+    curses.init_pair(12, curses.COLOR_WHITE, curses.COLOR_YELLOW)
+    curses.init_pair(13, curses.COLOR_WHITE, curses.COLOR_BLUE)
+    curses.init_pair(14, curses.COLOR_WHITE, curses.COLOR_CYAN)
+    curses.init_pair(15, curses.COLOR_WHITE, curses.COLOR_MAGENTA)
+    curses.init_pair(16, curses.COLOR_WHITE, curses.COLOR_RED)
+    curses.init_pair(17, curses.COLOR_WHITE, curses.COLOR_WHITE)
 
 def check_website_status(url):
     try:
@@ -81,7 +93,7 @@ def draw_screen(stdscr):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
 
             stdscr.addstr(16 + i, 0, f"{container_id:<15}")
-            stdscr.addstr(16 + i, 15, f"{name:<25}", curses.COLOR_CYAN)
+            stdscr.addstr(16 + i, 15, f"{name:<25}", curses.color_pair(5))
             stdscr.addstr(16 + i, 40, f"{status:<10}", status_color)
 
         # Website Status
@@ -89,10 +101,10 @@ def draw_screen(stdscr):
         for i, website_url in enumerate(websites):
             status_code = check_website_status(website_url)
             status_text = " OK ".center(6) if status_code == 200 else " ERROR ".center(6)
-            status_color = curses.color_pair(1) if status_code == "200" else curses.color_pair(3)
+            status_color = curses.color_pair(11) if status_code == 200 else curses.color_pair(13)
 
             stdscr.addstr(24 + i, 0, f"{website_url:<30}")
-            stdscr.addstr(24 + i, 30, f"{status_text}", status_color | curses.A_REVERSE)
+            stdscr.addstr(24 + i, 30, f"{status_text}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
