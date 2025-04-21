@@ -25,11 +25,11 @@ def draw_screen(stdscr):
     setup_curses()
 
     process_cache_expiry = 5 # Seconds
-    process_last_check = 0
+    process_update_time = 0
     process_cache = []
 
     website_cache_expiry = 10 # Seconds
-    website_last_check = 0
+    website_update_time = 0
     website_cache = {}
     website_list = [
         "https://www.demasie.com/health",
@@ -39,71 +39,66 @@ def draw_screen(stdscr):
     ]
 
     while True:
-        stdscr.clear()
-        stdscr.addstr(0, 0, "=== Raspberry Pi Status Screen ===", curses.A_BOLD)
+        current_time = time.time()
 
         # CPU Usage
         cpu_usage = psutil.cpu_percent(interval=1)
-
-        stdscr.addstr(2, 0, "CPU:", curses.A_BOLD)
-        stdscr.addstr(2, 15, f"{cpu_usage:.2f}%")
+        cpu_color = curses.color_pair(1) if cpu_usage < 50 else curses.color_pair(2)
 
         # Memory
         memory = psutil.virtual_memory()
-        memory_info = f"{memory.used / 1024**2:.2f} MB ({memory.percent}%)"
-
-        stdscr.addstr(3, 0, "Memory:", curses.A_BOLD)
-        stdscr.addstr(3, 15, memory_info)
+        memory_color = curses.color_pair(1) if memory.percent < 50 else curses.color_pair(2)
 
         # Temperature
         temp = os.popen("vcgencmd measure_temp").readline().strip().replace("temp=", "")
-
-        stdscr.addstr(4, 0, "Temperature:", curses.A_BOLD)
-        stdscr.addstr(4, 15, temp)
+        temp_color = curses.color_pair(1) if temp < 50 else curses.color_pair(2)
 
         # Top Processes
-        stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
-        stdscr.addstr(7, 0, f"{'PID':<10}{'Name':<25}{'CPU%':<10}")
-
-        current_time = time.time()
-        if current_time - process_last_check >= process_cache_expiry:
+        if current_time - process_update_time >= process_cache_expiry:
+            process_update_time = current_time
             process_cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
                                        key=lambda p: p.info['cpu_percent'], reverse=True)[:5]
-            process_last_check = current_time
-
-        for i, p in enumerate(process_cache):
-            pid = p.info['pid']
-            name = p.info['name'][:24]  # Truncate name to fit the column
-            cpu_percent = p.info['cpu_percent']
-            stdscr.addstr(8 + i, 0, f"{pid:<10}{name:<25}{cpu_percent:<10.2f}")
 
         # Docker Containers
-        stdscr.addstr(14, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(15, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}")
-
-        client = docker.from_env()
-        containers = [(c.id[:12], c.name, c.status) for c in client.containers.list()]
-
-        for i, (container_id, name, status) in enumerate(containers):
-            status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-
-            stdscr.addstr(16 + i, 0, f"{container_id:<15}")
-            stdscr.addstr(16 + i, 15, f"{name:<25}")
-            stdscr.addstr(16 + i, 40, f"{status:<10}", status_color)
+        docker_containers = [(c.id[:12], c.name, c.status) for c in docker.from_env().containers.list()]
 
         # Website Status
-        stdscr.addstr(23, 0, "Website Status:", curses.A_BOLD)
-        if current_time - website_last_check >= website_cache_expiry:
+        if current_time - website_update_time >= website_cache_expiry:
+            website_update_time = current_time
             website_cache = {url: check_website_status(url) for url in website_list}
-            website_last_check = current_time
 
+        # Draw Screen
+        stdscr.clear()
+        stdscr.addstr(0, 0, "=== Raspberry Pi Status Screen ===", curses.A_BOLD)
+
+        stdscr.addstr(2, 0, "CPU:", curses.A_BOLD)
+        stdscr.addstr(2, 15, f"{cpu_usage:.2f}%", cpu_color)
+        stdscr.addstr(3, 0, "Memory:", curses.A_BOLD)
+        stdscr.addstr(3, 15, f"{memory.percent}%", memory_color)
+        stdscr.addstr(3, 21, f"({memory.used / 1024**2:.2f} MB)")
+        stdscr.addstr(4, 0, "Temperature:", curses.A_BOLD)
+        stdscr.addstr(4, 15, temp, temp_color)
+
+        stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
+        stdscr.addstr(7, 0, f"{'PID':<10}{'Name':<25}{'CPU%':<10}")
+        for i, p in enumerate(process_cache):
+            stdscr.addstr(8 + i, 0, f"{p.info['pid']:<10}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<10.2f}")
+
+        stdscr.addstr(14, 0, "Docker Containers:", curses.A_BOLD)
+        stdscr.addstr(15, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}")
+        for i, (container_id, name, status) in enumerate(docker_containers):
+            status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
+            stdscr.addstr(16 + i, 0, f"{container_id:<15}")
+            stdscr.addstr(16 + i, 15, f"{name:<25}")
+            stdscr.addstr(16 + i, 50, f"{status:<10}", status_color)
+
+        stdscr.addstr(23, 0, "Website Status:", curses.A_BOLD)
         for i, website_url in enumerate(website_list):
             status_code = website_cache.get(website_url, 400)
             status_text = " OK ".center(6) if status_code == 200 else " ERROR ".center(6)
             status_color = curses.color_pair(1) if status_code == 200 else curses.color_pair(6)
-
             stdscr.addstr(24 + i, 0, f"{website_url:<30}", curses.color_pair(4))
-            stdscr.addstr(24 + i, 40, f"{status_text}", status_color | curses.A_REVERSE)
+            stdscr.addstr(24 + i, 50, f"{status_text}", status_color | curses.A_REVERSE)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
