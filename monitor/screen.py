@@ -59,7 +59,7 @@ def draw_screen(stdscr):
         stdscr.addstr(4, 15, temp)
 
         # Top Processes
-        stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
+        stdscr.addstr(6, 0, "Top Processes:", curses.color_pair(7) | curses.A_REVERSE)
         stdscr.addstr(7, 0, f"{'PID':<10}{'Name':<25}{'CPU%':<10}", curses.A_UNDERLINE)
 
         current_time = time.time()
@@ -75,8 +75,8 @@ def draw_screen(stdscr):
             stdscr.addstr(8 + i, 0, f"{pid:<10}{name:<25}{cpu_percent:<10.2f}")
 
         # Docker Containers
-        stdscr.addstr(14, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(15, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}", curses.A_UNDERLINE)
+        stdscr.addstr(14, 0, "Docker Containers:", curses.color_pair(7) | curses.A_REVERSE)
+        stdscr.addstr(15, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}", curses.A_BOLD)
 
         client = docker.from_env()
         containers = [(c.id[:12], c.name, c.status) for c in client.containers.list()]
@@ -89,11 +89,11 @@ def draw_screen(stdscr):
             stdscr.addstr(16 + i, 40, f"{status:<10}", status_color)
 
         # Website Status
-        stdscr.addstr(23, 0, "Website Status:", curses.A_BOLD)
+        stdscr.addstr(23, 0, "Website Status:", curses.color_pair(7) | curses.A_REVERSE)
         for i, website_url in enumerate(websites):
             status_code = check_website_status(website_url)
             status_text = " OK ".center(6) if status_code == 200 else " ERROR ".center(6)
-            status_color = curses.color_pair(1) if status_code == 200 else curses.color_pair(3)
+            status_color = curses.color_pair(1) if status_code == 200 else curses.color_pair(6)
 
             stdscr.addstr(24 + i, 0, f"{website_url:<30}", curses.color_pair(4))
             stdscr.addstr(24 + i, 40, f"{status_text}", status_color | curses.A_REVERSE)
