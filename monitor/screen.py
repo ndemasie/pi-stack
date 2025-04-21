@@ -63,7 +63,9 @@ def draw_screen(stdscr):
 
         # Temperature
         temp = os.popen("vcgencmd measure_temp").readline().strip().replace("temp=", "")
-        temp_num = float(temp)  # Attempt to convert temp to a float
+        # TODO: Fix
+        # temp_num = float(temp)  # Attempt to convert temp to a float
+        temp_num = 0
         temp_color = curses.color_pair(1)
         if temp_num > 55:
             temp_color = curses.color_pair(2)
