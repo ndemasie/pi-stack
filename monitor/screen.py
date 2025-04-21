@@ -3,12 +3,34 @@ import psutil
 import docker
 import os
 import time
+import requests
+
+curses.curs_set(0)  # Hide cursor
+
+curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
+curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLACK)
+
+curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_GREEN)
+curses.init_pair(5, curses.COLOR_BLACK, curses.COLOR_YELLOW)
+curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_RED)
+
+# Define a list of websites
+websites = [
+    "www.demasie.com/health",
+    "nathan.demasie.com/health",
+    "habit.demasie.com/health",
+    "refer.demasie.com/health"
+]
+
+
+def check_website_status(url):
+    try:
+        return requests.get(url, timeout=5).status_code
+    except requests.RequestException:
+        return 200
 
 def draw_screen(stdscr):
-    curses.curs_set(0)  # Hide cursor
-    curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
-    curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
-
     last_process_check = 0
     cached_processes = []
 
@@ -47,17 +69,25 @@ def draw_screen(stdscr):
 
         # Docker Containers
         stdscr.addstr(13, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(14, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}", curses.A_BOLD)
+        stdscr.addstr(14, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}", curses.A_UNDERLINE)
 
         client = docker.from_env()
         containers = [(c.id[:12], c.name, c.status) for c in client.containers.list()]
 
         for i, (container_id, name, status) in enumerate(containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
+            check_mark = "✔" if status == "running" else ""
 
             stdscr.addstr(15 + i, 0, f"{container_id:<15}")
             stdscr.addstr(15 + i, 15, f"{name:<25}", curses.COLOR_CYAN)
-            stdscr.addstr(15 + i, 40, f"{status:<10}", status_color)
+            stdscr.addstr(15 + i, 40, f"{status:<10} {check_mark}", status_color)
+
+        # Website Status
+        stdscr.addstr(17, 0, "Website Status:", curses.A_BOLD)
+        for i, website_url in enumerate(websites):
+            website_status = check_website_status(website_url)
+            status_color = curses.color_pair(1) if website_status == "OK" else curses.color_pair(2)
+            stdscr.addstr(17 + i, 0, f"{website_url:<30} {website_status}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
