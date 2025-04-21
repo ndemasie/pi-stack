@@ -89,11 +89,13 @@ def draw_screen(stdscr):
             stdscr.addstr(16 + i, 40, f"{status:<10} {check_mark}", status_color)
 
         # Website Status
-        stdscr.addstr(18, 0, "Website Status:", curses.A_BOLD)
+        stdscr.addstr(23, 0, "Website Status:", curses.A_BOLD)
         for i, website_url in enumerate(websites):
             website_status = check_website_status(website_url)
-            status_color = curses.color_pair(1) if website_status == "OK" else curses.color_pair(2)
-            stdscr.addstr(18 + i, 0, f"{website_url:<30} {website_status}", status_color)
+            website_status_text = "OK" if website_status == 200 else "ERROR"
+            status_color = curses.color_pair(4) if website_status == "200" else curses.color_pair(6)
+            stdscr.addstr(24 + i, 0, f"{website_url:<30}")
+            stdscr.addstr(24 + i, 30, f"{website_status:<8}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
