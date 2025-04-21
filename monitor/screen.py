@@ -15,14 +15,6 @@ def setup_curses():
     curses.init_pair(6, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
-    curses.init_pair(11, curses.COLOR_WHITE, curses.COLOR_GREEN)
-    curses.init_pair(12, curses.COLOR_WHITE, curses.COLOR_YELLOW)
-    curses.init_pair(13, curses.COLOR_WHITE, curses.COLOR_BLUE)
-    curses.init_pair(14, curses.COLOR_WHITE, curses.COLOR_CYAN)
-    curses.init_pair(15, curses.COLOR_WHITE, curses.COLOR_MAGENTA)
-    curses.init_pair(16, curses.COLOR_WHITE, curses.COLOR_RED)
-    curses.init_pair(17, curses.COLOR_WHITE, curses.COLOR_WHITE)
-
 def check_website_status(url):
     try:
         return requests.get(url, timeout=5).status_code
@@ -51,20 +43,20 @@ def draw_screen(stdscr):
         cpu_usage = psutil.cpu_percent(interval=1)
 
         stdscr.addstr(2, 0, "CPU:", curses.A_BOLD)
-        stdscr.addstr(2, 15, f"{cpu_usage:.2f}%", curses.color_pair(4))
+        stdscr.addstr(2, 15, f"{cpu_usage:.2f}%")
 
         # Memory
         memory = psutil.virtual_memory()
         memory_info = f"{memory.used / 1024**2:.2f} MB ({memory.percent}%)"
 
         stdscr.addstr(3, 0, "Memory:", curses.A_BOLD)
-        stdscr.addstr(3, 15, memory_info, curses.color_pair(4))
+        stdscr.addstr(3, 15, memory_info)
 
         # Temperature
         temp = os.popen("vcgencmd measure_temp").readline().strip().replace("temp=", "")
 
         stdscr.addstr(4, 0, "Temperature:", curses.A_BOLD)
-        stdscr.addstr(4, 15, temp, curses.color_pair(4))
+        stdscr.addstr(4, 15, temp)
 
         # Top Processes
         stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
@@ -92,8 +84,8 @@ def draw_screen(stdscr):
         for i, (container_id, name, status) in enumerate(containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
 
-            stdscr.addstr(16 + i, 0, f"{container_id:<15}", curses.color_pair(5))
-            stdscr.addstr(16 + i, 15, f"{name:<25}", curses.color_pair(4))
+            stdscr.addstr(16 + i, 0, f"{container_id:<15}")
+            stdscr.addstr(16 + i, 15, f"{name:<25}")
             stdscr.addstr(16 + i, 40, f"{status:<10}", status_color)
 
         # Website Status
@@ -101,10 +93,10 @@ def draw_screen(stdscr):
         for i, website_url in enumerate(websites):
             status_code = check_website_status(website_url)
             status_text = " OK ".center(6) if status_code == 200 else " ERROR ".center(6)
-            status_color = curses.color_pair(11) if status_code == 200 else curses.color_pair(13)
+            status_color = curses.color_pair(1) if status_code == 200 else curses.color_pair(3)
 
             stdscr.addstr(24 + i, 0, f"{website_url:<30}", curses.color_pair(4))
-            stdscr.addstr(24 + i, 30, f"{status_text}", status_color)
+            stdscr.addstr(24 + i, 30, f"{status_text}", status_color | curses.A_REVERSE)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
