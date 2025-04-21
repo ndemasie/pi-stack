@@ -60,7 +60,7 @@ def draw_screen(stdscr):
 
         # Top Processes
         stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
-        stdscr.addstr(7, 0, f"{'PID':<10}{'Name':<25}{'CPU%':<10}", curses.color_pair(7) | curses.A_REVERSE)
+        stdscr.addstr(7, 0, f"{'PID':<10}{'Name':<25}{'CPU%':<10}")
 
         current_time = time.time()
         if current_time - last_process_check >= 5:
@@ -76,7 +76,7 @@ def draw_screen(stdscr):
 
         # Docker Containers
         stdscr.addstr(14, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(15, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}", curses.color_pair(7) | curses.A_REVERSE)
+        stdscr.addstr(15, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}")
 
         client = docker.from_env()
         containers = [(c.id[:12], c.name, c.status) for c in client.containers.list()]
