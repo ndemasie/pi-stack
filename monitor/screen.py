@@ -96,7 +96,7 @@ def draw_screen(stdscr):
             status_color = curses.color_pair(1) if status_code == 200 else curses.color_pair(3)
 
             stdscr.addstr(24 + i, 0, f"{website_url:<30}", curses.color_pair(4))
-            stdscr.addstr(24 + i, 30, f"{status_text}", status_color | curses.A_REVERSE)
+            stdscr.addstr(24 + i, 40, f"{status_text}", status_color | curses.A_REVERSE)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
