@@ -24,16 +24,19 @@ def check_website_status(url):
 def draw_screen(stdscr):
     setup_curses()
 
-    # Define a list of websites
-    websites = [
+    process_cache_expiry = 5 # Seconds
+    process_last_check = 0
+    process_cache = []
+
+    website_cache_expiry = 10 # Seconds
+    website_last_check = 0
+    website_cache = {}
+    website_list = [
         "https://www.demasie.com/health",
         "https://nathan.demasie.com/health",
         "https://habit.demasie.com/health",
         "https://refer.demasie.com/health"
     ]
-
-    last_process_check = 0
-    cached_processes = []
 
     while True:
         stdscr.clear()
@@ -63,12 +66,12 @@ def draw_screen(stdscr):
         stdscr.addstr(7, 0, f"{'PID':<10}{'Name':<25}{'CPU%':<10}")
 
         current_time = time.time()
-        if current_time - last_process_check >= 5:
-            cached_processes = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
+        if current_time - process_last_check >= process_cache_expiry:
+            process_cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
                                        key=lambda p: p.info['cpu_percent'], reverse=True)[:5]
-            last_process_check = current_time
+            process_last_check = current_time
 
-        for i, p in enumerate(cached_processes):
+        for i, p in enumerate(process_cache):
             pid = p.info['pid']
             name = p.info['name'][:24]  # Truncate name to fit the column
             cpu_percent = p.info['cpu_percent']
@@ -90,8 +93,12 @@ def draw_screen(stdscr):
 
         # Website Status
         stdscr.addstr(23, 0, "Website Status:", curses.A_BOLD)
-        for i, website_url in enumerate(websites):
-            status_code = check_website_status(website_url)
+        if current_time - website_last_check >= website_cache_expiry:
+            website_cache = {url: check_website_status(url) for url in website_list}
+            website_last_check = current_time
+
+        for i, website_url in enumerate(website_list):
+            status_code = website_cache.get(website_url, 400)
             status_text = " OK ".center(6) if status_code == 200 else " ERROR ".center(6)
             status_color = curses.color_pair(1) if status_code == 200 else curses.color_pair(6)
 
