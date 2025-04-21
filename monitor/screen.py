@@ -106,11 +106,11 @@ def draw_screen(stdscr):
             stdscr.addstr(8 + i, 0, f"{p.info['pid']:<10}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<10.2f}")
 
         stdscr.addstr(14, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(15, 0, f"{'ID':<15}{'Name':<25}{'Status':<10}")
+        stdscr.addstr(15, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
         for i, (container_id, name, status) in enumerate(docker_containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
             stdscr.addstr(16 + i, 0, f"{container_id:<15}")
-            stdscr.addstr(16 + i, 15, f"{name:<25}")
+            stdscr.addstr(16 + i, 15, f"{name:<35}")
             stdscr.addstr(16 + i, 50, f"{status:<10}", status_color)
 
         stdscr.addstr(23, 0, "Website Status:", curses.A_BOLD)
