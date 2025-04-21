@@ -26,10 +26,10 @@ def draw_screen(stdscr):
 
     # Define a list of websites
     websites = [
-        "www.demasie.com/health",
-        "nathan.demasie.com/health",
-        "habit.demasie.com/health",
-        "refer.demasie.com/health"
+        "https://www.demasie.com/health",
+        "https://nathan.demasie.com/health",
+        "https://habit.demasie.com/health",
+        "https://refer.demasie.com/health"
     ]
 
     last_process_check = 0
