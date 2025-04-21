@@ -19,7 +19,7 @@ def check_website_status(url):
     try:
         return requests.get(url, timeout=5).status_code
     except requests.RequestException:
-        return 200
+        return 400
 
 def draw_screen(stdscr):
     setup_curses()
