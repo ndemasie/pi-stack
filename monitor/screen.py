@@ -114,7 +114,7 @@ def draw_screen(stdscr):
 
         stdscr.addstr(14, 0, "Website Status:", curses.A_BOLD)
         for i, website_url in enumerate(website_list):
-            if not website_url.strip():  # Skip empty or whitespace-only URLs
+            if not website_url.strip():  # Skip empty URLs
                 continue
             text, color = get_website_status_display(website_cache.get(website_url, 400))
             stdscr.addstr(15 + i, 0, f"{website_url:<30}", curses.color_pair(4))
