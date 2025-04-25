@@ -61,11 +61,11 @@ def draw_screen(stdscr):
         # Memory
         memory = psutil.virtual_memory()
         memory_color = curses.color_pair(1)
-        if memory > 30:
+        if memory.percent > 30:
             memory_color = curses.color_pair(2)
-        elif memory > 50:
+        elif memory.percent > 50:
             memory_color = curses.color_pair(6)
-        elif memory > 70:
+        elif memory.percent > 70:
             memory_color = curses.color_pair(6) | curses.A_REVERSE
 
         # Temperature
