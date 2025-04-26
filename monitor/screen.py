@@ -117,22 +117,23 @@ def draw_screen(stdscr):
         for i, p in enumerate(process_cache):
             stdscr.addstr(8 + i, 0, f"{p.info['pid']:<10}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<10.2f}")
 
-        stdscr.addstr(14, 0, "Website Status:", curses.A_BOLD)
+        stdscr.addstr(15, 0, "Website".rjust(46), curses.A_BOLD)
+        stdscr.addstr(15, 50, "Status", curses.A_BOLD)
         for i, website_url in enumerate(website_list):
             if not website_url.strip():
                 continue  # Skip empty URLs
             display_url = website_url.replace("https://", "").replace("/health", "").rjust(46)
             text, color = get_website_status_display(website_cache.get(website_url, 400))
-            stdscr.addstr(15 + i, 0, f"{display_url:<30}")
-            stdscr.addstr(15 + i, 50, f"{text}", color | curses.A_REVERSE)
+            stdscr.addstr(16 + i, 0, f"{display_url:<30}")
+            stdscr.addstr(16 + i, 50, f"{text}", color | curses.A_REVERSE)
 
-        stdscr.addstr(27, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(28, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
+        stdscr.addstr(29, 0, "Docker Containers:", curses.A_BOLD)
+        stdscr.addstr(30, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
         for i, (container_id, name, status) in enumerate(docker_containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(29 + i, 0, f"{container_id:<15}")
-            stdscr.addstr(29 + i, 15, f"{name:<35}")
-            stdscr.addstr(29 + i, 50, f"{status:<10}", status_color)
+            stdscr.addstr(31 + i, 0, f"{container_id:<15}")
+            stdscr.addstr(31 + i, 15, f"{name:<35}")
+            stdscr.addstr(31 + i, 50, f"{status:<10}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
