@@ -39,7 +39,7 @@ def draw_screen(stdscr):
     website_list = [
         "https://lieblinghomecare.com",
         "",
-        "https://www.demasie.com/health",
+        "https://demasie.com/health",
         "",
         "https://nathan.demasie.com/health",
         "https://refer.demasie.com/health",
