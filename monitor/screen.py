@@ -29,17 +29,20 @@ def get_website_status_display(status_code):
 def draw_screen(stdscr):
     setup_curses()
 
-    process_cache_expiry = 5 # Seconds
-    process_update_time = 0
     process_cache = []
+    process_cache_expiry = 5 # Seconds
+    process_update_offset = 0 # Seconds - Offset processes to avoid spikes
+    process_update_time = 0
 
-    docker_cache_expiry = 5 # Seconds
-    docker_update_time = 0
     docker_cache = []
+    docker_cache_expiry = 5 # Seconds
+    docker_update_offset = 2 # Seconds - Offset processes to avoid spikes
+    docker_update_time = 0
 
-    website_cache_expiry = 15 # Seconds
-    website_update_time = 0
     website_cache = {}
+    website_cache_expiry = 15 # Seconds
+    website_update_offset = 4 # Seconds - Offset processes to avoid spikes
+    website_update_time = 0
     website_list = [
         "https://lieblinghomecare.com",
         "",
@@ -91,18 +94,18 @@ def draw_screen(stdscr):
             temp_color = curses.color_pair(6) | curses.A_REVERSE
 
         # Top Processes
-        if current_time - process_update_time >= process_cache_expiry:
+        if current_time - process_update_offset - process_update_time >= process_cache_expiry:
             process_update_time = current_time
             process_cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
                                        key=lambda p: p.info['cpu_percent'], reverse=True)[:5]
 
         # Docker Containers
-        if current_time - docker_update_time >= docker_cache_expiry:
+        if current_time - docker_update_offset - docker_update_time >= docker_cache_expiry:
             docker_update_time = current_time
             docker_cache = [(c.short_id, c.name, c.status) for c in docker.from_env().containers.list()]
 
         # Website Status
-        if current_time - website_update_time >= website_cache_expiry:
+        if current_time - website_update_offset - website_update_time >= website_cache_expiry:
             website_update_time = current_time
             website_cache = {url: check_website_status(url) for url in website_list}
 
