@@ -40,11 +40,9 @@ def draw_screen(stdscr):
         "https://lieblinghomecare.com",
         "",
         "https://demasie.com/health",
-        "",
         "https://nathan.demasie.com/health",
         "https://refer.demasie.com/health",
         "https://habit.demasie.com/health",
-        "",
         "https://nathan-app-site.demasie.com/health",
         "https://nathan-app-habit-print.demasie.com/health",
         "https://nathan-app-referral-codes.demasie.com/health",
@@ -127,13 +125,13 @@ def draw_screen(stdscr):
             stdscr.addstr(15 + i, 0, f"{display_url:<30}")
             stdscr.addstr(15 + i, 50, f"{text}", color | curses.A_REVERSE)
 
-        stdscr.addstr(28, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(29, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
+        stdscr.addstr(26, 0, "Docker Containers:", curses.A_BOLD)
+        stdscr.addstr(27, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
         for i, (container_id, name, status) in enumerate(docker_containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(30 + i, 0, f"{container_id:<15}")
-            stdscr.addstr(30 + i, 15, f"{name:<35}")
-            stdscr.addstr(30 + i, 50, f"{status:<10}", status_color)
+            stdscr.addstr(28 + i, 0, f"{container_id:<15}")
+            stdscr.addstr(28 + i, 15, f"{name:<35}")
+            stdscr.addstr(28 + i, 50, f"{status:<10}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
