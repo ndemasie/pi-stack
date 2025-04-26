@@ -40,9 +40,15 @@ def draw_screen(stdscr):
         "https://lieblinghomecare.com",
         "",
         "https://www.demasie.com/health",
+        "",
         "https://nathan.demasie.com/health",
+        "https://refer.demasie.com/health",
         "https://habit.demasie.com/health",
-        "https://refer.demasie.com/health"
+        "",
+        "https://nathan-app-site.demasie.com/health",
+        "https://nathan-app-habit-print.demasie.com/health",
+        "https://nathan-app-referral-codes.demasie.com/health"
+        "https://nathan-edu-i18next-server.demasie.com/health"
     ]
 
     while True:
@@ -117,16 +123,16 @@ def draw_screen(stdscr):
             if not website_url.strip():  # Skip empty URLs
                 continue
             text, color = get_website_status_display(website_cache.get(website_url, 400))
-            stdscr.addstr(15 + i, 0, f"{website_url:<30}", curses.color_pair(4))
+            stdscr.addstr(15 + i, 0, f"{website_url:<30}")
             stdscr.addstr(15 + i, 50, f"{text}", color | curses.A_REVERSE)
 
-        stdscr.addstr(22, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(23, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
+        stdscr.addstr(28, 0, "Docker Containers:", curses.A_BOLD)
+        stdscr.addstr(29, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
         for i, (container_id, name, status) in enumerate(docker_containers):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(24 + i, 0, f"{container_id:<15}")
-            stdscr.addstr(24 + i, 15, f"{name:<35}")
-            stdscr.addstr(24 + i, 50, f"{status:<10}", status_color)
+            stdscr.addstr(30 + i, 0, f"{container_id:<15}")
+            stdscr.addstr(30 + i, 15, f"{name:<35}")
+            stdscr.addstr(30 + i, 50, f"{status:<10}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
