@@ -47,7 +47,7 @@ def draw_screen(stdscr):
         "",
         "https://nathan-app-site.demasie.com/health",
         "https://nathan-app-habit-print.demasie.com/health",
-        "https://nathan-app-referral-codes.demasie.com/health"
+        "https://nathan-app-referral-codes.demasie.com/health",
         "https://nathan-edu-i18next-server.demasie.com/health"
     ]
 
@@ -120,10 +120,11 @@ def draw_screen(stdscr):
 
         stdscr.addstr(14, 0, "Website Status:", curses.A_BOLD)
         for i, website_url in enumerate(website_list):
-            if not website_url.strip():  # Skip empty URLs
-                continue
+            if not website_url.strip():
+                continue # Skip empty URLs
+            display_url = website_url.replace("https://", "")
             text, color = get_website_status_display(website_cache.get(website_url, 400))
-            stdscr.addstr(15 + i, 0, f"{website_url:<30}")
+            stdscr.addstr(15 + i, 0, f"{display_url:<30}")
             stdscr.addstr(15 + i, 50, f"{text}", color | curses.A_REVERSE)
 
         stdscr.addstr(28, 0, "Docker Containers:", curses.A_BOLD)
