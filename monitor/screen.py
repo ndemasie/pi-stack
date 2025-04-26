@@ -33,7 +33,11 @@ def draw_screen(stdscr):
     process_update_time = 0
     process_cache = []
 
-    website_cache_expiry = 10 # Seconds
+    docker_cache_expiry = 5 # Seconds
+    docker_update_time = 0
+    docker_cache = []
+
+    website_cache_expiry = 15 # Seconds
     website_update_time = 0
     website_cache = {}
     website_list = [
@@ -93,7 +97,9 @@ def draw_screen(stdscr):
                                        key=lambda p: p.info['cpu_percent'], reverse=True)[:5]
 
         # Docker Containers
-        docker_containers = [(c.id[:12], c.name, c.status) for c in docker.from_env().containers.list()]
+        if current_time - docker_update_time >= docker_cache_expiry:
+            docker_update_time = current_time
+            docker_cache = [(c.short_id, c.name, c.status) for c in docker.from_env().containers.list()]
 
         # Website Status
         if current_time - website_update_time >= website_cache_expiry:
@@ -118,7 +124,7 @@ def draw_screen(stdscr):
             stdscr.addstr(8 + i, 0, f"{p.info['pid']:<10}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<10.2f}")
 
         stdscr.addstr(15, 0, "Website".rjust(46), curses.A_BOLD)
-        stdscr.addstr(15, 50, "Status", curses.A_BOLD)
+        stdscr.addstr(15, 50, "Status")
         for i, website_url in enumerate(website_list):
             if not website_url.strip():
                 continue  # Skip empty URLs
@@ -129,9 +135,9 @@ def draw_screen(stdscr):
 
         stdscr.addstr(29, 0, "Docker Containers:", curses.A_BOLD)
         stdscr.addstr(30, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
-        for i, (container_id, name, status) in enumerate(docker_containers):
+        for i, (short_id, name, status) in enumerate(docker_cache):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(31 + i, 0, f"{container_id:<15}")
+            stdscr.addstr(31 + i, 0, f"{short_id:<15}")
             stdscr.addstr(31 + i, 15, f"{name:<35}")
             stdscr.addstr(31 + i, 50, f"{status:<10}", status_color)
 
