@@ -15,7 +15,7 @@ def setup_curses():
     curses.init_pair(6, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
-def check_website_status(url):
+def get_website_status(url):
     try:
         return requests.head(url, timeout=5).status_code
     except requests.RequestException:
@@ -39,16 +39,17 @@ def draw_screen(stdscr):
 
     process_cache = []
     process_cache_expiry = 5 # Seconds
-    process_update_offset = 0 # Seconds - Offset processes to avoid spikes
+    process_update_offset = 0 # Seconds - Time offset to avoid spikes
     process_update_time = 0
 
     docker_cache = []
-    docker_cache_expiry = 5 # Seconds
-    docker_update_offset = 2 # Seconds - Offset processes to avoid spikes
+    docker_cache_expiry = 10 # Seconds
+    docker_update_offset = 2 # Seconds - Time offset to avoid spikes
     docker_update_time = 0
 
     website_cache = {
         "https://lieblinghomecare.com": 0,
+        "": 0,
         "https://demasie.com/health": 0,
         "https://nathan.demasie.com/health": 0,
         "https://refer.demasie.com/health": 0,
@@ -58,6 +59,8 @@ def draw_screen(stdscr):
         "https://nathan-app-referral-codes.demasie.com/health": 0,
         "https://nathan-edu-i18next-server.demasie.com/health": 0
     }
+    website_keys = list(website_cache.keys())
+    website_index = 0
 
     while True:
         current_time = time.time()
@@ -107,14 +110,11 @@ def draw_screen(stdscr):
             docker_cache = [(c.short_id, c.name, c.status) for c in docker.from_env().containers.list()]
 
         # Website Status - Rolling Updates
-        if not hasattr(draw_screen, "website_keys"):
-            draw_screen.website_keys = list(website_cache.keys())
-        if not hasattr(draw_screen, "website_index"):
-            draw_screen.website_index = 0
+        website_url = website_keys[website_index]
+        if website_url.strip():
+            website_cache[website_url] = get_website_status(website_url)
 
-        current_website = draw_screen.website_keys[draw_screen.website_index]
-        website_cache[current_website] = check_website_status(current_website)
-        draw_screen.website_index = (draw_screen.website_index + 1) % len(draw_screen.website_keys)
+        website_index = (website_index + 1) % len(website_keys)
 
         # Draw Screen
         stdscr.clear()
@@ -136,18 +136,21 @@ def draw_screen(stdscr):
         stdscr.addstr(15, 0, "Website".rjust(46), curses.A_BOLD)
         stdscr.addstr(15, 50, "Status")
         for i, (website_url, status_code) in enumerate(website_cache.items()):
+            if not website_url.strip():
+                continue
+
             display_url = website_url.replace("https://", "").replace("/health", "").rjust(46)
             text, color = get_website_status_display(status_code)
             stdscr.addstr(16 + i, 0, f"{display_url:<30}")
             stdscr.addstr(16 + i, 50, f"{text}", color)
 
-        stdscr.addstr(29, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(30, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
+        stdscr.addstr(28, 0, "Docker Containers:", curses.A_BOLD)
+        stdscr.addstr(29, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
         for i, (short_id, name, status) in enumerate(docker_cache):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(31 + i, 0, f"{short_id:<15}")
-            stdscr.addstr(31 + i, 15, f"{name:<35}")
-            stdscr.addstr(31 + i, 50, f"{status:<10}", status_color)
+            stdscr.addstr(30 + i, 0, f"{short_id:<15}")
+            stdscr.addstr(30 + i, 15, f"{name:<35}")
+            stdscr.addstr(30 + i, 50, f"{status:<10}", status_color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
