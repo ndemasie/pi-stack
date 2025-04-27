@@ -17,7 +17,7 @@ def setup_curses():
 
 def check_website_status(url):
     try:
-        return requests.get(url, timeout=5).status_code
+        return requests.head(url, timeout=5).status_code
     except requests.RequestException:
         return 400
 
