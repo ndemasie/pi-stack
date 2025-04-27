@@ -22,8 +22,16 @@ def check_website_status(url):
         return 400
 
 def get_website_status_display(status_code):
-    text = " OK ".center(6) if status_code == 200 else " ERROR ".center(6)
-    color = curses.color_pair(1) if status_code == 200 else curses.color_pair(6)
+    if status_code == 0:
+        text = "UKN".center(6)
+        color = curses.color_pair(4) | curses.A_REVERSE
+    elif status_code == 200:
+        text = "OK".center(6)
+        color = curses.color_pair(1) | curses.A_REVERSE
+    else:
+        text = "ERROR".center(6)
+        color = curses.color_pair(6) | curses.A_REVERSE
+
     return text, color
 
 def draw_screen(stdscr):
@@ -39,23 +47,17 @@ def draw_screen(stdscr):
     docker_update_offset = 2 # Seconds - Offset processes to avoid spikes
     docker_update_time = 0
 
-    website_cache = {}
-    website_cache_expiry = 15 # Seconds
-    website_update_offset = 4 # Seconds - Offset processes to avoid spikes
-    website_update_time = 0
-    website_list = [
-        "https://lieblinghomecare.com",
-        "",
-        "https://demasie.com/health",
-        "https://nathan.demasie.com/health",
-        "https://refer.demasie.com/health",
-        "https://habit.demasie.com/health",
-        "",
-        "https://nathan-app-site.demasie.com/health",
-        "https://nathan-app-habit-print.demasie.com/health",
-        "https://nathan-app-referral-codes.demasie.com/health",
-        "https://nathan-edu-i18next-server.demasie.com/health"
-    ]
+    website_cache = {
+        "https://lieblinghomecare.com": 0,
+        "https://demasie.com/health": 0,
+        "https://nathan.demasie.com/health": 0,
+        "https://refer.demasie.com/health": 0,
+        "https://habit.demasie.com/health": 0,
+        "https://nathan-app-site.demasie.com/health": 0,
+        "https://nathan-app-habit-print.demasie.com/health": 0,
+        "https://nathan-app-referral-codes.demasie.com/health": 0,
+        "https://nathan-edu-i18next-server.demasie.com/health": 0
+    }
 
     while True:
         current_time = time.time()
@@ -104,10 +106,15 @@ def draw_screen(stdscr):
             docker_update_time = current_time
             docker_cache = [(c.short_id, c.name, c.status) for c in docker.from_env().containers.list()]
 
-        # Website Status
-        if current_time - website_update_offset - website_update_time >= website_cache_expiry:
-            website_update_time = current_time
-            website_cache = {url: check_website_status(url) for url in website_list}
+        # Website Status - Rolling Updates
+        if not hasattr(draw_screen, "website_keys"):
+            draw_screen.website_keys = list(website_cache.keys())
+        if not hasattr(draw_screen, "website_index"):
+            draw_screen.website_index = 0
+
+        current_website = draw_screen.website_keys[draw_screen.website_index]
+        website_cache[current_website] = check_website_status(current_website)
+        draw_screen.website_index = (draw_screen.website_index + 1) % len(draw_screen.website_keys)
 
         # Draw Screen
         stdscr.clear()
@@ -128,13 +135,11 @@ def draw_screen(stdscr):
 
         stdscr.addstr(15, 0, "Website".rjust(46), curses.A_BOLD)
         stdscr.addstr(15, 50, "Status")
-        for i, website_url in enumerate(website_list):
-            if not website_url.strip():
-                continue  # Skip empty URLs
+        for i, (website_url, status_code) in enumerate(website_cache.items()):
             display_url = website_url.replace("https://", "").replace("/health", "").rjust(46)
-            text, color = get_website_status_display(website_cache.get(website_url, 400))
+            text, color = get_website_status_display(status_code)
             stdscr.addstr(16 + i, 0, f"{display_url:<30}")
-            stdscr.addstr(16 + i, 50, f"{text}", color | curses.A_REVERSE)
+            stdscr.addstr(16 + i, 50, f"{text}", color)
 
         stdscr.addstr(29, 0, "Docker Containers:", curses.A_BOLD)
         stdscr.addstr(30, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
