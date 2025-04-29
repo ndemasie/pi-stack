@@ -34,6 +34,24 @@ def get_website_status_display(status_code):
 
     return text, color
 
+def draw_layout(stdscr):
+    stdscr.clear()
+
+    stdscr.addstr(0, 0, "=== Raspberry Pi Status Screen ===", curses.A_BOLD)
+
+    stdscr.addstr(2, 0, "CPU:", curses.A_BOLD)
+    stdscr.addstr(3, 0, "Memory:", curses.A_BOLD)
+    stdscr.addstr(4, 0, "Temperature:", curses.A_BOLD)
+
+    stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
+    stdscr.addstr(7, 0, f"{'PID':<10}{'Name':<25}{'CPU%':<10}")
+
+    stdscr.addstr(15, 0, "Website".rjust(46))
+    stdscr.addstr(15, 50, "Status")
+
+    stdscr.addstr(28, 0, "Docker Containers:", curses.A_BOLD)
+    stdscr.addstr(29, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
+
 def draw_screen(stdscr):
     setup_curses()
 
@@ -61,6 +79,8 @@ def draw_screen(stdscr):
     }
     website_keys = list(website_cache.keys())
     website_index = 0
+
+    draw_layout(stdscr)
 
     while True:
         current_time = time.time()
@@ -116,25 +136,21 @@ def draw_screen(stdscr):
 
         website_index = (website_index + 1) % len(website_keys)
 
-        # Draw Screen
-        stdscr.clear()
-        stdscr.addstr(0, 0, "=== Raspberry Pi Status Screen ===", curses.A_BOLD)
+        # Draw Details
 
-        stdscr.addstr(2, 0, "CPU:", curses.A_BOLD)
+        # Hardware Status
         stdscr.addstr(2, 15, f"{cpu_usage:.2f}%", cpu_color)
-        stdscr.addstr(3, 0, "Memory:", curses.A_BOLD)
         stdscr.addstr(3, 15, f"{memory.percent}%", memory_color)
         stdscr.addstr(3, 21, f"({memory.used / 1024**2:.2f} MB)")
-        stdscr.addstr(4, 0, "Temperature:", curses.A_BOLD)
         stdscr.addstr(4, 15, temp, temp_color)
 
-        stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
-        stdscr.addstr(7, 0, f"{'PID':<10}{'Name':<25}{'CPU%':<10}")
+
+        # Top Processes
         for i, p in enumerate(process_cache):
             stdscr.addstr(8 + i, 0, f"{p.info['pid']:<10}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<10.2f}")
 
-        stdscr.addstr(15, 0, "Website".rjust(46), curses.A_BOLD)
-        stdscr.addstr(15, 50, "Status")
+
+        # Website Status
         for i, (website_url, status_code) in enumerate(website_cache.items()):
             if not website_url.strip():
                 continue
@@ -144,8 +160,8 @@ def draw_screen(stdscr):
             stdscr.addstr(16 + i, 0, f"{display_url:<30}")
             stdscr.addstr(16 + i, 50, f"{text}", color)
 
-        stdscr.addstr(28, 0, "Docker Containers:", curses.A_BOLD)
-        stdscr.addstr(29, 0, f"{'ID':<15}{'Name':<35}{'Status':<10}")
+
+        # Docker containers
         for i, (short_id, name, status) in enumerate(docker_cache):
             status_color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
             stdscr.addstr(30 + i, 0, f"{short_id:<15}")
