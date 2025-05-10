@@ -56,7 +56,7 @@ def draw_screen(stdscr):
         "https://habit.demasie.com/health": 0,
         "https://nathan-app-site.demasie.com/health": 0,
         "https://nathan-app-habit-print.demasie.com/health": 0,
-        "https://nathan-app-referral-codes.demasie.com/health": 0,
+        "https://nathan-app-refer-codes.demasie.com/health": 0,
         "https://nathan-edu-i18next-server.demasie.com/health": 0
     }
     website_keys = list(website_cache.keys())
