@@ -6,9 +6,6 @@ echo "Stopping docker containers"
 docker container stop $(docker container ls -aq)
 docker system prune -a --volumes
 
-# Remove docker-compose
-${PROJECT_DIR}/packages/docker-compose/uninstall.sh
-
 echo "Uninstalling docker..."
 sudo apt purge docker
 sudo apt autoremove -y

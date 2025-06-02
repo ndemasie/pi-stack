@@ -26,7 +26,6 @@ Many thanks to the [gcgarner/IOTstack](https://github.com/gcgarner/IOTstack) and
 | --- | --- | --- |
 | bluez-tools | [bluez-tools](https://code.google.com/archive/p/bluez-tools/) | A set of tools to manage bluetooth devices for linux |
 | docker | [Docker](https://docs.docker.com/) | Containers |
-| docker-compose | [Docker Compose](https://github.com/docker/compose) | Tool for running multi-container applications |
 | git | [Git](https://git-scm.com/) | Version contral system |
 | libwidevinecdm0 | Widevine | DRM library used by Netflix et. al. |
 | log2ram | [log2ram](https://github.com/azlux/log2ram) | Like ramlog for systemd. <br> Reduces SD card writes on RaspberryPi. |

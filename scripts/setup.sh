@@ -20,20 +20,20 @@ source ${PROJECT_DIR}/scripts/helpers/index.sh
 
 # Setup steps in order of execution
 steps=(
-  do_validate_arm_sys_arch
+  do_validate_sys_arch
   do_rotate_screen
+  do_set_term_font
   do_update_pi
   do_confirm_tz
   do_fix_dns
-  # do_add_bluetooth_group_to_user
   do_add_env_file
   do_packages_menu
   do_containers_menu
 )
 
-function do_validate_arm_sys_arch() {
-  if [ $(echo "$SYS_ARCH" | grep -v "arm") ]; then
-    echo "${RED}ERROR${RESET} Only ARM architecture is supported: detected '${SYS_ARCH}'"
+function do_validate_sys_arch() {
+  if [ $(echo "$SYS_ARCH" | grep -v "aarch64") ]; then
+    echo "${RED}ERROR${RESET} Only "aarch64" architecture is supported: detected '${SYS_ARCH}'"
     exit 1
   fi
 }
@@ -81,9 +81,8 @@ function do_containers_menu() {
 }
 
 function do_fix_dns() {
-  execute "${PROJECT_DIR}/scripts/fix-dns.sh"
+  execute "${PROJECT_DIR}/scripts/do-fix-dns.sh"
 }
-
 
 # Check if a function name is passed as an argument
 if [[ -n $1 ]]; then

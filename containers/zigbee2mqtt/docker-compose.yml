@@ -1,15 +1,23 @@
 services:
   zigbee2mqtt:
     container_name: zigbee2mqtt
-    build: ../zigbee2mqtt/Dockerfile
+    image: koenkk/zigbee2mqtt:latest
     environment:
-      - TZ=Europe/Berlin
+      - TZ=${TZ:-Etc/UTC}
+      - ZIGBEE2MQTT_CONFIG_SERIAL_PORT=/dev/ttyACM0
+      - ZIGBEE2MQTT_CONFIG_SERIAL_ADAPTER=zstack
+      - ZIGBEE2MQTT_CONFIG_MQTT_SERVER=mqtt://mosquitto:1883
+      # only enable the next line for Zigbee2MQTT v1
+      # - ZIGBEE2MQTT_CONFIG_FRONTEND=true
+      - ZIGBEE2MQTT_CONFIG_FRONTEND_ENABLED=true
+      - ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_SYMLINK_CURRENT=true
+      # - DEBUG=zigbee-herdsman*
     ports:
       - "8080:8080"
     volumes:
-      - ../../data/zigbee2mqtt/data:/app/data
+      - ./volumes/zigbee2mqtt/data:/app/data
     devices:
-      # - /dev/ttyACM0:/dev/ttyACM0 # should work if CC2531 connected
-      # - /dev/ttyAMA0:/dev/ttyACM0
-      # - /dev/ttyUSB0:/dev/ttyACM0
+      - "${ZIGBEE2MQTT_DEVICE_PATH:?eg echo ZIGBEE2MQTT_DEVICE_PATH=/dev/ttyACM0 >>~/pi-stack/.env}:/dev/ttyACM0"
     restart: unless-stopped
+    depends_on:
+      - mosquitto

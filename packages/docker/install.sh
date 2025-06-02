@@ -5,8 +5,8 @@ source "$(dirname $SCRIPT_PATH)/.conf"
 echo "Installing ${name}..."
 curl -sSL https://get.docker.com | sh
 
-echo "Adding docker group to ${USER}"
-sudo usermod -aG docker $USER
+sudo groupadd docker
+sudo gpasswd -a $USER docker
 sudo su - $USER # Logout/in for user groups to take effect
 
 echo "Checking ${USER} groups"

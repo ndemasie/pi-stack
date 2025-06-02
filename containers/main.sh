@@ -63,7 +63,7 @@ function get_selections() {
 
 function save_compose() {
   compose_files=$(get_compose_files)
-  docker-compose $compose_files config > $SAVED_DOCKER_COMPOSE_PATH
+  docker compose $compose_files config > $SAVED_DOCKER_COMPOSE_PATH
 }
 
 # MAIN
@@ -82,18 +82,18 @@ while (("$#")); do
     save_compose
     ;;
   config)
-    sudo docker-compose \
+    sudo docker compose \
       --file $SAVED_DOCKER_COMPOSE_PATH \
       config
     ;;
   down)
-    sudo docker-compose \
+    sudo docker compose \
       --file $SAVED_DOCKER_COMPOSE_PATH \
       down \
       --remove-orphans
     ;;
   up)
-    sudo docker-compose \
+    sudo docker compose \
       --file $SAVED_DOCKER_COMPOSE_PATH \
       up \
       --build \
