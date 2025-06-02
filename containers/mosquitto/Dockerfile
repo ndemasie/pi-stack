@@ -10,5 +10,3 @@ COPY --chown=mosquitto:mosquitto ./volumes /volumes
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
 
 RUN chmod 755 /docker-entrypoint.sh
-
-VOLUME ["/mosquitto/config", "/mosquitto/pwfile"]
