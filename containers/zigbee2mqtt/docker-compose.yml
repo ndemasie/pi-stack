@@ -15,9 +15,9 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./volumes/zigbee2mqtt/data:/app/data
+      - ../../data/zigbee2mqtt:/app/data
     devices:
-      - "${ZIGBEE2MQTT_DEVICE_PATH:?eg echo ZIGBEE2MQTT_DEVICE_PATH=/dev/ttyACM0 >>~/pi-stack/.env}:/dev/ttyACM0"
+      - "/dev/serial/by-id/usb-Texas_Instruments_TI_CC2531_USB_CDC___0X00124B0018E33122-if00:/dev/ttyACM0"
     restart: unless-stopped
     depends_on:
       - mosquitto
