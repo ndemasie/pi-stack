@@ -23,14 +23,14 @@ def get_website_status(url):
 
 def get_website_status_display(status_code):
     if status_code == 0:
-        text = "UKN".center(6)
+        text = "UKN".center(7)
         color = curses.color_pair(4) | curses.A_REVERSE
     elif status_code == 200:
-        text = "OK".center(6)
+        text = "OK".center(7)
         color = curses.color_pair(1) | curses.A_REVERSE
     else:
-        text = "ERROR".center(6)
-        color = curses.color_pair(6) | curses.A_REVERSE
+        text = "ERROR".center(7)
+        color = curses.color_pair(7) | curses.A_REVERSE
 
     return text, color
 
@@ -102,7 +102,7 @@ def draw_screen(stdscr):
         if current_time - process_update_offset - process_update_time >= process_cache_expiry:
             process_update_time = current_time
             process_cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
-                                       key=lambda p: p.info['cpu_percent'], reverse=True)[:5]
+                                       key=lambda p: p.info['cpu_percent'], reverse=True)[:3]
 
         # Docker Containers
         if current_time - docker_update_offset - docker_update_time >= docker_cache_expiry:
@@ -128,25 +128,25 @@ def draw_screen(stdscr):
         stdscr.addstr(4, 0, "Temperature:", curses.A_BOLD)
         stdscr.addstr(4, 15, temp, temp_color)
 
-        stdscr.addstr(6, 0, f"{'PID':<7}{'Name':<24}{'CPU%':<7}", curses.A_BOLD)
+        stdscr.addstr(6, 0, f"{'PID':<7}{'Name':<26}{'CPU%':<7}", curses.A_BOLD)
         for i, p in enumerate(process_cache):
-            stdscr.addstr(6 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:23]:<24}{p.info['cpu_percent']:<7.2f}")
+            stdscr.addstr(6 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:25]:<26}{p.info['cpu_percent']:<7.2f}")
 
-        stdscr.addstr(15, 0, f"{'Website'.rjust(30)}{'Status':<7}", curses.A_BOLD)
+        stdscr.addstr(11, 0, f"{'Website'.rjust(30)}{'Status':<7}", curses.A_BOLD)
         for i, (website_url, status_code) in enumerate(website_cache.items()):
             if not website_url.strip():
                 continue
 
             display_url = website_url.replace("https://", "").replace("/health", "").rjust(30)
             text, color = get_website_status_display(status_code)
-            stdscr.addstr(15 + 1 + i, 0, f"{display_url[:30]:<30}")
-            stdscr.addstr(15 + 1 + i, 31, f"{text[:7]:<7}", color)
+            stdscr.addstr(11 + 1 + i, 0, f"{display_url[:30]:<30}")
+            stdscr.addstr(11 + 1 + i, 32, f"{text[:7]:<7}", color)
 
-        # stdscr.addstr(29, 0, f"{'Docker Container':<30}{'Status':<7}", curses.A_BOLD)
-        # for i, (short_id, name, status) in enumerate(docker_cache):
-        #     color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-        #     stdscr.addstr(29 + 1 + i, 0, f"{name[:24]:<24}")
-        #     stdscr.addstr(29 + 1 + i, 25, f"{status[10]:<10}", color)
+        stdscr.addstr(23, 0, f"{'Docker Container':<30}{'Status':<7}", curses.A_BOLD)
+        for i, (short_id, name, status) in enumerate(docker_cache):
+            color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
+            stdscr.addstr(23 + 1 + i, 0, f"{name[:26]:<26}")
+            stdscr.addstr(23 + 1 + i, 27, f"{status[10]:<10}", color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
