@@ -23,14 +23,14 @@ def get_website_status(url):
 
 def get_website_status_display(status_code):
     if status_code == 0:
-        text = "UKN".center(7)
+        text = "UKN".center(6)
         color = curses.color_pair(4) | curses.A_REVERSE
     elif status_code == 200:
-        text = "OK".center(7)
+        text = "OK".center(6)
         color = curses.color_pair(1) | curses.A_REVERSE
     else:
-        text = "ERROR".center(7)
-        color = curses.color_pair(7) | curses.A_REVERSE
+        text = "ERROR".center(6)
+        color = curses.color_pair(6) | curses.A_REVERSE
 
     return text, color
 
@@ -132,7 +132,7 @@ def draw_screen(stdscr):
         for i, p in enumerate(process_cache):
             stdscr.addstr(4 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:25]:<26}{p.info['cpu_percent']:<7.2f}")
 
-        stdscr.addstr(9, 0, f"{'Website'.rjust(30)}{'Status':<7}", curses.A_BOLD)
+        stdscr.addstr(9, 0, f"{'Website'.rjust(30):<31}{'Status':<7}", curses.A_BOLD)
         for i, (website_url, status_code) in enumerate(website_cache.items()):
             if not website_url.strip():
                 continue
@@ -145,8 +145,8 @@ def draw_screen(stdscr):
         stdscr.addstr(21, 0, f"{'Docker Container':<30}{'Status':<7}", curses.A_BOLD)
         for i, (short_id, name, status) in enumerate(docker_cache):
             color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(21 + 1 + i, 0, f"{name[:24]:<24}")
-            stdscr.addstr(21 + 1 + i, 25, f"{status[:12]:<12}", color)
+            stdscr.addstr(21 + 1 + i, 0, f"{name[:29]:<30}")
+            stdscr.addstr(21 + 1 + i, 30, f"{status[:7]:<7}", color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
