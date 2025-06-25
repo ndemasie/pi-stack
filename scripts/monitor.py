@@ -140,13 +140,13 @@ def draw_screen(stdscr):
             display_url = website_url.replace("https://", "").replace("/health", "").rjust(31)
             text, color = get_website_status_display(status_code)
             stdscr.addstr(9 + 1 + i, 0, f"{display_url[-31:]:<32}")
-            stdscr.addstr(9 + 1 + i, 32, f"{text[:8]:<8}", color)
+            stdscr.addstr(9 + 1 + i, 32, f"{text[:8]}", color)
 
         stdscr.addstr(21, 0, f"{'Docker Container':<32}{'Status':<8}", curses.A_BOLD)
         for i, (short_id, name, status) in enumerate(docker_cache):
             color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
             stdscr.addstr(21 + 1 + i, 0, f"{name[:31]:<32}")
-            stdscr.addstr(21 + 1 + i, 32, f"{status[:8]:<8}", color)
+            stdscr.addstr(21 + 1 + i, 32, f"{status[:8]}", color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
