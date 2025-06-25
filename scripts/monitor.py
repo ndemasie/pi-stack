@@ -121,32 +121,32 @@ def draw_screen(stdscr):
         # stdscr.addstr(0, 0, "=== Raspberry Pi Status Screen ===", curses.A_BOLD)
 
         stdscr.addstr(0, 0, "CPU:", curses.A_BOLD)
-        stdscr.addstr(0, 15, f"{cpu_usage:.2f}%", cpu_color)
-        stdscr.addstr(1, 0, "Memory:", curses.A_BOLD)
-        stdscr.addstr(1, 15, f"{memory.percent}%", memory_color)
-        stdscr.addstr(1, 21, f"({memory.used / 1024**2:.2f} MB)")
-        stdscr.addstr(2, 0, "Temperature:", curses.A_BOLD)
-        stdscr.addstr(2, 15, temp, temp_color)
+        stdscr.addstr(0, 5, f"{cpu_usage:.2f}%", cpu_color)
+        stdscr.addstr(0, 8, "Mem:", curses.A_BOLD)
+        stdscr.addstr(0, 13, f"{memory.percent}%", memory_color)
+        stdscr.addstr(0, 19, f"({memory.used / 1024**2:.1f}MB)")
+        stdscr.addstr(0, 27, "Temp:", curses.A_BOLD)
+        stdscr.addstr(0, 32, temp, temp_color)
 
-        stdscr.addstr(4, 0, f"{'PID':<7}{'Name':<25}{'CPU%':<8}", curses.A_BOLD)
+        stdscr.addstr(2, 0, f"{'PID':<7}{'Name':<25}{'CPU%':<8}", curses.A_BOLD)
         for i, p in enumerate(process_cache):
-            stdscr.addstr(4 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
+            stdscr.addstr(2 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
 
-        stdscr.addstr(9, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
+        stdscr.addstr(7, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
         for i, (website_url, status_code) in enumerate(website_cache.items()):
             if not website_url.strip():
                 continue
 
             display_url = website_url.replace("https://", "").replace("/health", "").rjust(33)
             text, color = get_website_status_display(status_code)
-            stdscr.addstr(9 + 1 + i, 0, f"{display_url[-33:]:<34}")
-            stdscr.addstr(9 + 1 + i, 34, f"{text[:6]}", color)
+            stdscr.addstr(7 + 1 + i, 0, f"{display_url[-33:]:<34}")
+            stdscr.addstr(7 + 1 + i, 34, f"{text[:6]}", color)
 
-        stdscr.addstr(21, 0, f"{'Docker Container':<32}{'Status':<8}", curses.A_BOLD)
+        stdscr.addstr(19, 0, f"{'Docker Container':<32}{'Status':<8}", curses.A_BOLD)
         for i, (short_id, name, status) in enumerate(docker_cache):
             color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(21 + 1 + i, 0, f"{name[:31]:<32}")
-            stdscr.addstr(21 + 1 + i, 32, f"{status[:8]}", color)
+            stdscr.addstr(19 + 1 + i, 0, f"{name[:31]:<32}")
+            stdscr.addstr(19 + 1 + i, 32, f"{status[:8]}", color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
