@@ -131,7 +131,7 @@ def draw_screen(stdscr):
         stdscr.addstr(6, 0, "Top Processes:", curses.A_BOLD)
         stdscr.addstr(7, 0, f"{'PID':<7}{'Name':<24}{'CPU%':<7}")
         for i, p in enumerate(process_cache):
-            stdscr.addstr(8 + i, 0, f"{p.info['pid'][:7]:<7}{p.info['name'][:23]:<24}{p.info['cpu_percent'][:7]:<7.2f}")
+            stdscr.addstr(8 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:23]:<24}{p.info['cpu_percent']:<7.2f}")
 
         stdscr.addstr(15, 0, "Website".rjust(30), curses.A_BOLD)
         stdscr.addstr(15, 31, "Status")
