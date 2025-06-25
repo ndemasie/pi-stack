@@ -128,19 +128,19 @@ def draw_screen(stdscr):
         stdscr.addstr(2, 0, "Temperature:", curses.A_BOLD)
         stdscr.addstr(2, 15, temp, temp_color)
 
-        stdscr.addstr(4, 0, f"{'PID':<7}{'Name':<26}{'CPU%':<8}", curses.A_BOLD)
+        stdscr.addstr(4, 0, f"{'PID':<7}{'Name':<25}{'CPU%':<8}", curses.A_BOLD)
         for i, p in enumerate(process_cache):
             stdscr.addstr(4 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
 
-        stdscr.addstr(9, 0, f"{'Website'.rjust(31):<32}{'Status':<8}", curses.A_BOLD)
+        stdscr.addstr(9, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
         for i, (website_url, status_code) in enumerate(website_cache.items()):
             if not website_url.strip():
                 continue
 
-            display_url = website_url.replace("https://", "").replace("/health", "").rjust(31)
+            display_url = website_url.replace("https://", "").replace("/health", "").rjust(33)
             text, color = get_website_status_display(status_code)
-            stdscr.addstr(9 + 1 + i, 0, f"{display_url[-31:]:<32}")
-            stdscr.addstr(9 + 1 + i, 32, f"{text[:8]}", color)
+            stdscr.addstr(9 + 1 + i, 0, f"{display_url[-33:]:<34}")
+            stdscr.addstr(9 + 1 + i, 32, f"{text[:6]}", color)
 
         stdscr.addstr(21, 0, f"{'Docker Container':<32}{'Status':<8}", curses.A_BOLD)
         for i, (short_id, name, status) in enumerate(docker_cache):
