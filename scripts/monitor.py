@@ -122,11 +122,11 @@ def draw_screen(stdscr):
 
         stdscr.addstr(0, 0, "CPU:", curses.A_BOLD)
         stdscr.addstr(0, 5, f"{cpu_usage:.2f}%", cpu_color)
-        stdscr.addstr(0, 8, "Mem:", curses.A_BOLD)
-        stdscr.addstr(0, 13, f"{memory.percent}%", memory_color)
+        stdscr.addstr(0, 10, "Mem:", curses.A_BOLD)
+        stdscr.addstr(0, 15, f"{memory.percent}%", memory_color)
         stdscr.addstr(0, 19, f"({memory.used / 1024**2:.1f}MB)")
-        stdscr.addstr(0, 27, "Temp:", curses.A_BOLD)
-        stdscr.addstr(0, 32, temp, temp_color)
+        stdscr.addstr(0, 31, "T:", curses.A_BOLD)
+        stdscr.addstr(0, 34, temp, temp_color)
 
         stdscr.addstr(2, 0, f"{'PID':<7}{'Name':<25}{'CPU%':<8}", curses.A_BOLD)
         for i, p in enumerate(process_cache):
