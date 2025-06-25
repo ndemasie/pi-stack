@@ -140,7 +140,7 @@ def draw_screen(stdscr):
             display_url = website_url.replace("https://", "").replace("/health", "").rjust(33)
             text, color = get_website_status_display(status_code)
             stdscr.addstr(9 + 1 + i, 0, f"{display_url[-33:]:<34}")
-            stdscr.addstr(9 + 1 + i, 32, f"{text[:6]}", color)
+            stdscr.addstr(9 + 1 + i, 34, f"{text[:6]}", color)
 
         stdscr.addstr(21, 0, f"{'Docker Container':<32}{'Status':<8}", curses.A_BOLD)
         for i, (short_id, name, status) in enumerate(docker_cache):
