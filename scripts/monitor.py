@@ -142,11 +142,11 @@ def draw_screen(stdscr):
             stdscr.addstr(15 + 1 + i, 0, f"{display_url[:30]:<30}")
             stdscr.addstr(15 + 1 + i, 31, f"{text[:7]:<7}", color)
 
-        stdscr.addstr(29, 0, f"{'Docker Container':<30}{'Status':<7}", curses.A_BOLD)
-        for i, (short_id, name, status) in enumerate(docker_cache):
-            color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(29 + 1 + i, 0, f"{name[:24]:<24}"[:24])
-            # stdscr.addstr(29 + 1 + i, 25, f"{status[10]:<10}", color)
+        # stdscr.addstr(29, 0, f"{'Docker Container':<30}{'Status':<7}", curses.A_BOLD)
+        # for i, (short_id, name, status) in enumerate(docker_cache):
+        #     color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
+        #     stdscr.addstr(29 + 1 + i, 0, f"{name[:24]:<24}")
+        #     stdscr.addstr(29 + 1 + i, 25, f"{status[10]:<10}", color)
 
         stdscr.refresh()
         time.sleep(1)  # Adjust refresh rate
