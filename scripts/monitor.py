@@ -145,7 +145,7 @@ def draw_screen(stdscr):
         stdscr.addstr(29, 0, f"{'Docker Container':<30}{'Status':<7}", curses.A_BOLD)
         for i, (short_id, name, status) in enumerate(docker_cache):
             color = curses.color_pair(1) if status == "running" else curses.color_pair(2)
-            stdscr.addstr(29 + 1 + i, 0, f"{name[:27]:<27}")
+            stdscr.addstr(29 + 1 + i, 0, f"{name[:26]:<26}")
             stdscr.addstr(29 + 1 + i, 28, f"{status[10]:<10}", color)
 
         stdscr.refresh()
