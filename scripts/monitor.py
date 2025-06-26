@@ -128,9 +128,9 @@ def draw_screen(stdscr):
         stdscr.addstr(0, 32, "T:", curses.A_BOLD)
         stdscr.addstr(0, 34, temp, temp_color)
 
-        stdscr.addstr(2, 0, f"{'PID':<7}{'Name':<25}{'CPU%':<8}", curses.A_BOLD)
+        stdscr.addstr(2, 0, f"{'PID':<7}{'Name':<27}{'CPU %':<8}", curses.A_BOLD)
         for i, p in enumerate(process_cache):
-            stdscr.addstr(2 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
+            stdscr.addstr(2 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:26]:<27}{p.info['cpu_percent']:<8.2f}")
 
         stdscr.addstr(7, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
         for i, (website_url, status_code) in enumerate(website_cache.items()):
