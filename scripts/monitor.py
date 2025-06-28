@@ -1,9 +1,9 @@
 import curses
 import psutil
-import docker
 import os
 import time
 import requests
+import subprocess
 
 def setup_curses():
     curses.curs_set(0)  # Hide cursor
@@ -33,6 +33,21 @@ def get_website_status_display(status_code):
         color = curses.color_pair(6) | curses.A_REVERSE
 
     return text, color
+
+def load_docker_cache():
+    result = []
+    try:
+        # Get container id, name, and status from docker ps
+        output = subprocess.check_output([
+            "docker", "ps", "--format", "{{.ID}}|{{.Names}}|{{.Status}}"
+        ], text=True)
+        for line in output.strip().splitlines():
+            container_id, name, status_str = line.split("|", 2)
+            status = status_str.split(" ", 1)[0]
+            result.append((container_id, name, status))
+    except Exception:
+        pass
+    return result
 
 def draw_screen(stdscr):
     setup_curses()
@@ -107,7 +122,7 @@ def draw_screen(stdscr):
         # Docker Containers
         if current_time - docker_update_offset - docker_update_time >= docker_cache_expiry:
             docker_update_time = current_time
-            docker_cache = [(c.short_id, c.name, c.status) for c in docker.from_env().containers.list()]
+            docker_cache = load_docker_cache()
 
         # Website Status - Rolling Updates
         website_url = website_keys[website_index]
