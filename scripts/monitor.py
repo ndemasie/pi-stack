@@ -4,6 +4,7 @@ import os
 import time
 import requests
 import subprocess
+import re
 
 def setup_curses():
     curses.curs_set(0)  # Hide cursor
@@ -39,12 +40,16 @@ def load_docker_cache():
     try:
         # Get container id, name, and status from docker ps
         output = subprocess.check_output([
-            "docker", "ps", "--format", "{{.ID}}|{{.Names}}|{{.Status}}"
+            "docker", "ps", "--format", "{{.ID}}|{{.Names}}|{{.State}}|{{.Status}}"
         ], text=True)
         for line in output.strip().splitlines():
-            container_id, name, status_str = line.split("|", 2)
-            status = status_str.split(" ", 1)[0]
-            result.append((container_id, name, status))
+            container_id, name, state, status = line.split("|", 3)
+
+            status_str = re.search(r'\(([^)]+)\)', status)
+            if status_str:
+                state = status_str.group(1)
+
+            result.append((container_id, name, state))
     except Exception:
         pass
     return result
