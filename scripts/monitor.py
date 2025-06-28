@@ -107,7 +107,10 @@ def draw_screen(stdscr):
         # Docker Containers
         if current_time - docker_update_offset - docker_update_time >= docker_cache_expiry:
             docker_update_time = current_time
-            docker_cache = [(c.short_id, c.name, c.status) for c in docker.from_env().containers.list()]
+            docker_cache = [
+                (c.short_id, c.name, c.status)
+                for c in sorted(docker.from_env().containers.list(), key=lambda c: c.name)
+            ]
 
         # Website Status - Rolling Updates
         website_url = website_keys[website_index]
