@@ -62,10 +62,10 @@ def draw_screen(stdscr):
     process_update_offset = 0 # Seconds - Time offset to avoid spikes
     process_update_time = 0
 
-    docker_cache = []
-    docker_cache_expiry = 10 # Seconds
-    docker_update_offset = 2 # Seconds - Time offset to avoid spikes
-    docker_update_time = 0
+    container_cache = []
+    container_cache_expiry = 10 # Seconds
+    container_update_offset = 2 # Seconds - Time offset to avoid spikes
+    container_update_time = 0
 
     website_cache = {
         "https://lieblinghomecare.com": 0,
@@ -124,12 +124,12 @@ def draw_screen(stdscr):
             process_cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
                                        key=lambda p: p.info['cpu_percent'], reverse=True)[:3]
 
-        # Docker Containers
-        if current_time - docker_update_offset - docker_update_time >= docker_cache_expiry:
-            docker_update_time = current_time
-            docker_cache = load_docker_cache()
+        # Containers
+        if current_time - container_update_offset - container_update_time >= container_cache_expiry:
+            container_update_time = current_time
+            container_cache = load_docker_cache()
 
-        # Website Status - Rolling Updates
+        # Websites
         website_url = website_keys[website_index]
         if website_url.strip():
             website_cache[website_url] = get_website_status(website_url)
@@ -148,9 +148,9 @@ def draw_screen(stdscr):
         stdscr.addstr(0, 32, "T:", curses.A_BOLD)
         stdscr.addstr(0, 34, temp, temp_color)
 
-        stdscr.addstr(2, 0, f"{'PID':<7}{'Name':<27}{'CPU %':<8}", curses.A_BOLD)
+        stdscr.addstr(2, 0, f"{'PID':<9}{'Name':<25}{'CPU %':<8}", curses.A_BOLD)
         for i, p in enumerate(process_cache):
-            stdscr.addstr(2 + 1 + i, 0, f"{p.info['pid']:<7}{p.info['name'][:26]:<27}{p.info['cpu_percent']:<8.2f}")
+            stdscr.addstr(2 + 1 + i, 0, f"{p.info['pid']:<9}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
 
         stdscr.addstr(7, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
         for i, (website_url, status_code) in enumerate(website_cache.items()):
@@ -162,8 +162,8 @@ def draw_screen(stdscr):
             stdscr.addstr(7 + 1 + i, 0, f"{display_url[-33:]:<34}")
             stdscr.addstr(7 + 1 + i, 34, f"{text[:6]}", color)
 
-        stdscr.addstr(19, 0, f"{'Docker Container':<32}{'Status':<8}", curses.A_BOLD)
-        for i, (container_id, name, status) in enumerate(sorted(docker_cache, key=lambda x: x[1])):
+        stdscr.addstr(19, 0, f"{'Container':<32}{'Status':<8}", curses.A_BOLD)
+        for i, (container_id, name, status) in enumerate(sorted(container_cache, key=lambda x: x[1])):
             color = curses.color_pair(1)
             if status != "healthy" and status != "running":
                 color = curses.color_pair(2)
