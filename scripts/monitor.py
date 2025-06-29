@@ -48,8 +48,10 @@ class ContainerWidget:
         stdscr.addstr(row, 0, f"{'Container':<32}{'Status':<8}", curses.A_BOLD)
         for i, (container_id, name, status) in enumerate(sorted(self.container_cache, key=lambda x: x[1])):
             color = self.get_container_display(status)
-            stdscr.addstr(row + 1 + i, 0, f"{name[:31]:<32}")
-            stdscr.addstr(row + 1 + i, 32, f"{status[:8]}", color)
+            stdscr.addstr(row + 1, 0, f"{name[:31]:<32}")
+            stdscr.addstr(row + 1, 32, f"{status[:8]}", color)
+            row += 1
+        return row + 2
 
 class WebsiteWidget:
     def __init__(self):
@@ -97,8 +99,10 @@ class WebsiteWidget:
                 continue
             display_url = website_url.replace("https://", "").replace("/health", "").rjust(33)
             color, text = self.get_website_display(status_code)
-            stdscr.addstr(row + 1 + i, 0, f"{display_url[-33:]:<34}")
-            stdscr.addstr(row + 1 + i, 34, f"{text[:6]}", color)
+            stdscr.addstr(row + 1, 0, f"{display_url[-33:]:<34}")
+            stdscr.addstr(row + 1, 34, f"{text[:6]}", color)
+            row += 1
+        return row + 2
 
 class HardwareWidget:
     def __init__(self):
@@ -160,6 +164,7 @@ class HardwareWidget:
         stdscr.addstr(row, 21, f"({self.memory.used / 1024**2:.1f}MB)")
         stdscr.addstr(row, 32, "T:", curses.A_BOLD)
         stdscr.addstr(row, 34, self.temp, temp_color)
+        return row + 2
 
 class ProcessWidget:
     def __init__(self):
@@ -177,7 +182,9 @@ class ProcessWidget:
     def draw(self, stdscr, row):
         stdscr.addstr(row, 0, f"{'PID':<9}{'Name':<25}{'CPU %':<8}", curses.A_BOLD)
         for i, p in enumerate(self.process_cache):
-            stdscr.addstr(row + 1 + i, 0, f"{p.info['pid']:<9}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
+            stdscr.addstr(row + 1, 0, f"{p.info['pid']:<9}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
+            row += 1
+        return row + 2
 
 class MonitorApp:
     def __init__(self, stdscr):
@@ -209,10 +216,12 @@ class MonitorApp:
             self.website_widget.update_cache()
             self.stdscr.clear()
 
-            self.hardware_widget.draw(self.stdscr, row=0)
-            self.process_widget.draw(self.stdscr, row=2)
-            self.website_widget.draw(self.stdscr, row=7)
-            self.container_widget.draw(self.stdscr, row=19)
+            row = 0
+            row = self.hardware_widget.draw(self.stdscr, row)
+            row = self.process_widget.draw(self.stdscr, row)
+            row = self.website_widget.draw(self.stdscr, row)
+            row = self.container_widget.draw(self.stdscr, row)
+
             self.stdscr.refresh()
             time.sleep(1)  # Adjust refresh rate
 
