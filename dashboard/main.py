@@ -11,10 +11,10 @@ class MonitorApp:
         self.stdscr = stdscr
         self.setup_curses()
 
-        self.container_widget = ContainerWidget()
-        self.website_widget = WebsiteWidget()
-        self.hardware_widget = HardwareWidget()
-        self.process_widget = ProcessWidget()
+        self.container_widget = ContainerWidget(self.stdscr)
+        self.website_widget = WebsiteWidget(self.stdscr)
+        self.hardware_widget = HardwareWidget(self.stdscr)
+        self.process_widget = ProcessWidget(self.stdscr)
 
     def setup_curses(self) -> None:
         curses.curs_set(0)  # Hide cursor
@@ -24,9 +24,12 @@ class MonitorApp:
         curses.init_pair(4, curses.COLOR_CYAN, curses.COLOR_BLACK)
         curses.init_pair(5, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
         curses.init_pair(6, curses.COLOR_RED, curses.COLOR_BLACK)
+
         curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
+        curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
     def run(self) -> None:
+        self.stdscr.clear()
         while True:
             current_time = time.time()
 
@@ -34,16 +37,15 @@ class MonitorApp:
             self.process_widget.update_cache(current_time)
             self.container_widget.update_cache(current_time)
             self.website_widget.update_cache()
-            self.stdscr.clear()
 
             row = 0
-            row = self.hardware_widget.draw(self.stdscr, row)
-            row = self.process_widget.draw(self.stdscr, row)
-            row = self.website_widget.draw(self.stdscr, row)
-            row = self.container_widget.draw(self.stdscr, row)
-
+            row = self.hardware_widget.draw(row)
+            row = self.process_widget.draw(row)
+            row = self.website_widget.draw(row)
+            row = self.container_widget.draw(row)
             self.stdscr.refresh()
-            time.sleep(1)  # Adjust refresh rate
+
+            time.sleep(1)
 
 def main(stdscr: Any) -> None:
     app = MonitorApp(stdscr)

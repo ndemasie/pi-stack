@@ -4,7 +4,8 @@ import re
 from typing import List, Tuple, Any
 
 class ContainerWidget:
-    def __init__(self) -> None:
+    def __init__(self, stdscr) -> None:
+        self.stdscr = stdscr
         self.container_cache: List[Tuple[str, str, str]] = []
         self.container_cache_expiry: int = 10 # Seconds
         self.container_update_offset: int = 2 # Seconds - Time offset to avoid spikes
@@ -41,13 +42,13 @@ class ContainerWidget:
             self.container_update_time = time
             self.container_cache = self.load_docker_cache()
 
-    def draw(self, stdscr: Any, row: int) -> int:
-        stdscr.addstr(row, 0, f"{'Container':<32}{'Status':<8}", curses.A_BOLD)
+    def draw(self, row: int) -> int:
+        self.stdscr.addstr(row, 0, f"{'Container':<32}{'Status':<8}", curses.A_BOLD)
 
         for i, (container_id, name, status) in enumerate(sorted(self.container_cache, key=lambda x: x[1])):
             color = self.get_container_display(status)
-            stdscr.addstr(row + 1, 0, f"{name[:31]:<32}")
-            stdscr.addstr(row + 1, 32, f"{status[:8]}", color)
+            self.stdscr.addstr(row + 1, 0, f"{name[:31]:<32}")
+            self.stdscr.addstr(row + 1, 32, f"{status[:8]}", color)
             row += 1
 
         return row + 2

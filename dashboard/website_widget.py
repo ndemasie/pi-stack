@@ -3,7 +3,8 @@ import requests
 from typing import Dict, List, Tuple, Any
 
 class WebsiteWidget:
-    def __init__(self) -> None:
+    def __init__(self, stdscr) -> None:
+        self.stdscr = stdscr
         self.website_cache: Dict[str, int] = {
             "https://lieblinghomecare.com": 0,
             "https://demasie.com/health": 0,
@@ -42,13 +43,13 @@ class WebsiteWidget:
             self.website_cache[website_url] = self.get_website_status(website_url)
         self.website_index = (self.website_index + 1) % len(self.website_keys)
 
-    def draw(self, stdscr: Any, row: int) -> int:
-        stdscr.addstr(row, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
+    def draw(self, row: int) -> int:
+        self.stdscr.addstr(row, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
 
         for i, (website_url, status_code) in enumerate(self.website_cache.items()):
             color, status, website = self.get_website_display(status_code, website_url)
-            stdscr.addstr(row + 1, 0, f"{website[-33:]:<34}")
-            stdscr.addstr(row + 1, 34, f"{status[:6]}", color)
+            self.stdscr.addstr(row + 1, 0, f"{website[-33:]:<34}")
+            self.stdscr.addstr(row + 1, 34, f"{status[:6]}", color)
             row += 1
 
         return row + 2

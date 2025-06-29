@@ -4,7 +4,8 @@ import os
 from typing import Any
 
 class HardwareWidget:
-    def __init__(self) -> None:
+    def __init__(self, stdscr) -> None:
+        self.stdscr = stdscr
         self.cpu_usage: float = 0
         self.memory: Any = None
         self.temp: str = ""
@@ -52,17 +53,17 @@ class HardwareWidget:
         except Exception:
             self.temp_num = 0
 
-    def draw(self, stdscr: Any, row: int) -> int:
+    def draw(self, row: int) -> int:
         cpu_color = self.get_cpu_display(self.cpu_usage)
         memory_color = self.get_memory_display(self.memory.percent)
         temp_color = self.get_temp_display(self.temp_num)
 
-        stdscr.addstr(row, 0, "CPU:", curses.A_BOLD)
-        stdscr.addstr(row, 4, f"{self.cpu_usage:.2f}%", cpu_color)
-        stdscr.addstr(row, 11, "Mem:", curses.A_BOLD)
-        stdscr.addstr(row, 15, f"{self.memory.percent}%", memory_color)
-        stdscr.addstr(row, 21, f"({self.memory.used / 1024**2:.1f}MB)")
-        stdscr.addstr(row, 32, "T:", curses.A_BOLD)
-        stdscr.addstr(row, 34, self.temp, temp_color)
+        self.stdscr.addstr(row, 0, "CPU:", curses.A_BOLD)
+        self.stdscr.addstr(row, 4, f"{self.cpu_usage:.2f}%", cpu_color)
+        self.stdscr.addstr(row, 11, "Mem:", curses.A_BOLD)
+        self.stdscr.addstr(row, 15, f"{self.memory.percent}%", memory_color)
+        self.stdscr.addstr(row, 21, f"({self.memory.used / 1024**2:.1f}MB)")
+        self.stdscr.addstr(row, 32, "T:", curses.A_BOLD)
+        self.stdscr.addstr(row, 34, self.temp, temp_color)
 
         return row + 2
