@@ -42,7 +42,7 @@ class TimerWidget:
             self.draw(row)
             key: int = self.stdscr.getch()
 
-            if key in (curses.KEY_TAB, 9):
+            if key in (curses.KEY_STAB, curses.KEY_BTAB, 9):
                 self.selected_button = (self.selected_button + 1) % 2
 
             elif key in (curses.KEY_ENTER, 10, 13):
