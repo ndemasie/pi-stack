@@ -6,12 +6,15 @@ class TimerWidget:
     def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
 
+        self.row = None
         self.running: bool = False
         self.start_time: Optional[float] = None
         self.elapsed: float = 0
         self.selected_button: int = 0  # 0: Start/Stop, 1: Reset
 
     def draw(self, row: int) -> None:
+        self.row = row
+
         # Start/Stop
         attr = curses.color_pair(8) if self.selected_button == 0 else curses.color_pair(7)
         text = " [ Start ] " if not self.running else " [ Stop ] "
@@ -33,15 +36,12 @@ class TimerWidget:
         self.stdscr.addstr(row + 1, 24, f"{hours:02}:{minutes:02}:{seconds:02}", curses.A_BOLD)
         self.stdscr.addstr(row + 2, 24)
 
-    def run(self) -> None:
-        curses.curs_set(0)
-        self.draw(0)
-
+    def run(self, row: int) -> None:
         if self.running:
             self.elapsed += time.time() - self.start_time  # type: ignore
 
         while True:
-            self.draw(0)
+            self.draw(row)
             key: int = self.stdscr.getch()
 
             if key in (curses.KEY_TAB, 9):
@@ -60,4 +60,5 @@ class TimerWidget:
                     self.elapsed = 0
                     self.start_time = None
 
+            self.stdscr.refresh()
             time.sleep(0.05)

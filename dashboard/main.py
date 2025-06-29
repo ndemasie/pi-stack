@@ -4,20 +4,23 @@ from container_widget import ContainerWidget
 from website_widget import WebsiteWidget
 from hardware_widget import HardwareWidget
 from process_widget import ProcessWidget
+from timer_widget import TimerWidget
 from typing import Any
 
 class MonitorApp:
-    def __init__(self, stdscr: Any) -> None:
-        self.stdscr = stdscr
+    def __init__(self, stdscr: 'curses._CursesWindow') -> None:
+        self.stdscr: 'curses._CursesWindow' = stdscr
         self.setup_curses()
 
         self.container_widget = ContainerWidget(self.stdscr)
         self.website_widget = WebsiteWidget(self.stdscr)
         self.hardware_widget = HardwareWidget(self.stdscr)
         self.process_widget = ProcessWidget(self.stdscr)
+        self.timer_widget = TimerWidget(self.stdscr)
 
     def setup_curses(self) -> None:
         curses.curs_set(0)  # Hide cursor
+
         curses.init_pair(1, curses.COLOR_GREEN, curses.COLOR_BLACK)
         curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
         curses.init_pair(3, curses.COLOR_BLUE, curses.COLOR_BLACK)
@@ -40,9 +43,10 @@ class MonitorApp:
             self.stdscr.clear()
             row = 0
             row = self.hardware_widget.draw(row)
-            row = self.process_widget.draw(row)
+            # row = self.process_widget.draw(row)
             row = self.website_widget.draw(row)
             row = self.container_widget.draw(row)
+            self.timer_widget.run(row)
             self.stdscr.refresh()
 
             time.sleep(1)

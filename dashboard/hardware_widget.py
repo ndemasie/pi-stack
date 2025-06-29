@@ -4,8 +4,8 @@ import os
 from typing import Any
 
 class HardwareWidget:
-    def __init__(self, stdscr) -> None:
-        self.stdscr = stdscr
+    def __init__(self, stdscr: 'curses._CursesWindow') -> None:
+        self.stdscr: 'curses._CursesWindow' = stdscr
         self.cpu_usage: float = 0
         self.memory: Any = None
         self.temp: str = ""

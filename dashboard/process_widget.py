@@ -3,8 +3,8 @@ import psutil
 from typing import List, Any
 
 class ProcessWidget:
-    def __init__(self, stdscr) -> None:
-        self.stdscr = stdscr
+    def __init__(self, stdscr: 'curses._CursesWindow') -> None:
+        self.stdscr: 'curses._CursesWindow' = stdscr
         self.process_cache: List[Any] = []
         self.process_cache_expiry: int = 5 # Seconds
         self.process_update_offset: int = 0 # Seconds - Time offset to avoid spikes

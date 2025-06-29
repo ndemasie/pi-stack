@@ -4,8 +4,8 @@ import re
 from typing import List, Tuple, Any
 
 class ContainerWidget:
-    def __init__(self, stdscr) -> None:
-        self.stdscr = stdscr
+    def __init__(self, stdscr: 'curses._CursesWindow') -> None:
+        self.stdscr: 'curses._CursesWindow' = stdscr
         self.container_cache: List[Tuple[str, str, str]] = []
         self.container_cache_expiry: int = 10 # Seconds
         self.container_update_offset: int = 2 # Seconds - Time offset to avoid spikes
