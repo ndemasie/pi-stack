@@ -72,12 +72,21 @@ class MonitorApp:
 
     @staticmethod
     def get_website_display(status_code):
-        if status_code == 0:
-            return curses.color_pair(4) | curses.A_REVERSE, "UKN".center(6)
-        elif status_code == 200:
+        if status_code == 200:
             return curses.color_pair(1) | curses.A_REVERSE, "OK".center(6)
+        elif status_code == 0:
+            return curses.color_pair(4) | curses.A_REVERSE, "UKN".center(6)
         else:
             return curses.color_pair(6) | curses.A_REVERSE, "ERROR".center(6)
+
+    @staticmethod
+    def get_container_display(status):
+        if status in ("healthy", "running"):
+            return curses.color_pair(1)
+        elif status == "unhealthy":
+            return curses.color_pair(2)
+        else:
+            return curses.color_pair(6)
 
     @staticmethod
     def get_cpu_display(cpu_usage):
@@ -161,21 +170,17 @@ class MonitorApp:
                 self.stdscr.addstr(2 + 1 + i, 0, f"{p.info['pid']:<9}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
 
             self.stdscr.addstr(7, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
-            row = 7
             for i, (website_url, status_code) in enumerate(self.website_cache.items()):
                 if not website_url.strip():
                     continue
                 display_url = website_url.replace("https://", "").replace("/health", "").rjust(33)
                 color, text = self.get_website_display(status_code)
-                self.stdscr.addstr(row + 1, 0, f"{display_url[-33:]:<34}")
-                self.stdscr.addstr(row + 1, 34, f"{text[:6]}", color)
-                row += 1
+                self.stdscr.addstr(7 + 1 + i, 0, f"{display_url[-33:]:<34}")
+                self.stdscr.addstr(7 + 1 + i, 34, f"{text[:6]}", color)
 
             self.stdscr.addstr(19, 0, f"{'Container':<32}{'Status':<8}", curses.A_BOLD)
             for i, (container_id, name, status) in enumerate(sorted(self.container_cache, key=lambda x: x[1])):
-                color = curses.color_pair(1)
-                if status != "healthy" and status != "running":
-                    color = curses.color_pair(2)
+                color = self.get_container_display(status)
                 self.stdscr.addstr(19 + 1 + i, 0, f"{name[:31]:<32}")
                 self.stdscr.addstr(19 + 1 + i, 32, f"{status[:8]}", color)
 
