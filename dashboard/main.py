@@ -35,7 +35,7 @@ class MonitorApp:
         while True:
             current_time = time.time()
 
-            self.hardware_widget.update()
+            self.hardware_widget.update(current_time)
             self.process_widget.update_cache(current_time)
             self.website_widget.update_cache()
             self.container_widget.update_cache(current_time)
