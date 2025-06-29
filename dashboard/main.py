@@ -37,17 +37,22 @@ class MonitorApp:
 
             self.hardware_widget.update()
             self.process_widget.update_cache(current_time)
-            self.container_widget.update_cache(current_time)
             self.website_widget.update_cache()
+            self.container_widget.update_cache(current_time)
+            self.timer_widget.update()
 
             self.stdscr.clear()
             row = 0
             row = self.hardware_widget.draw(row)
-            # row = self.process_widget.draw(row)
+            row = self.process_widget.draw(row)
             row = self.website_widget.draw(row)
             row = self.container_widget.draw(row)
-            self.timer_widget.run(row)
+            row = self.timer_widget.draw(row)
+
             self.stdscr.refresh()
+
+            key = self.stdscr.getch()
+            self.timer_widget.handle_input(key)
 
             time.sleep(1)
 
