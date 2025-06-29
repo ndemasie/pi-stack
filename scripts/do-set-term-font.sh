@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FONTSIZE=$(whiptail --title "Font Size" --menu "Choose a font size" 12 60 5 \
+FONTSIZE=$(whiptail --title "Font Size" --menu "Choose a font size" 12 40 5 \
     "16x32" "Large Font (16x32)" \
     "8x16" "Medium Font (8x16)" 3>&1 1>&2 2>&3)
 
