@@ -30,9 +30,9 @@ class TimerWidget:
         hours: int = int(self.elapsed // 3600)
         minutes: int = int((self.elapsed % 3600) // 60)
         seconds: int = int(self.elapsed % 60)
-        self.stdscr.addstr(row + 0, 24)
+        self.stdscr.addstr(row + 0, 24, " " * 11)
         self.stdscr.addstr(row + 1, 24, f"{hours:2.2f}:{minutes:2.2f}:{seconds:2.2f}", curses.A_BOLD)
-        self.stdscr.addstr(row + 2, 24)
+        self.stdscr.addstr(row + 2, 24, " " * 11)
 
     def run(self, row: int) -> None:
         if self.running:
