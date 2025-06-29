@@ -1,5 +1,4 @@
 from ClockWidget import ClockWidget
-# from MonitorWidget import MonitorWidget
 from textual.app import App, ComposeResult
 
 class MainApp(App):
@@ -26,7 +25,6 @@ class MainApp(App):
     '''
     BINDINGS = [ ("q", "quit", "Quit") ]
     def compose(self) -> ComposeResult:
-        # yield MonitorWidget()
         yield ClockWidget()
 
 if __name__ == "__main__":
