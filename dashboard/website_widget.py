@@ -48,6 +48,7 @@ class WebsiteWidget:
 
         for i, (website_url, status_code) in enumerate(self.website_cache.items()):
             if not website_url.strip():
+                row += 1
                 continue
 
             color, status, website = self.get_website_display(status_code, website_url)
