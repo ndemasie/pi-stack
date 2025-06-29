@@ -6,7 +6,6 @@ class WebsiteWidget:
     def __init__(self) -> None:
         self.website_cache: Dict[str, int] = {
             "https://lieblinghomecare.com": 0,
-            "": 0,
             "https://demasie.com/health": 0,
             "https://nathan.demasie.com/health": 0,
             "https://refer.demasie.com/health": 0,
@@ -47,10 +46,6 @@ class WebsiteWidget:
         stdscr.addstr(row, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
 
         for i, (website_url, status_code) in enumerate(self.website_cache.items()):
-            if not website_url.strip():
-                row += 1
-                continue
-
             color, status, website = self.get_website_display(status_code, website_url)
             stdscr.addstr(row + 1, 0, f"{website[-33:]:<34}")
             stdscr.addstr(row + 1, 34, f"{status[:6]}", color)
