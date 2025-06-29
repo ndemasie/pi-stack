@@ -20,7 +20,7 @@ class ContainerWidget:
             ], text=True)
             for line in output.strip().splitlines():
                 container_id, name, state, status = line.split("|", 3)
-                status_str = re.search(r'\\(([^)]+)\\)', status)
+                status_str = re.search(r'\\((\w+?)\\)', status)
                 if status_str:
                     state = status_str.group(1)
                 result.append((container_id, name, state))
