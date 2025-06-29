@@ -20,22 +20,24 @@ class ContainerWidget:
             ], text=True)
             for line in output.strip().splitlines():
                 container_id, name, state, status = line.split("|", 3)
-                status_str = re.search(r'\\((\w+?)\\)', status)
-                if status_str:
-                    state = status_str.group(1)
-                result.append((container_id, name, state))
+                result.append((container_id, name, state, status))
         except Exception:
             pass
         return result
 
     @staticmethod
-    def get_container_display(status: str) -> int:
-        if status in ("healthy", "running"):
-            return curses.color_pair(1)
-        elif status == "unhealthy":
-            return curses.color_pair(2)
+    def get_container_display(state: str, status: str) -> Tuple[int, str]:
+        match = re.search(r'\((\w+?)\)', status)
+        text = match.group(1) if match else state
+
+        if text in ("healthy", "running"):
+            return curses.color_pair(1), text
+        elif text == "paused":
+            return curses.color_pair(4), text
+        elif text in ("unhealthy", "restarting"):
+            return curses.color_pair(2), text
         else:
-            return curses.color_pair(6)
+            return curses.color_pair(6), text
 
     def update_cache(self, time: float) -> None:
         if time - self.container_update_offset - self.container_update_time >= self.container_cache_expiry:
@@ -45,10 +47,10 @@ class ContainerWidget:
     def draw(self, row: int) -> int:
         self.stdscr.addstr(row, 0, f"{'Container':<32}{'Status':<8}", curses.A_BOLD)
 
-        for i, (container_id, name, status) in enumerate(sorted(self.container_cache, key=lambda x: x[1])):
-            color = self.get_container_display(status)
+        for i, (container_id, name, state, status) in enumerate(sorted(self.container_cache, key=lambda x: x[1])):
+            color, text = self.get_container_display(state, status)
             self.stdscr.addstr(row + 1, 0, f"{name[:31]:<32}")
-            self.stdscr.addstr(row + 1, 32, f"{status[:8]}", color)
+            self.stdscr.addstr(row + 1, 32, f"{text[:8]}", color)
             row += 1
 
         return row + 2
