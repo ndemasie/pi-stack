@@ -37,7 +37,7 @@ class MonitorApp:
 
             self.hardware_widget.update()
             self.process_widget.update_cache(current_time)
-            self.website_widget.update_cache()
+            self.website_widget.update_cache(current_time)
             self.container_widget.update_cache(current_time)
             self.timer_widget.update(current_time)
 
@@ -54,7 +54,7 @@ class MonitorApp:
             key = self.stdscr.getch()
             self.timer_widget.handle_input(key)
 
-            time.sleep(1)
+            time.sleep(0.05)
 
 def main(stdscr: Any) -> None:
     app = MonitorApp(stdscr)

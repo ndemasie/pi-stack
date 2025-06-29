@@ -18,6 +18,7 @@ class WebsiteWidget:
         }
         self.website_keys: List[str] = list(self.website_cache.keys())
         self.website_index: int = 0
+        self._last_update_second: int = -1
 
     @staticmethod
     def get_website_status(url: str) -> int:
@@ -37,11 +38,12 @@ class WebsiteWidget:
         else:
             return curses.color_pair(6) | curses.A_REVERSE, "ERROR".center(6), display_url
 
-    def update_cache(self) -> None:
-        website_url: str = self.website_keys[self.website_index]
-        if website_url.strip():
+    def update_cache(self, time: float) -> None:
+        if int(time) != self._last_update_second:
+            self._last_update_second = int(time)
+            website_url: str = self.website_keys[self.website_index]
             self.website_cache[website_url] = self.get_website_status(website_url)
-        self.website_index = (self.website_index + 1) % len(self.website_keys)
+            self.website_index = (self.website_index + 1) % len(self.website_keys)
 
     def draw(self, row: int) -> int:
         self.stdscr.addstr(row, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
