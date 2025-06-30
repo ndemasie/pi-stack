@@ -59,11 +59,11 @@ class HardwareWidget:
         temp_color = self.get_temp_display(self.temp_num)
 
         self.stdscr.addstr(row, 0, "CPU:", curses.A_BOLD)
-        self.stdscr.addstr(row, 4, f"{self.cpu_usage:.2f}%", cpu_color)
+        self.stdscr.addstr(row, 4, f"{self.cpu_usage:.2f}", cpu_color)
         self.stdscr.addstr(row, 11, "Mem:", curses.A_BOLD)
         self.stdscr.addstr(row, 15, f"{self.memory.percent}%", memory_color)
         self.stdscr.addstr(row, 21, f"({self.memory.used / 1024**2:.1f}MB)")
         self.stdscr.addstr(row, 32, "T:", curses.A_BOLD)
-        self.stdscr.addstr(row, 34, self.temp, temp_color)
+        self.stdscr.addstr(row, 34, f"{self.temp_num:.1f}'C", temp_color)
 
         return row + 2
