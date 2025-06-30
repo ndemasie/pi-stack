@@ -10,6 +10,8 @@ from typing import Any
 class MonitorApp:
     def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
+        self.stdscr.nodelay(True)  # Make getch non-blocking
+
         self.setup_curses()
 
         self.container_widget = ContainerWidget(self.stdscr)
@@ -52,7 +54,8 @@ class MonitorApp:
             self.stdscr.refresh()
 
             key = self.stdscr.getch()
-            self.timer_widget.handle_input(key)
+            if key != -1:
+                self.timer_widget.handle_input(key)
 
             time.sleep(0.05)
 
