@@ -34,6 +34,8 @@ class MonitorApp:
         curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
     def run(self) -> None:
+        self.stdscr.clear()
+
         while True:
             current_time = time.time()
 
@@ -43,7 +45,6 @@ class MonitorApp:
             self.container_widget.update_cache(current_time)
             self.timer_widget.update(current_time)
 
-            self.stdscr.clear()
             row = 0
             row = self.hardware_widget.draw(row)
             row = self.process_widget.draw(row)
