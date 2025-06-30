@@ -39,11 +39,11 @@ class TimerWidget:
         # Start/Stop
         attr = curses.color_pair(8) if self.selected_button == 0 else curses.color_pair(7)
         text = " [ Start ] " if not self.running else " [ Stop ] "
-        self.stdscr.addstr(row, 0, text, attr)
+        self.stdscr.addstr(row, 0, f"{text:<12}", attr)
 
         # Reset
         attr = curses.color_pair(8) if self.selected_button == 1 else curses.color_pair(7)
-        self.stdscr.addstr(row, 12, f" [ Reset ] ", attr)
+        self.stdscr.addstr(row, 12, f"{' [ Reset ] ':<12}", attr)
 
         # Timer
         hours: int = int(self.elapsed // 3600)
