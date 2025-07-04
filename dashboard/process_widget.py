@@ -1,5 +1,5 @@
 import curses
-from time import time
+import time
 import psutil
 from typing import List, Any
 

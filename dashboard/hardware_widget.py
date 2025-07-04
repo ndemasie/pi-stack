@@ -1,6 +1,7 @@
 import curses
 import psutil
 import os
+import time
 from typing import Any
 
 class HardwareWidget:
