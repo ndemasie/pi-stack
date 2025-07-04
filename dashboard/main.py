@@ -44,16 +44,26 @@ class MonitorApp:
 
     def run(self) -> None:
         self.stdscr.clear()
+        last_timer_update = time.time()
 
         while True:
             key = self.stdscr.getch()
-            self.redraw()
+            now = time.time()
+            redraw = False
 
+            # Redraw if a key is pressed
             if key != -1:
                 self.timer_widget.handle_input(key)
-                self.redraw()
+                redraw = True
 
-            time.sleep(1)
+            # Redraw if a second has passed
+            if now - last_timer_update >= 1:
+                redraw = True
+                last_timer_update = now
+
+            if redraw:
+                self.redraw()
+            time.sleep(0.05)
 
 def main(stdscr: Any) -> None:
     app = MonitorApp(stdscr)
