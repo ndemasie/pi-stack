@@ -33,32 +33,27 @@ class MonitorApp:
         curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
         curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
+    def redraw(self) -> None:
+        row = 0
+        row = self.hardware_widget.draw(row)
+        row = self.process_widget.draw(row)
+        row = self.website_widget.draw(row)
+        row = self.container_widget.draw(row)
+        row = self.timer_widget.draw(row)
+        self.stdscr.refresh()
+
     def run(self) -> None:
         self.stdscr.clear()
 
         while True:
-            current_time = time.time()
+            key = self.stdscr.getch()
+            self.redraw()
 
-            self.hardware_widget.update()
-            self.process_widget.update_cache(current_time)
-            self.website_widget.update_cache(current_time)
-            self.container_widget.update_cache(current_time)
-            # self.timer_widget.update(current_time)
+            if key != -1:
+                self.timer_widget.handle_input(key)
+                self.redraw()
 
-            row = 0
-            row = self.hardware_widget.draw(row)
-            row = self.process_widget.draw(row)
-            row = self.website_widget.draw(row)
-            row = self.container_widget.draw(row)
-            # row = self.timer_widget.draw(row)
-
-            self.stdscr.refresh()
-
-            # key = self.stdscr.getch()
-            # if key != -1:
-            #     self.timer_widget.handle_input(key)
-
-            time.sleep(0.05)
+            time.sleep(1)
 
 def main(stdscr: Any) -> None:
     app = MonitorApp(stdscr)

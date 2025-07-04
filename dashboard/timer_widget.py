@@ -1,33 +1,40 @@
 import curses
 import time
-from typing import Optional, Tuple
+from typing import Optional
+from enum import Enum
+
+class TimerButton(Enum):
+    START_STOP = 0
+    RESET = 1
 
 class TimerWidget:
     def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
 
-        self.row = None
+        self.button: TimerButton = TimerButton.START_STOP
         self.running: bool = False
         self.start_time: Optional[float] = None
         self.elapsed: float = 0
-        self.selected_button: int = 0  # 0: Start/Stop, 1: Reset
 
     def handle_input(self, key: int) -> None:
         if key in (curses.KEY_STAB, curses.KEY_BTAB, 9):
-            self.selected_button = (self.selected_button + 1) % 2
+            self.button = TimerButton((self.button.value + 1) % 2)
+
         elif key in (curses.KEY_ENTER, 10, 13):
-            if self.selected_button == 0 and not self.running:
+            if self.button == TimerButton.START_STOP and not self.running:
                 self.running = True
                 self.start_time = time.time()
-            elif self.selected_button == 0 and self.running:
+
+            elif self.button == TimerButton.START_STOP and self.running:
                 self.running = False
                 self.elapsed += time.time() - self.start_time
                 self.start_time = None
-            elif self.selected_button == 1:
+
+            elif self.button == TimerButton.RESET:
                 self.running = False
                 self.elapsed = 0
                 self.start_time = None
-                self.selected_button = 0
+                self.button = 0
 
     def update(self, current_time: int) -> None:
         if self.running and self.start_time is not None:
@@ -37,13 +44,14 @@ class TimerWidget:
 
     def draw(self, row: int) -> None:
         # Start/Stop
-        attr = curses.color_pair(8) if self.selected_button == 0 else curses.color_pair(7)
+        attr = curses.A_REVERSE if self.button == TimerButton.START_STOP else curses.A_NORMAL
         text = " [ Start ] " if not self.running else " [ Stop ] "
         self.stdscr.addstr(row, 0, f"{text:<12}", attr)
 
         # Reset
-        attr = curses.color_pair(8) if self.selected_button == 1 else curses.color_pair(7)
-        self.stdscr.addstr(row, 12, f"{' [ Reset ] ':<12}", attr)
+        attr = curses.A_REVERSE if self.button == TimerButton.RESET else curses.A_NORMAL
+        text = " [ Reset ] " if self.button == TimerButton.RESET else " [ Reset ] "
+        self.stdscr.addstr(row, 12, f"{text:<12}", attr)
 
         # Timer
         hours: int = int(self.elapsed // 3600)
