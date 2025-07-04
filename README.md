@@ -25,10 +25,10 @@ Many thanks to the [gcgarner/IOTstack](https://github.com/gcgarner/IOTstack) and
 | Command | Name | Description |
 | --- | --- | --- |
 | bluez-tools | [bluez-tools](https://code.google.com/archive/p/bluez-tools/) | A set of tools to manage bluetooth devices for linux |
+| cups | CUPS | Setup CUPS (Common Unix Printer Driver System) |
 | docker | [Docker](https://docs.docker.com/) | Containers |
 | git | [Git](https://git-scm.com/) | Version contral system |
 | libwidevinecdm0 | Widevine | DRM library used by Netflix et. al. |
 | log2ram | [log2ram](https://github.com/azlux/log2ram) | Like ramlog for systemd. <br> Reduces SD card writes on RaspberryPi. |
-| micro | [micro](https://github.com/zyedidia/micro) | Minimal text editor |
-| python3 | Python3 | Python3 with Pip3 |
+| micro | [Micro](https://github.com/zyedidia/micro) | Minimal text editor |
 
