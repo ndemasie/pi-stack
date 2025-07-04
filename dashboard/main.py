@@ -56,19 +56,15 @@ class MonitorApp:
         while True:
             key = self.stdscr.getch()
             now = time.time()
-            redraw = False
 
             # If key is pressed
             if key != -1:
                 self.timer_widget.handle_input(key)
-                redraw = True
+                self.redraw()
 
             # If second has passed
             if now - last_timer_update >= 1:
                 last_timer_update = now
-                redraw = True
-
-            if redraw:
                 self.update(now)
                 self.redraw()
 
