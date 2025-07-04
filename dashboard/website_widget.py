@@ -1,4 +1,5 @@
 import curses
+import time
 import requests
 from typing import Dict, List, Tuple, Any
 
@@ -38,7 +39,7 @@ class WebsiteWidget:
         else:
             return curses.color_pair(6) | curses.A_REVERSE, "ERROR".center(6), display_url
 
-    def update(self, time: float) -> None:
+    def update(self, time: float = time.time()) -> None:
         if int(time) != self._last_update_second:
             self._last_update_second = int(time)
             website_url: str = self.website_keys[self.website_index]

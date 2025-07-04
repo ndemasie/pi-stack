@@ -34,11 +34,12 @@ class MonitorApp:
         curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
     def update(self) -> None:
-        self.hardware_widget.update()
-        self.process_widget.update()
-        self.website_widget.update()
-        self.container_widget.update()
-        self.timer_widget.update(int(time.time()))
+        cur_time = time.time()
+        self.hardware_widget.update(cur_time)
+        self.process_widget.update(cur_time)
+        self.website_widget.update(cur_time)
+        self.container_widget.update(cur_time)
+        self.timer_widget.update(cur_time)
 
     def redraw(self) -> None:
         row = 0

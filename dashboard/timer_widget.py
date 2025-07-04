@@ -15,6 +15,7 @@ class TimerWidget:
         self.running: bool = False
         self.start_time: Optional[float] = None
         self.elapsed: float = 0
+        self.update()
 
     def handle_input(self, key: int) -> None:
         if key in (curses.KEY_STAB, curses.KEY_BTAB, 9):
@@ -36,10 +37,10 @@ class TimerWidget:
                 self.start_time = None
                 self.button = TimerButton.START_STOP
 
-    def update(self, current_time: int) -> None:
+    def update(self, time: float = time.time()) -> None:
         if self.running and self.start_time is not None:
-            self.elapsed += current_time - self.start_time
-            self.start_time = current_time
+            self.elapsed += time - self.start_time
+            self.start_time = time
 
 
     def draw(self, row: int) -> None:

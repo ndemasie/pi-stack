@@ -1,6 +1,7 @@
 import curses
 import subprocess
 import re
+import time
 from typing import List, Tuple, Any
 
 class ContainerWidget:
@@ -10,6 +11,7 @@ class ContainerWidget:
         self.container_cache_expiry: int = 10 # Seconds
         self.container_update_offset: int = 2 # Seconds - Time offset to avoid spikes
         self.container_update_time: float = 0
+        self.update()
 
     @staticmethod
     def load_docker_cache() -> List[Tuple[str, str, str]]:
@@ -39,7 +41,7 @@ class ContainerWidget:
         else:
             return curses.color_pair(6), text
 
-    def update(self, time: float) -> None:
+    def update(self, time: float = time.time()) -> None:
         if time - self.container_update_offset - self.container_update_time >= self.container_cache_expiry:
             self.container_update_time = time
             self.container_cache = self.load_docker_cache()
