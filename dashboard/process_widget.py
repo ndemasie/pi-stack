@@ -10,7 +10,7 @@ class ProcessWidget:
         self.process_update_offset: int = 0 # Seconds - Time offset to avoid spikes
         self.process_update_time: float = 0
 
-    def update_cache(self, time: float) -> None:
+    def update(self, time: float) -> None:
         if time - self.process_update_offset - self.process_update_time >= self.process_cache_expiry:
             self.process_update_time = time
             self.process_cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),

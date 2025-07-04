@@ -39,7 +39,7 @@ class ContainerWidget:
         else:
             return curses.color_pair(6), text
 
-    def update_cache(self, time: float) -> None:
+    def update(self, time: float) -> None:
         if time - self.container_update_offset - self.container_update_time >= self.container_cache_expiry:
             self.container_update_time = time
             self.container_cache = self.load_docker_cache()
