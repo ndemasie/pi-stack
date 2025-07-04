@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if whiptail --title "Screen Orientation" --yesno "Do you want to rotate the screen?" 12 60; then
-  ROTATION=$(whiptail --title "Screen Orientation" --menu "Rotation:" 12 60 5 \
+if whiptail --title "Screen Orientation" --yesno "Do you want to rotate the screen?" 12 40; then
+  ROTATION=$(whiptail --title "Screen Orientation" --menu "Rotation:" 12 40 5 \
       "1" "(90deg)" \
       "2" "(180deg)" \
       "3" "(270deg)" 3>&1 1>&2 2>&3)

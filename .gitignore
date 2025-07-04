@@ -9,3 +9,6 @@ data/
 
 # Generated container docker-compose may include secrets
 containers/docker-compose.yml
+
+# Cache
+**/__pycache__
