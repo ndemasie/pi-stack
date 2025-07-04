@@ -1,12 +1,13 @@
 import curses
 import time
 import requests
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple, Optional
 
 class WebsiteWidget:
     def __init__(self, stdscr) -> None:
         self.stdscr = stdscr
 
+        self.row: Optional[int] = None
         self.cache: Dict[str, int] = {
             "https://lieblinghomecare.com": 0,
             "https://demasie.com/health": 0,
@@ -47,7 +48,11 @@ class WebsiteWidget:
             self.cache[website_url] = self.get_website_status(website_url)
             self.index = (self.index + 1) % len(self.keys)
 
-    def draw(self, row: int) -> int:
+    def draw(self, row: Optional[int] = None) -> int:
+        if row is None:
+            row = self.row if self.row is not None else 0
+        self.row = row
+
         self.stdscr.addstr(row, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
 
         for i, (website_url, status_code) in enumerate(self.cache.items()):

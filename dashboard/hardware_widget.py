@@ -2,12 +2,13 @@ import curses
 import psutil
 import os
 import time
-from typing import Any
+from typing import Any, Optional
 
 class HardwareWidget:
     def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
 
+        self.row: Optional[int] = None
         self.cpu_usage: float = 0
         self.memory: Any = None  # psutil.virtual_memory() returns a named tuple
         self.temp: str = ""
@@ -56,7 +57,11 @@ class HardwareWidget:
         except Exception:
             self.temp_num = 0
 
-    def draw(self, row: int) -> int:
+    def draw(self, row: Optional[int] = None) -> int:
+        if row is None:
+            row = self.row if self.row is not None else 0
+        self.row = row
+
         cpu_color = self.get_cpu_display(self.cpu_usage)
         memory_color = self.get_memory_display(self.memory.percent)
         temp_color = self.get_temp_display(self.temp_num)

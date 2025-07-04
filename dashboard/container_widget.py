@@ -2,11 +2,13 @@ import curses
 import subprocess
 import re
 import time
-from typing import List, Tuple, Any
+from typing import List, Tuple, Optional
 
 class ContainerWidget:
     def __init__(self, stdscr: 'curses._CursesWindow', update_offset: int = 0) -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
+
+        self.row: Optional[int] = None
         self.cache: List[Tuple[str, str, str]] = []
         self.cache_expiry: int = 10 # Seconds
         self.update_offset: int = update_offset # Seconds - Time offset to avoid spikes
@@ -46,7 +48,11 @@ class ContainerWidget:
             self.update_time = time
             self.cache = self.load_docker_cache()
 
-    def draw(self, row: int) -> int:
+    def draw(self, row: Optional[int] = None) -> int:
+        if row is None:
+            row = self.row if self.row is not None else 0
+        self.row = row
+
         self.stdscr.addstr(row, 0, f"{'Container':<32}{'Status':<8}", curses.A_BOLD)
 
         for i, (container_id, name, state, status) in enumerate(sorted(self.cache, key=lambda x: x[1])):

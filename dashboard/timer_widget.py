@@ -11,24 +11,25 @@ class TimerWidget:
     def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
 
+        self.row: Optional[int] = None
         self.button: TimerButton = TimerButton.START_STOP
         self.is_running: bool = False
         self.start_time: Optional[float] = None
         self.elapsed: float = 0
         self.update()
 
-    def handle_input(self, key: int) -> None:
+    def handle_input(self, key: int, time: float = time.time()) -> None:
         if key in (curses.KEY_STAB, curses.KEY_BTAB, 9):
             self.button = TimerButton((self.button.value + 1) % 2)
 
         elif key in (curses.KEY_ENTER, 10, 13):
             if self.button == TimerButton.START_STOP and not self.is_running:
                 self.is_running = True
-                self.start_time = time.time()
+                self.start_time = time
 
             elif self.button == TimerButton.START_STOP and self.is_running:
                 self.is_running = False
-                self.elapsed += time.time() - self.start_time
+                self.elapsed += time - self.start_time
                 self.start_time = None
 
             elif self.button == TimerButton.RESET:
@@ -43,7 +44,11 @@ class TimerWidget:
             self.start_time = time
 
 
-    def draw(self, row: int) -> None:
+    def draw(self, row: Optional[int] = None) -> int:
+        if row is None:
+            row = self.row if self.row is not None else 0
+        self.row = row
+
         # Start/Stop
         attr = curses.A_REVERSE if self.button == TimerButton.START_STOP else curses.A_NORMAL
         text = " [ Start ] " if not self.is_running else " [ Stop ] "

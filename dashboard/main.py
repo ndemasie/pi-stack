@@ -59,8 +59,8 @@ class MonitorApp:
 
             # If key is pressed
             if key != -1:
-                self.timer_widget.handle_input(key)
-                self.redraw()
+                self.timer_widget.handle_input(key, now)
+                self.timer_widget.draw()
 
             # If second has passed
             if now - last_timer_update >= 1:

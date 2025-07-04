@@ -1,11 +1,13 @@
 import curses
 import time
 import psutil
-from typing import List, Any
+from typing import List, Any, Optional
 
 class ProcessWidget:
     def __init__(self, stdscr: 'curses._CursesWindow', update_offset: int = 0) -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
+
+        self.row: Optional[int] = None
         self.cache: List[Any] = []
         self.cache_expiry: int = 5 # Seconds
         self.update_offset: int = update_offset # Seconds - Time offset to avoid spikes
@@ -18,7 +20,11 @@ class ProcessWidget:
             self.cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
                                        key=lambda p: p.info['cpu_percent'], reverse=True)[:3]
 
-    def draw(self, row: int) -> int:
+    def draw(self, row: Optional[int] = None) -> int:
+        if row is None:
+            row = self.row if self.row is not None else 0
+        self.row = row
+
         self.stdscr.addstr(row, 0, f"{'PID':<9}{'Name':<25}{'CPU %':<8}", curses.A_BOLD)
 
         for i, p in enumerate(self.cache):
