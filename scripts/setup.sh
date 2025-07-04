@@ -43,7 +43,7 @@ function do_update_pi() {
 }
 
 function do_confirm_tz() {
-  if whiptail --title "Timezone" --yesno "$(timedatectl | sed -nr '/Time zone|Universal time/p')\n\n\nSet new Timezone?" 12 60; then
+  if whiptail --title "Timezone" --yesno "$(timedatectl | sed -nr '/Time zone|Universal time/p')\n\n\nSet new Timezone?" 12 40; then
     sudo raspi-config
   fi
 }
@@ -67,7 +67,7 @@ function do_add_bluetooth_group_to_user() {
 }
 
 function do_add_env_file {
-  if whiptail --title "Add .env file?" --yesno "Add .env file?" 12 60; then
+  if whiptail --title "Add .env file?" --yesno "Add .env file?" 12 40; then
     [[ ! -f .env ]] && touch .env
   fi
 }

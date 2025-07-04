@@ -21,7 +21,7 @@ function get_selections() {
   done
 
   selections=$(whiptail --title "Install Packages" --notags --separate-output --checklist \
-    "Use the [SPACEBAR] to select which packages you would like to install" 20 78 12 \
+    "Use the [SPACEBAR] to select which packages you would like to install" 20 40 12 \
     -- "${menu_options[@]}" \
     3>&1 1>&2 2>&3)
 
