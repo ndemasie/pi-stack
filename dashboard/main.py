@@ -14,10 +14,10 @@ class MonitorApp:
 
         self.setup_curses()
 
-        self.container_widget = ContainerWidget(self.stdscr)
+        self.container_widget = ContainerWidget(self.stdscr, update_offset=3)
         self.website_widget = WebsiteWidget(self.stdscr)
         self.hardware_widget = HardwareWidget(self.stdscr)
-        self.process_widget = ProcessWidget(self.stdscr)
+        self.process_widget = ProcessWidget(self.stdscr, update_offset=1)
         self.timer_widget = TimerWidget(self.stdscr)
 
     def setup_curses(self) -> None:
@@ -33,13 +33,12 @@ class MonitorApp:
         curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
         curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
-    def update(self) -> None:
-        cur_time = time.time()
-        self.hardware_widget.update(cur_time)
-        self.process_widget.update(cur_time)
-        self.website_widget.update(cur_time)
-        self.container_widget.update(cur_time)
-        self.timer_widget.update(cur_time)
+    def update(self, time: float = time.time()) -> None:
+        self.hardware_widget.update(time)
+        self.process_widget.update(time)
+        self.website_widget.update(time)
+        self.container_widget.update(time)
+        self.timer_widget.update(time)
 
     def redraw(self) -> None:
         row = 0
@@ -59,19 +58,20 @@ class MonitorApp:
             now = time.time()
             redraw = False
 
-            # Redraw if a key is pressed
+            # If key is pressed
             if key != -1:
                 self.timer_widget.handle_input(key)
                 redraw = True
 
-            # Redraw if a second has passed
+            # If second has passed
             if now - last_timer_update >= 1:
-                redraw = True
                 last_timer_update = now
+                redraw = True
 
             if redraw:
-                self.update()
+                self.update(now)
                 self.redraw()
+
             time.sleep(0.05)
 
 def main(stdscr: Any) -> None:

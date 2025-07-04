@@ -5,12 +5,12 @@ import time
 from typing import List, Tuple, Any
 
 class ContainerWidget:
-    def __init__(self, stdscr: 'curses._CursesWindow') -> None:
+    def __init__(self, stdscr: 'curses._CursesWindow', update_offset: int = 0) -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
-        self.container_cache: List[Tuple[str, str, str]] = []
-        self.container_cache_expiry: int = 10 # Seconds
-        self.container_update_offset: int = 2 # Seconds - Time offset to avoid spikes
-        self.container_update_time: float = 0
+        self.cache: List[Tuple[str, str, str]] = []
+        self.cache_expiry: int = 10 # Seconds
+        self.update_offset: int = update_offset # Seconds - Time offset to avoid spikes
+        self.update_time: float = 0
         self.update()
 
     @staticmethod
@@ -42,14 +42,14 @@ class ContainerWidget:
             return curses.color_pair(6), text
 
     def update(self, time: float = time.time()) -> None:
-        if time - self.container_update_offset - self.container_update_time >= self.container_cache_expiry:
-            self.container_update_time = time
-            self.container_cache = self.load_docker_cache()
+        if time - self.update_offset - self.update_time >= self.cache_expiry:
+            self.update_time = time
+            self.cache = self.load_docker_cache()
 
     def draw(self, row: int) -> int:
         self.stdscr.addstr(row, 0, f"{'Container':<32}{'Status':<8}", curses.A_BOLD)
 
-        for i, (container_id, name, state, status) in enumerate(sorted(self.container_cache, key=lambda x: x[1])):
+        for i, (container_id, name, state, status) in enumerate(sorted(self.cache, key=lambda x: x[1])):
             color, text = self.get_container_display(state, status)
             self.stdscr.addstr(row + 1, 0, f"{name[:31]:<32}")
             self.stdscr.addstr(row + 1, 32, f"{text[:8]}", color)

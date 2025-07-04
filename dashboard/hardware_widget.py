@@ -7,6 +7,7 @@ from typing import Any
 class HardwareWidget:
     def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
+
         self.cpu_usage: float = 0
         self.memory: Any = None  # psutil.virtual_memory() returns a named tuple
         self.temp: str = ""

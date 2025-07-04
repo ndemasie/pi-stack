@@ -6,7 +6,8 @@ from typing import Dict, List, Tuple, Any
 class WebsiteWidget:
     def __init__(self, stdscr) -> None:
         self.stdscr = stdscr
-        self.website_cache: Dict[str, int] = {
+
+        self.cache: Dict[str, int] = {
             "https://lieblinghomecare.com": 0,
             "https://demasie.com/health": 0,
             "https://nathan.demasie.com/health": 0,
@@ -17,9 +18,9 @@ class WebsiteWidget:
             "https://nathan-app-refer-codes.demasie.com/health": 0,
             "https://nathan-edu-i18next-server.demasie.com/health": 0
         }
-        self.website_keys: List[str] = list(self.website_cache.keys())
-        self.website_index: int = 0
-        self._last_update_second: int = -1
+        self.keys: List[str] = list(self.cache.keys())
+        self.index: int = 0
+        self.last_updated_sec: int = -1
 
     @staticmethod
     def get_website_status(url: str) -> int:
@@ -40,16 +41,16 @@ class WebsiteWidget:
             return curses.color_pair(6) | curses.A_REVERSE, "ERROR".center(6), display_url
 
     def update(self, time: float = time.time()) -> None:
-        if int(time) != self._last_update_second:
-            self._last_update_second = int(time)
-            website_url: str = self.website_keys[self.website_index]
-            self.website_cache[website_url] = self.get_website_status(website_url)
-            self.website_index = (self.website_index + 1) % len(self.website_keys)
+        if int(time) != self.last_updated_sec:
+            self.last_updated_sec = int(time)
+            website_url: str = self.keys[self.index]
+            self.cache[website_url] = self.get_website_status(website_url)
+            self.index = (self.index + 1) % len(self.keys)
 
     def draw(self, row: int) -> int:
         self.stdscr.addstr(row, 0, f"{'Website'.rjust(33):<34}{'Status':<6}", curses.A_BOLD)
 
-        for i, (website_url, status_code) in enumerate(self.website_cache.items()):
+        for i, (website_url, status_code) in enumerate(self.cache.items()):
             color, status, website = self.get_website_display(status_code, website_url)
             self.stdscr.addstr(row + 1, 0, f"{website[-33:]:<34}")
             self.stdscr.addstr(row + 1, 34, f"{status[:6]}", color)

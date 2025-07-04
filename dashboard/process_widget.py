@@ -4,24 +4,24 @@ import psutil
 from typing import List, Any
 
 class ProcessWidget:
-    def __init__(self, stdscr: 'curses._CursesWindow') -> None:
+    def __init__(self, stdscr: 'curses._CursesWindow', update_offset: int = 0) -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
-        self.process_cache: List[Any] = []
-        self.process_cache_expiry: int = 5 # Seconds
-        self.process_update_offset: int = 0 # Seconds - Time offset to avoid spikes
-        self.process_update_time: float = 0
+        self.cache: List[Any] = []
+        self.cache_expiry: int = 5 # Seconds
+        self.update_offset: int = update_offset # Seconds - Time offset to avoid spikes
+        self.update_time: float = 0
         self.update()
 
     def update(self, time: float = time.time()) -> None:
-        if time - self.process_update_offset - self.process_update_time >= self.process_cache_expiry:
-            self.process_update_time = time
-            self.process_cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
+        if time - self.update_offset - self.update_time >= self.cache_expiry:
+            self.update_time = time
+            self.cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
                                        key=lambda p: p.info['cpu_percent'], reverse=True)[:3]
 
     def draw(self, row: int) -> int:
         self.stdscr.addstr(row, 0, f"{'PID':<9}{'Name':<25}{'CPU %':<8}", curses.A_BOLD)
 
-        for i, p in enumerate(self.process_cache):
+        for i, p in enumerate(self.cache):
             self.stdscr.addstr(row + 1, 0, f"{p.info['pid']:<9}{p.info['name'][:24]:<25}{p.info['cpu_percent']:<8.2f}")
             row += 1
 
