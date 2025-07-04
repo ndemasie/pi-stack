@@ -47,17 +47,17 @@ class TimerWidget:
         # Start/Stop
         attr = curses.A_REVERSE if self.button == TimerButton.START_STOP else curses.A_NORMAL
         text = " [ Start ] " if not self.running else " [ Stop ] "
-        self.stdscr.addstr(row, 0, f"{text:<11}", attr)
+        self.stdscr.addstr(row, 2, f"{text:<11}", attr)
 
         # Timer
         hours: int = int(self.elapsed // 3600)
         minutes: int = int((self.elapsed % 3600) // 60)
         seconds: int = int(self.elapsed % 60)
-        self.stdscr.addstr(row, 13, f"{hours:02}:{minutes:02}:{seconds:02}", curses.A_BOLD)
+        self.stdscr.addstr(row, 15, f"{hours:02}:{minutes:02}:{seconds:02}", curses.A_BOLD)
 
         # Reset
         attr = curses.A_REVERSE if self.button == TimerButton.RESET else curses.A_NORMAL
         text = " [ Reset ] "
-        self.stdscr.addstr(row, 24, f"{text:<11}", attr)
+        self.stdscr.addstr(row, 25, f"{text:<11}", attr)
 
         return row + 2
