@@ -33,6 +33,13 @@ class MonitorApp:
         curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
         curses.init_pair(8, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
+    def update(self) -> None:
+        self.hardware_widget.update()
+        self.process_widget.update()
+        self.website_widget.update()
+        self.container_widget.update()
+        self.timer_widget.update(int(time.time()))
+
     def redraw(self) -> None:
         row = 0
         row = self.hardware_widget.draw(row)
@@ -62,6 +69,7 @@ class MonitorApp:
                 last_timer_update = now
 
             if redraw:
+                self.update()
                 self.redraw()
             time.sleep(0.05)
 
