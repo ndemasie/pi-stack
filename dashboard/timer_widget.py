@@ -64,4 +64,7 @@ class TimerWidget:
         text = " [ Reset ] "
         self.stdscr.addstr(row, 26, f"{text:<11}", attr)
 
+        if row is None:
+            self.stdscr.refresh()
+
         return row + 2

@@ -40,7 +40,7 @@ class MonitorApp:
         self.container_widget.update(time)
         self.timer_widget.update(time)
 
-    def redraw(self) -> None:
+    def draw(self) -> None:
         row = 0
         row = self.hardware_widget.draw(row)
         row = self.process_widget.draw(row)
@@ -52,6 +52,7 @@ class MonitorApp:
     def run(self) -> None:
         self.stdscr.clear()
         last_timer_update = time.time()
+        self.draw()  # Initial draw
 
         while True:
             key = self.stdscr.getch()
@@ -66,7 +67,7 @@ class MonitorApp:
             if now - last_timer_update >= 1:
                 last_timer_update = now
                 self.update(now)
-                self.redraw()
+                self.draw()
 
             time.sleep(0.05)
 
