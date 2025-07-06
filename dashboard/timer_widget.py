@@ -36,7 +36,6 @@ class TimerWidget:
                 self.is_running = False
                 self.elapsed = 0
                 self.start_time = None
-                self.button = TimerButton.START_STOP
 
     def update(self, time: float = time.time()) -> None:
         if self.is_running and self.start_time is not None:
