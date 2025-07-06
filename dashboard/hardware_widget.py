@@ -17,36 +17,36 @@ class HardwareWidget:
 
     @staticmethod
     def get_cpu_display(cpu_usage: float) -> int:
-        if cpu_usage > 70:
-            return curses.color_pair(6) | curses.A_REVERSE
-        elif cpu_usage > 50:
-            return curses.color_pair(6)
-        elif cpu_usage > 30:
-            return curses.color_pair(2)
+        if cpu_usage < 30:
+            return curses.color_pair(3)
+        elif cpu_usage < 50:
+            return curses.color_pair(4)
+        elif cpu_usage < 70:
+            return curses.color_pair(5)
         else:
-            return curses.color_pair(1)
+            return curses.color_pair(5) | curses.A_REVERSE
 
     @staticmethod
     def get_memory_display(memory_percent: float) -> int:
-        if memory_percent > 70:
-            return curses.color_pair(6) | curses.A_REVERSE
-        elif memory_percent > 50:
-            return curses.color_pair(6)
-        elif memory_percent > 30:
-            return curses.color_pair(2)
+        if memory_percent < 30:
+            return curses.color_pair(3)
+        elif memory_percent < 50:
+            return curses.color_pair(4)
+        elif memory_percent < 70:
+            return curses.color_pair(5)
         else:
-            return curses.color_pair(1)
+            return curses.color_pair(5) | curses.A_REVERSE
 
     @staticmethod
     def get_temp_display(temp_num: float) -> int:
-        if temp_num > 64:
-            return curses.color_pair(6) | curses.A_REVERSE
-        elif temp_num > 60:
-            return curses.color_pair(6)
-        elif temp_num > 55:
-            return curses.color_pair(2)
+        if temp_num < 55:
+            return curses.color_pair(3)
+        elif temp_num < 60:
+            return curses.color_pair(4)
+        elif temp_num < 64:
+            return curses.color_pair(5)
         else:
-            return curses.color_pair(1)
+            return curses.color_pair(5) | curses.A_REVERSE
 
     def update(self, timer: float = time.time()) -> None:
         self.cpu_usage = psutil.cpu_percent(interval=1)

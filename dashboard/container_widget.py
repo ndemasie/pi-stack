@@ -34,14 +34,14 @@ class ContainerWidget:
         match = re.search(r'\((\w+?)\)', status)
         text = match.group(1) if match else state
 
-        if text in ("healthy", "running"):
-            return curses.color_pair(1), text
-        elif text == "paused":
-            return curses.color_pair(4), text
-        elif text in ("unhealthy", "restarting"):
+        if text == "paused":
             return curses.color_pair(2), text
+        elif text in ("healthy", "running"):
+            return curses.color_pair(3), text
+        elif text in ("unhealthy", "restarting"):
+            return curses.color_pair(4), text
         else:
-            return curses.color_pair(6), text
+            return curses.color_pair(5), text
 
     def update(self, time: float = time.time()) -> None:
         if time - self.update_offset - self.update_time >= self.cache_expiry:

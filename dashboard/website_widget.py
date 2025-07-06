@@ -34,12 +34,12 @@ class WebsiteWidget:
     def get_website_display(status_code: int, website_url: str) -> Tuple[int, str, str]:
         display_url: str = website_url.replace("https://", "").replace("/health", "").rjust(33)
 
-        if status_code == 200:
-            return curses.color_pair(1) | curses.A_REVERSE, "OK".center(6), display_url
-        elif status_code == 0:
-            return curses.color_pair(4) | curses.A_REVERSE, "UKN".center(6), display_url
+        if status_code == 0:
+            return curses.color_pair(2) | curses.A_REVERSE, "UKN".center(6), display_url
+        elif status_code == 200:
+            return curses.color_pair(3) | curses.A_REVERSE, "OK".center(6), display_url
         else:
-            return curses.color_pair(6) | curses.A_REVERSE, "ERROR".center(6), display_url
+            return curses.color_pair(5) | curses.A_REVERSE, "ERROR".center(6), display_url
 
     def update(self, time: float = time.time()) -> None:
         if int(time) != self.last_updated_sec:
