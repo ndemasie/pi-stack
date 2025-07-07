@@ -53,11 +53,12 @@ class TimerWidget:
         text = " [ Start ] " if not self.is_running else " [ Stop ] "
         self.stdscr.addstr(row, 3, f"{text:<11}", attr)
 
-        # Timer
+        # Timer (highlight if running)
+        timer_attr = curses.color_pair(3) | curses.A_REVERSE if self.is_running else curses.A_BOLD
         hours: int = int(self.elapsed // 3600)
         minutes: int = int((self.elapsed % 3600) // 60)
         seconds: int = int(self.elapsed % 60)
-        self.stdscr.addstr(row, 16, f"{hours:02}:{minutes:02}:{seconds:02}", curses.A_BOLD)
+        self.stdscr.addstr(row, 16, f"{hours:02}:{minutes:02}:{seconds:02}", timer_attr)
 
         # Reset
         attr = curses.A_REVERSE if self.button == TimerButton.RESET else curses.A_NORMAL
