@@ -18,11 +18,25 @@ class TimerWidget:
         self.elapsed: float = 0
         self.update()
 
+    def get_time_display(self) -> int:
+        if not self.is_running:
+            return curses.A_BOLD
+
+        flash = curses.A_NORMAL if int(self.elapsed) % 2 == 0 else curses.A_REVERSE
+
+        if self.elapsed < (60 * 60 * 7): # 7 hours
+            return curses.color_pair(3) | flash
+        elif self.elapsed < (60 * 60 * 8): # 8 hours
+            return curses.color_pair(4) | flash
+        else:
+            return curses.color_pair(5) | flash
+
     def handle_input(self, key: int, time: float = time.time()) -> None:
         if key in (curses.KEY_STAB, curses.KEY_BTAB, 9):
             self.button = TimerButton((self.button.value + 1) % 2)
+            return
 
-        elif key in (curses.KEY_ENTER, 10, 13):
+        if key in (curses.KEY_ENTER, 10, 13):
             if self.button == TimerButton.START_STOP and not self.is_running:
                 self.is_running = True
                 self.start_time = time
@@ -54,11 +68,10 @@ class TimerWidget:
         self.stdscr.addstr(row, 2, f"{text:<11}", attr)
 
         # Timer (highlight if running)
-        timer_attr = curses.color_pair(3) | curses.A_REVERSE if self.is_running else curses.A_BOLD
         hours: int = int(self.elapsed // 3600)
         minutes: int = int((self.elapsed % 3600) // 60)
         seconds: int = int(self.elapsed % 60)
-        self.stdscr.addstr(row, 15, f" {hours:02}:{minutes:02}:{seconds:02} ", timer_attr)
+        self.stdscr.addstr(row, 15, f" {hours:02}:{minutes:02}:{seconds:02} ", self.get_time_display())
 
         # Reset
         attr = curses.A_REVERSE if self.button == TimerButton.RESET else curses.A_NORMAL
