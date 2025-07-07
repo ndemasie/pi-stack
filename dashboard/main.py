@@ -1,5 +1,6 @@
 import curses
 import time
+import threading
 from container_widget import ContainerWidget
 from website_widget import WebsiteWidget
 from hardware_widget import HardwareWidget
@@ -20,6 +21,20 @@ class MonitorApp:
         self.process_widget = ProcessWidget(self.stdscr, update_offset=1)
         self.timer_widget = TimerWidget(self.stdscr)
 
+        self._run_background_updates()
+
+    def _run_background_updates(self):
+        def updater(widget, interval=1.0):
+            while True:
+                widget.update(time.time())
+                time.sleep(interval)
+
+        threading.Thread(target=updater, args=(self.hardware_widget, 1), daemon=True).start()
+        threading.Thread(target=updater, args=(self.process_widget, 1), daemon=True).start()
+        threading.Thread(target=updater, args=(self.website_widget, 1), daemon=True).start()
+        threading.Thread(target=updater, args=(self.container_widget, 2), daemon=True).start()
+        threading.Thread(target=updater, args=(self.timer_widget, 1), daemon=True).start()
+
     def setup_curses(self) -> None:
         curses.curs_set(0)  # Hide cursor
 
@@ -32,13 +47,6 @@ class MonitorApp:
 
         curses.init_pair(10, curses.COLOR_WHITE, curses.COLOR_BLACK)
 
-    def update(self, time: float = time.time()) -> None:
-        self.hardware_widget.update(time)
-        self.process_widget.update(time)
-        self.website_widget.update(time)
-        self.container_widget.update(time)
-        self.timer_widget.update(time)
-
     def draw(self) -> None:
         row = 0
         row = self.hardware_widget.draw(row)
@@ -50,7 +58,7 @@ class MonitorApp:
 
     def run(self) -> None:
         self.stdscr.clear()
-        last_timer_update = time.time()
+        last_draw = time.time()
         self.draw()  # Initial draw
 
         while True:
@@ -63,10 +71,9 @@ class MonitorApp:
                 self.timer_widget.draw()
 
             # If second has passed
-            if now - last_timer_update >= 1:
-                last_timer_update = now
-                self.update(now)
+            if now - last_draw >= 1:
                 self.draw()
+                last_draw = now
 
             time.sleep(0.05)
 
