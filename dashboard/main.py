@@ -25,17 +25,15 @@ class MonitorApp:
 
     def _run_background_updates(self):
         def updater(widget, interval=1.0, offset=0.0):
-            # Wait until the next (interval-aligned) time plus offset
+            if offset > 0:
+                time.sleep(offset)
             while True:
-                now = time.time()
-                next_time = ((now - offset) // interval + 1) * interval + offset
-                sleep_time = max(0, next_time - now)
-                time.sleep(sleep_time)
                 widget.update(time.time())
+                time.sleep(interval)
 
         threading.Thread(target=updater, args=(self.hardware_widget, 1, 0), daemon=True).start()
         threading.Thread(target=updater, args=(self.process_widget, 3, 2), daemon=True).start()
-        threading.Thread(target=updater, args=(self.website_widget, 1, 1), daemon=True).start()
+        threading.Thread(target=updater, args=(self.website_widget, 1, 0), daemon=True).start()
         threading.Thread(target=updater, args=(self.container_widget, 3, 4), daemon=True).start()
         threading.Thread(target=updater, args=(self.timer_widget, 0.5, 0), daemon=True).start()
 
