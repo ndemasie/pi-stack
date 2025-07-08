@@ -40,7 +40,7 @@ class WebsiteWidget:
         else:
             return curses.color_pair(5) | curses.A_REVERSE, "ERROR".center(6), display_url
 
-    def update(self) -> None:
+    def update(self, time: float = time.time()) -> None:
         self.cache_index += 1
         website_url: str = self.keys[self.cache_index % len(self.keys)]
         self.cache[website_url] = self.get_website_status(website_url)

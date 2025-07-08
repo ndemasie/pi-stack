@@ -12,7 +12,7 @@ class ProcessWidget:
         self.update_time: float = 0
         self.update()
 
-    def update(self) -> None:
+    def update(self, time: float = time.time()) -> None:
         self.cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
                             key=lambda p: p.info['cpu_percent'], reverse=True)[:3]
 

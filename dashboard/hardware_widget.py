@@ -48,7 +48,7 @@ class HardwareWidget:
         else:
             return curses.color_pair(5) | curses.A_REVERSE
 
-    def update(self) -> None:
+    def update(self, time: float = time.time()) -> None:
         self.cpu_usage = psutil.cpu_percent(interval=1)
         self.memory = psutil.virtual_memory()
         self.temp = os.popen("vcgencmd measure_temp").readline().strip().replace("temp=", "")

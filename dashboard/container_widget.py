@@ -41,7 +41,7 @@ class ContainerWidget:
         else:
             return curses.color_pair(5), text
 
-    def update(self) -> None:
+    def update(self, time: float = time.time()) -> None:
         self.cache = self.load_docker_cache()
 
     def draw(self, row: Optional[int] = None) -> int:
