@@ -5,13 +5,11 @@ import time
 from typing import List, Tuple, Optional
 
 class ContainerWidget:
-    def __init__(self, stdscr: 'curses._CursesWindow', update_offset: int = 0) -> None:
+    def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
 
         self.row: Optional[int] = None
         self.cache: List[Tuple[str, str, str]] = []
-        self.cache_expiry: int = 10 # Seconds
-        self.update_offset: int = update_offset # Seconds - Time offset to avoid spikes
         self.update_time: float = 0
         self.update()
 
@@ -43,10 +41,8 @@ class ContainerWidget:
         else:
             return curses.color_pair(5), text
 
-    def update(self, time: float = time.time()) -> None:
-        if time - self.update_offset - self.update_time >= self.cache_expiry:
-            self.update_time = time
-            self.cache = self.load_docker_cache()
+    def update(self) -> None:
+        self.cache = self.load_docker_cache()
 
     def draw(self, row: Optional[int] = None) -> int:
         if row is None:

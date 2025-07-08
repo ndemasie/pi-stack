@@ -4,21 +4,17 @@ import psutil
 from typing import List, Any, Optional
 
 class ProcessWidget:
-    def __init__(self, stdscr: 'curses._CursesWindow', update_offset: int = 0) -> None:
+    def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
 
         self.row: Optional[int] = None
         self.cache: List[Any] = []
-        self.cache_expiry: int = 5 # Seconds
-        self.update_offset: int = update_offset # Seconds - Time offset to avoid spikes
         self.update_time: float = 0
         self.update()
 
-    def update(self, time: float = time.time()) -> None:
-        if time - self.update_offset - self.update_time >= self.cache_expiry:
-            self.update_time = time
-            self.cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
-                                       key=lambda p: p.info['cpu_percent'], reverse=True)[:3]
+    def update(self) -> None:
+        self.cache = sorted(psutil.process_iter(['pid', 'name', 'cpu_percent']),
+                            key=lambda p: p.info['cpu_percent'], reverse=True)[:3]
 
     def draw(self, row: Optional[int] = None) -> int:
         if row is None:

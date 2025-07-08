@@ -8,6 +8,7 @@ class WebsiteWidget:
         self.stdscr = stdscr
 
         self.row: Optional[int] = None
+        self.cache_index: int = 0
         self.cache: Dict[str, int] = {
             "https://lieblinghomecare.com": 0,
             "https://demasie.com/health": 0,
@@ -20,8 +21,6 @@ class WebsiteWidget:
             "https://nathan-edu-i18next-server.demasie.com/health": 0
         }
         self.keys: List[str] = list(self.cache.keys())
-        self.index: int = 0
-        self.last_updated_sec: int = -1
 
     @staticmethod
     def get_website_status(url: str) -> int:
@@ -41,12 +40,10 @@ class WebsiteWidget:
         else:
             return curses.color_pair(5) | curses.A_REVERSE, "ERROR".center(6), display_url
 
-    def update(self, time: float = time.time()) -> None:
-        if int(time) != self.last_updated_sec:
-            self.last_updated_sec = int(time)
-            website_url: str = self.keys[self.index]
-            self.cache[website_url] = self.get_website_status(website_url)
-            self.index = (self.index + 1) % len(self.keys)
+    def update(self) -> None:
+        self.cache_index += 1
+        website_url: str = self.keys[self.cache_index % len(self.keys)]
+        self.cache[website_url] = self.get_website_status(website_url)
 
     def draw(self, row: Optional[int] = None) -> int:
         if row is None:

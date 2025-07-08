@@ -15,25 +15,29 @@ class MonitorApp:
 
         self.setup_curses()
 
-        self.container_widget = ContainerWidget(self.stdscr, update_offset=3)
+        self.container_widget = ContainerWidget(self.stdscr)
         self.website_widget = WebsiteWidget(self.stdscr)
         self.hardware_widget = HardwareWidget(self.stdscr)
-        self.process_widget = ProcessWidget(self.stdscr, update_offset=1)
+        self.process_widget = ProcessWidget(self.stdscr)
         self.timer_widget = TimerWidget(self.stdscr)
 
         self._run_background_updates()
 
     def _run_background_updates(self):
-        def updater(widget, interval=1.0):
+        def updater(widget, interval=1.0, offset=0.0):
+            # Wait until the next (interval-aligned) time plus offset
             while True:
+                now = time.time()
+                next_time = ((now - offset) // interval + 1) * interval + offset
+                sleep_time = max(0, next_time - now)
+                time.sleep(sleep_time)
                 widget.update(time.time())
-                time.sleep(interval)
 
-        threading.Thread(target=updater, args=(self.hardware_widget, 1), daemon=True).start()
-        threading.Thread(target=updater, args=(self.process_widget, 1), daemon=True).start()
-        threading.Thread(target=updater, args=(self.website_widget, 1), daemon=True).start()
-        threading.Thread(target=updater, args=(self.container_widget, 2), daemon=True).start()
-        threading.Thread(target=updater, args=(self.timer_widget, 1), daemon=True).start()
+        threading.Thread(target=updater, args=(self.hardware_widget, 1, 0), daemon=True).start()
+        threading.Thread(target=updater, args=(self.process_widget, 3, 2), daemon=True).start()
+        threading.Thread(target=updater, args=(self.website_widget, 1, 1), daemon=True).start()
+        threading.Thread(target=updater, args=(self.container_widget, 3, 4), daemon=True).start()
+        threading.Thread(target=updater, args=(self.timer_widget, 0.5, 0), daemon=True).start()
 
     def setup_curses(self) -> None:
         curses.curs_set(0)  # Hide cursor
