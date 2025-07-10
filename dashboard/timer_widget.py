@@ -8,6 +8,7 @@ class TimerButton(Enum):
     RESET = 1
 
 class TimerWidget:
+
     def __init__(self, stdscr: 'curses._CursesWindow') -> None:
         self.stdscr: 'curses._CursesWindow' = stdscr
 
@@ -16,6 +17,7 @@ class TimerWidget:
         self.is_running: bool = False
         self.start_time: Optional[float] = None
         self.elapsed: float = 0
+        self.reset_armed: bool = False  # Tracks if reset is armed for double click
         self.update()
 
     def get_time_display(self) -> int:
@@ -31,26 +33,45 @@ class TimerWidget:
         else:
             return curses.color_pair(5) | flash
 
+    def get_reset_display(self):
+        if self.button == TimerButton.RESET and self.reset_armed:
+            return " [ Confirm ] ", curses.color_pair(5) | curses.A_REVERSE
+        elif self.button == TimerButton.RESET:
+            return " [ Reset ] ", curses.A_REVERSE
+        else:
+            return " [ Reset ] ", curses.A_NORMAL
+
+    def get_start_display(self):
+        attr = curses.A_REVERSE if self.button == TimerButton.START_STOP else curses.A_NORMAL
+        text = " [ Start ] " if not self.is_running else " [ Stop ] "
+        return text, attr
+
     def handle_input(self, key: int, time: float = time.time()) -> None:
         if key in (curses.KEY_STAB, curses.KEY_BTAB, 9):
             self.button = TimerButton((self.button.value + 1) % 2)
-            return
 
         if key in (curses.KEY_ENTER, 10, 13):
-            if self.button == TimerButton.START_STOP and not self.is_running:
-                self.is_running = True
-                self.start_time = time
-
-            elif self.button == TimerButton.START_STOP and self.is_running:
-                self.is_running = False
-                self.elapsed += time - self.start_time
-                self.start_time = None
+            if self.button == TimerButton.START_STOP:
+                if not self.is_running:
+                    self.is_running = True
+                    self.start_time = time
+                else:
+                    self.is_running = False
+                    self.elapsed += time - self.start_time
+                    self.start_time = None
 
             elif self.button == TimerButton.RESET:
-                self.is_running = False
-                self.elapsed = 0
-                self.start_time = None
-                self.button = TimerButton.START_STOP
+                if not self.reset_armed:
+                    self.reset_armed = True  # First click arms reset
+                    return
+                else:
+                    self.is_running = False
+                    self.elapsed = 0
+                    self.start_time = None
+                    self.button = TimerButton.START_STOP
+
+        self.reset_armed = False  # Disarm reset if switching
+
 
     def update(self, time: float = time.time()) -> None:
         if self.is_running and self.start_time is not None:
@@ -64,8 +85,7 @@ class TimerWidget:
         self.row = row
 
         # Start/Stop
-        attr = curses.A_REVERSE if self.button == TimerButton.START_STOP else curses.A_NORMAL
-        text = " [ Start ] " if not self.is_running else " [ Stop ] "
+        text, attr = self.get_start_display()
         self.stdscr.addstr(row, 2, f"{text:<11}", attr)
 
         # Timer (highlight if running)
@@ -75,8 +95,7 @@ class TimerWidget:
         self.stdscr.addstr(row, 15, f" {hours:02}:{minutes:02}:{seconds:02} ", self.get_time_display())
 
         # Reset
-        attr = curses.A_REVERSE if self.button == TimerButton.RESET else curses.A_NORMAL
-        text = " [ Reset ] "
+        text, attr = self.get_reset_display()
         self.stdscr.addstr(row, 27, f"{text:<11}", attr)
 
         if row is None:
