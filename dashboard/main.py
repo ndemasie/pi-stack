@@ -61,11 +61,17 @@ class MonitorApp:
     def run(self) -> None:
         self.stdscr.clear()
         last_draw = time.time()
+        last_clear = time.time()
         self.draw()  # Initial draw
 
         while True:
             now = time.time()
             key = self.stdscr.getch()
+
+            # Clear the screen every minute
+            if now - last_clear >= 60:
+                self.stdscr.clear()
+                last_clear = now
 
             # If key is pressed
             if key != -1:
