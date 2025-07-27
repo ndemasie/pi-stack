@@ -16,10 +16,10 @@ class MonitorApp:
         self.setup_curses()
 
         self.container_widget = ContainerWidget(self.stdscr)
-        self.website_widget = WebsiteWidget(self.stdscr)
         self.hardware_widget = HardwareWidget(self.stdscr)
-        self.process_widget = ProcessWidget(self.stdscr)
+        # self.process_widget = ProcessWidget(self.stdscr)
         self.timer_widget = TimerWidget(self.stdscr)
+        self.website_widget = WebsiteWidget(self.stdscr)
 
         self._run_background_updates()
 
@@ -32,7 +32,7 @@ class MonitorApp:
                 time.sleep(interval)
 
         threading.Thread(target=updater, args=(self.hardware_widget, 1, 0), daemon=True).start()
-        threading.Thread(target=updater, args=(self.process_widget, 3, 2), daemon=True).start()
+        # threading.Thread(target=updater, args=(self.process_widget, 3, 2), daemon=True).start()
         threading.Thread(target=updater, args=(self.website_widget, 1, 0), daemon=True).start()
         threading.Thread(target=updater, args=(self.container_widget, 3, 4), daemon=True).start()
         threading.Thread(target=updater, args=(self.timer_widget, 0.5, 0), daemon=True).start()
@@ -52,7 +52,7 @@ class MonitorApp:
     def draw(self) -> None:
         row = 0
         row = self.hardware_widget.draw(row)
-        row = self.process_widget.draw(row)
+        # row = self.process_widget.draw(row)
         row = self.website_widget.draw(row)
         row = self.container_widget.draw(row)
         row = self.timer_widget.draw(row)
