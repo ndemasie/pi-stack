@@ -13,12 +13,13 @@ class WebsiteWidget:
             "https://lieblinghomecare.com": 0,
             "https://demasie.com/health": 0,
             "https://nathan.demasie.com/health": 0,
-            "https://refer.demasie.com/health": 0,
             "https://habit.demasie.com/health": 0,
-            "https://nathan-app-site.demasie.com/health": 0,
+            "https://refer.demasie.com/health": 0,
             "https://nathan-app-habit-print.demasie.com/health": 0,
             "https://nathan-app-refer-codes.demasie.com/health": 0,
-            "https://nathan-edu-i18next-server.demasie.com/health": 0
+            "https://nathan-app-site.demasie.com/health": 0,
+            "https://nathan-edu-i18next-server.demasie.com/health": 0,
+            "https://nathan-tool-n8n.demasie.com/healthz": 0
         }
         self.keys: List[str] = list(self.cache.keys())
 
