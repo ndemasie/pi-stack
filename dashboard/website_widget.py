@@ -1,6 +1,7 @@
 import curses
 import time
 import requests
+import urllib
 from typing import Dict, List, Tuple, Optional
 
 class WebsiteWidget:
@@ -32,7 +33,7 @@ class WebsiteWidget:
 
     @staticmethod
     def get_website_display(status_code: int, website_url: str) -> Tuple[int, str, str]:
-        display_url: str = website_url.replace("https://", "").replace("/health", "").rjust(33)
+        display_url: str = urllib.parse.urlparse(website_url).netloc.rjust(33)
 
         if status_code == 0:
             return curses.color_pair(2) | curses.A_REVERSE, "UKN".center(6), display_url
