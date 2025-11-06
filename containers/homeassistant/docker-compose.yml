@@ -4,6 +4,7 @@ services:
     image: ghcr.io/home-assistant/home-assistant:stable
     ports:
       - "8123:8123"
+      - "100.88.196.39:8123:8123" # Tailscale IP binding
     network_mode: host
     privileged: true
     restart: unless-stopped
