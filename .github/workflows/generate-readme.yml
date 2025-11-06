@@ -1,4 +1,4 @@
-name: CI
+name: generate-readme
 on:
   pull_request:
     branches:
